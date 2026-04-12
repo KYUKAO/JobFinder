@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>国内 TA 岗位地图 — TA Job Finder</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --primary: #007AFF;
+      --success: #34C759;
+      --accent-warm: #FF9500;
+      --bg: #F5F7FA;
+      --card: #fff;
+      --text: #1A1A2E;
+      --text-secondary: #666;
+      --border: #E8ECF0;
+    }
+
+    body {
+      font-family: 'PingFang SC', 'Microsoft YaHei', 'Helvetica Neue', Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* Header */
+    header {
+      background: linear-gradient(135deg, #34C759, #30D158);
+      padding: 0;
+      flex-shrink: 0;
+      box-shadow: 0 2px 12px rgba(52,199,89,0.3);
+      z-index: 10;
+    }
+    .header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 24px;
+      gap: 16px;
+    }
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .header-back {
+      background: rgba(255,255,255,0.2);
+      color: #fff;
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 600;
+      padding: 6px 14px;
+      border-radius: 20px;
+      transition: background 0.2s;
+    }
+    .header-back:hover { background: rgba(255,255,255,0.3); }
+    .header-title { font-size: 1.1rem; font-weight: 700; color: #fff; }
+    .header-meta { font-size: 0.75rem; color: rgba(255,255,255,0.8); margin-top: 2px; }
+    #new-badge {
+      background: #fff;
+      color: #34C759;
+      font-weight: 700;
+      font-size: 0.75rem;
+      padding: 3px 10px;
+      border-radius: 20px;
+    }
+
+    /* Filter bar */
+    .filter-bar {
+      background: var(--card);
+      padding: 10px 24px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .filter-tab {
+      padding: 5px 14px;
+      border-radius: 20px;
+      font-size: 0.78rem;
+      font-weight: 500;
+      cursor: pointer;
+      border: 1.5px solid transparent;
+      background: var(--bg);
+      color: var(--text-secondary);
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .filter-tab:hover { border-color: var(--primary); color: var(--primary); }
+    .filter-tab.active { background: var(--success); color: #fff; border-color: var(--success); }
+    .filter-tab.active.intern { background: #AF52DE; border-color: #AF52DE; }
+    .filter-tab.active.sj { background: #FF9500; border-color: #FF9500; }
+    .filter-tab.active.bj { background: #007AFF; border-color: #007AFF; }
+    .filter-tab.active.gz { background: #FF3B30; border-color: #FF3B30; }
+    .filter-tab.active.hz { background: #5AC8FA; border-color: #5AC8FA; }
+    .filter-tab.active.sz { background: #34C759; border-color: #34C759; }
+
+    /* Main */
+    .container {
+      display: grid;
+      grid-template-columns: 360px 1fr;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      background: var(--card);
+      overflow-y: auto;
+      border-right: 1px solid var(--border);
+    }
+    .sidebar-header {
+      padding: 14px 20px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-secondary);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      background: var(--card);
+      z-index: 10;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .job-card {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+      transition: background 0.15s;
+      position: relative;
+    }
+    .job-card:hover, .job-card.active { background: #F8FFF9; }
+    .job-card.active { border-left: 3px solid var(--success); }
+    .job-card.is-new { background: #F0FFF5; }
+    .job-card.is-new::after {
+      content: '🆕 今日新';
+      position: absolute;
+      top: 10px; right: 12px;
+      background: var(--success);
+      color: #fff;
+      font-size: 0.62rem;
+      font-weight: 700;
+      padding: 1px 6px;
+      border-radius: 8px;
+    }
+    .job-card.hidden { display: none; }
+
+    .job-city-tag {
+      display: inline-block;
+      font-size: 0.62rem;
+      font-weight: 700;
+      padding: 1px 6px;
+      border-radius: 6px;
+      margin-bottom: 4px;
+    }
+    .city-sh { background: #FFF0E8; color: #FF9500; }
+    .city-bj { background: #E8F0FF; color: #007AFF; }
+    .city-gz { background: #FFE8E8; color: #FF3B30; }
+    .city-hz { background: #E8F8FF; color: #5AC8FA; }
+    .city-sz { background: #E8F9ED; color: #34C759; }
+    .city-wh { background: #FFF8E8; color: #FF9500; }
+    .city-cd { background: #F3E8FF; color: #AF52DE; }
+    .city-nj { background: #E8F4FF; color: #007AFF; }
+
+    .job-company {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--success);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 3px;
+    }
+    .job-title {
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 6px;
+      line-height: 1.3;
+    }
+    .job-meta {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      font-size: 0.72rem;
+      color: var(--text-secondary);
+      margin-bottom: 4px;
+    }
+    .badge {
+      display: inline-block;
+      padding: 1px 8px;
+      border-radius: 20px;
+      font-size: 0.68rem;
+      font-weight: 600;
+    }
+    .badge-fulltime { background: #E8F9ED; color: var(--success); }
+    .badge-intern { background: #F3E8FF; color: #AF52DE; }
+    .badge-new-grad { background: #E8F0FF; color: #007AFF; }
+    .badge-salary { background: #FFF8E8; color: #FF9500; }
+
+    .job-salary {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--success);
+      margin-top: 4px;
+    }
+
+    /* Map */
+    .map-wrapper { position: relative; }
+    #map { width: 100%; height: 100%; }
+
+    .map-legend {
+      position: absolute;
+      bottom: 24px;
+      right: 16px;
+      background: rgba(255,255,255,0.95);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 16px;
+      font-size: 0.75rem;
+      z-index: 1000;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+      max-width: 180px;
+    }
+    .map-legend h4 {
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 5px;
+      color: var(--text);
+    }
+    .legend-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    @media (max-width: 768px) {
+      .container { grid-template-columns: 1fr; grid-template-rows: 260px 1fr; }
+      .sidebar { order: 2; }
+      .map-wrapper { order: 1; }
+    }
+
+    .sidebar::-webkit-scrollbar { width: 4px; }
+    .sidebar::-webkit-scrollbar-track { background: var(--border); }
+    .sidebar::-webkit-scrollbar-thumb { background: var(--success); border-radius: 4px; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="header-left">
+      <a href="index.html" class="header-back">← 首页</a>
+      <div>
+        <div class="header-title">🇨🇳 国内 TA 岗位地图</div>
+        <div class="header-meta">Boss 直聘 · 技术美术校招 & 1-3 年岗位</div>
+      </div>
+    </div>
+    <span id="new-badge">— 个今日新岗位</span>
+  </div>
+</header>
+
+<div class="filter-bar">
+  <span class="filter-tab active" data-filter="all">全部城市</span>
+  <span class="filter-tab" data-filter="sh">上海</span>
+  <span class="filter-tab" data-filter="bj">北京</span>
+  <span class="filter-tab" data-filter="gz">广州</span>
+  <span class="filter-tab" data-filter="hz">杭州</span>
+  <span class="filter-tab" data-filter="sz">深圳</span>
+  <div style="flex:1;"></div>
+  <span class="filter-tab" data-filter="intern">实习</span>
+  <span class="filter-tab" data-filter="newgrad">校招</span>
+  <select id="sort-select" style="font-size:0.75rem;padding:4px 8px;border-radius:8px;border:1px solid var(--border);">
+    <option value="priority">优先级</option>
+    <option value="salary">薪资</option>
+    <option value="new">最新发布</option>
+  </select>
+</div>
+
+<div class="container">
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <span>Open Positions</span>
+      <span id="visible-count" style="font-weight:400;color:var(--success);">0 / 0</span>
+    </div>
+    <div id="job-list"></div>
+  </div>
+
+  <div class="map-wrapper">
+    <div id="map"></div>
+    <div class="map-legend">
+      <h4>Legend</h4>
+      <div class="legend-item"><div class="legend-dot" style="background:#FF9500;"></div>上海</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#007AFF;"></div>北京</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#FF3B30;"></div>广州</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#5AC8FA;"></div>杭州</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#34C759;"></div>深圳</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#FF6B35;border:2px solid #fff;box-shadow:0 0 6px #FF6B35;"></div>🆕 今日新</div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ================================================================
+// 岗位数据（每次更新时修改 postedDate）
+// ================================================================
+
+var domesticJobs = [
+  {
+    id: 101,
+    name: "技术美术（TA）",
+    company: "腾讯游戏",
+    city: "深圳",
+    cityCode: "sz",
+    address: "深圳市南山区科技中一路腾讯大厦",
+    lat: 22.5405,
+    lng: 113.9386,
+    category: "biggame",
+    type: "Full-time",
+    level: "1-3年",
+    priority: 3,
+    salary: "25K-45K·16薪",
+    url: "https://careers.tencent.com/jobdesc.html?jobId=xxxx",
+    postedDate: "2026-04-12",
+    excluded: false
+  },
+  {
+    id: 102,
+    name: "技术美术（TA）",
+    company: "网易游戏",
+    city: "杭州",
+    cityCode: "hz",
+    address: "杭州市滨江区网商路599号网易大厦",
+    lat: 30.2084,
+    lng: 120.2030,
+    category: "biggame",
+    type: "Full-time",
+    level: "校招/社招",
+    priority: 3,
+    salary: "20K-40K·16薪",
+    url: "https://game.campus.163.com/positions",
+    postedDate: "2026-04-11",
+    excluded: false
+  },
+  {
+    id: 103,
+    name: "Technical Artist",
+    company: "米哈游",
+    city: "上海",
+    cityCode: "sh",
+    address: "上海市徐汇区宜山路1009号米哈游大厦",
+    lat: 31.1831,
+    lng: 121.4195,
+    category: "biggame",
+    type: "Full-time",
+    level: "1-3年",
+    priority: 3,
+    salary: "30K-55K·15薪",
+    url: "https://mihoyo.com/career",
+    postedDate: "2026-04-12",
+    excluded: false
+  },
+  {
+    id: 104,
+    name: "技术美术（TA）- 角色方向",
+    company: "完美世界",
+    city: "北京",
+    cityCode: "bj",
+    address: "北京市朝阳区望京街道完美世界大厦",
+    lat: 39.9890,
+    lng: 116.4790,
+    category: "aaa",
+    type: "Full-time",
+    level: "1-3年",
+    priority: 2,
+    salary: "18K-35K·14薪",
+    url: "https://jobs.wanmei.com",
+    postedDate: "2026-04-09",
+    excluded: false
+  },
+  {
+    id: 105,
+    name: "TA实习生",
+    company: "字节跳动游戏",
+    city: "上海",
+    cityCode: "sh",
+    address: "上海市浦东新区金科路字节跳动",
+    lat: 31.2304,
+    lng: 121.4737,
+    category: "bigtech",
+    type: "Intern",
+    level: "实习",
+    priority: 2,
+    salary: "200-400/天",
+    url: "https://job.bytedance.com/campus",
+    postedDate: "2026-04-12",
+    excluded: false
+  },
+  {
+    id: 106,
+    name: "技术美术（TA）- 渲染方向",
+    company: "三七互娱",
+    city: "广州",
+    cityCode: "gz",
+    address: "广州市天河区黄埔大道中666号三七互娱",
+    lat: 23.1246,
+    lng: 113.3623,
+    category: "game",
+    type: "Full-time",
+    level: "1-3年",
+    priority: 2,
+    salary: "15K-30K·12薪",
+    url: "https://www.37.com/hr",
+    postedDate: "2026-04-08",
+    excluded: false
+  },
+  {
+    id: 107,
+    name: "技术美术（TA）- 角色动画",
+    company: "腾讯游戏",
+    city: "深圳",
+    cityCode: "sz",
+    address: "深圳市南山区科技中一路腾讯大厦",
+    lat: 22.5405,
+    lng: 113.9386,
+    category: "biggame",
+    type: "Full-time",
+    level: "校招",
+    priority: 3,
+    salary: "20K-38K·16薪",
+    url: "https://careers.tencent.com/jobdesc.html?jobId=xxxx",
+    postedDate: "2026-04-10",
+    excluded: false
+  },
+  {
+    id: 108,
+    name: "技术美术（TA）",
+    company: "网易游戏",
+    city: "广州",
+    cityCode: "gz",
+    address: "广州市天河区科韵路网易游戏",
+    lat: 23.1288,
+    lng: 113.3930,
+    category: "biggame",
+    type: "Full-time",
+    level: "1-3年",
+    priority: 2,
+    salary: "18K-35K·16薪",
+    url: "https://game.campus.163.com/positions",
+    postedDate: "2026-04-11",
+    excluded: false
+  }
+];
+
+// ================================================================
+// 判断今日新
+// ================================================================
+var today = new Date();
+var todayStr = today.getFullYear() + '-' + String(today.getMonth()+1).padStart(2,'0') + '-' + String(today.getDate()).padStart(2,'0');
+
+function isToday(dateStr) {
+  return dateStr === todayStr;
+}
+
+// ================================================================
+// 城市颜色
+// ================================================================
+function getCityColor(cityCode) {
+  return { sh: '#FF9500', bj: '#007AFF', gz: '#FF3B30', hz: '#5AC8FA', sz: '#34C759', wh: '#FF9500', cd: '#AF52DE', nj: '#007AFF' }[cityCode] || '#34C759';
+}
+
+// ================================================================
+// 图标
+// ================================================================
+function mkIcon(color, sz, isNew) {
+  sz = sz || 14;
+  var glow = isNew ? 'box-shadow:0 0 10px ' + color + ';' : '';
+  return L.divIcon({
+    className: '',
+    html: '<div style="width:' + sz + 'px;height:' + sz + 'px;background:' + color + ';border:' + (isNew ? '3px' : '2.5px') + ' solid #fff;border-radius:50%;' + glow + '"></div>',
+    iconSize: [sz, sz], iconAnchor: [sz/2, sz/2]
+  });
+}
+
+// ================================================================
+// 地图
+// ================================================================
+// 默认中心在中国东部
+var defaultCenter = [30.5, 120.0];
+
+var map = L.map('map', { zoomControl: true, scrollWheelZoom: true }).setView(defaultCenter, 5);
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  attribution: '&copy; OSM', maxZoom: 18
+}).addTo(map);
+
+var markerMap = {};
+
+function renderMarkers(visibleJobs) {
+  Object.values(markerMap).forEach(function(m) { map.removeLayer(m); });
+  markerMap = {};
+
+  visibleJobs.forEach(function(j) {
+    if (j.excluded) return;
+    var color = getCityColor(j.cityCode);
+    var isNew = isToday(j.postedDate);
+    var markerColor = isNew ? '#FF6B35' : color;
+    var m = L.marker([j.lat, j.lng], { icon: mkIcon(markerColor, isNew ? 18 : 14, isNew) }).addTo(map);
+    m.bindPopup(buildPopup(j));
+    markerMap[j.id] = m;
+  });
+
+  if (visibleJobs.length > 0) {
+    var bounds = L.latLngBounds(visibleJobs.filter(function(j){ return !j.excluded; }).map(function(j){ return [j.lat, j.lng]; }));
+    map.fitBounds(bounds.pad(0.2), { maxZoom: 10 });
+  }
+}
+
+function buildPopup(j) {
+  var isNew = isToday(j.postedDate);
+  var newTag = isNew ? '<span style="background:#34C759;color:#fff;padding:2px 8px;border-radius:8px;font-size:0.75rem;font-weight:700;margin-bottom:6px;display:inline-block;">🆕 今日新</span><br><br>' : '';
+  return '<b style="color:' + getCityColor(j.cityCode) + '">[' + j.city + '] ' + j.company + '</b><br>' +
+    '<b>' + j.name + '</b><br><small>' + j.address + '</small><br><br>' +
+    newTag +
+    (j.salary ? '<b>💰 薪资：</b>' + j.salary + '<br>' : '') +
+    '<b>🏷 类型：</b>' + j.type + ' · ' + j.level + '<br><br>' +
+    '<a href="' + j.url + '" target="_blank" style="color:#007AFF;font-size:0.85em;">🔗 查看职位 →</a>';
+}
+
+// 初始渲染
+renderMarkers(domesticJobs);
+
+// ================================================================
+// 侧边栏
+// ================================================================
+function renderSidebar(visibleJobs) {
+  var listEl = document.getElementById('job-list');
+  document.getElementById('visible-count').textContent = visibleJobs.length + ' / ' + domesticJobs.length;
+
+  listEl.innerHTML = '';
+  visibleJobs.forEach(function(j) {
+    if (j.excluded) return;
+    var isNew = isToday(j.postedDate);
+    var cityClass = 'city-' + (j.cityCode || 'sz');
+    var typeClass = j.type === 'Intern' ? 'badge-intern' : 'badge-fulltime';
+    var levelBadge = j.level === '实习' ? 'badge-intern' : (j.level === '校招' || j.level === '校招/社招' ? 'badge-new-grad' : '');
+
+    var el = document.createElement('div');
+    el.className = 'job-card' + (isNew ? ' is-new' : '');
+    el.id = 'card-' + j.id;
+    el.innerHTML =
+      '<span class="job-city-tag ' + cityClass + '">' + j.city + '</span>' +
+      '<div class="job-company">' + j.company + '</div>' +
+      '<div class="job-title">' + j.name + '</div>' +
+      '<div class="job-meta">' +
+        '<span class="badge ' + typeClass + '">' + j.type + '</span>' +
+        (levelBadge ? '<span class="badge ' + levelBadge + '">' + j.level + '</span>' : '') +
+      '</div>' +
+      (j.salary ? '<div class="job-salary">💰 ' + j.salary + '</div>' : '');
+
+    el.addEventListener('click', function() { focusJob(j.id); });
+    listEl.appendChild(el);
+  });
+}
+
+function focusJob(id) {
+  document.querySelectorAll('.job-card').forEach(function(c) { c.classList.remove('active'); });
+  var card = document.getElementById('card-' + id);
+  if (card) { card.classList.add('active'); card.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
+
+  var job = domesticJobs.find(function(j) { return j.id === id; });
+  if (job && markerMap[id]) {
+    map.setView([job.lat, job.lng], 12, { animate: true });
+    setTimeout(function() { markerMap[id].openPopup(); }, 200);
+  }
+}
+
+renderSidebar(domesticJobs);
+
+// ================================================================
+// 过滤
+// ================================================================
+var currentFilter = 'all';
+
+document.querySelectorAll('.filter-tab').forEach(function(tab) {
+  tab.addEventListener('click', function() {
+    document.querySelectorAll('.filter-tab').forEach(function(t) { t.classList.remove('active'); });
+    tab.classList.add('active');
+    currentFilter = tab.dataset.filter;
+    applyFilter();
+  });
+});
+
+function applyFilter() {
+  var sortBy = document.getElementById('sort-select').value;
+  var visible = domesticJobs.filter(function(j) {
+    if (j.excluded) return false;
+    if (currentFilter === 'all') return true;
+    if (['sh','bj','gz','hz','sz','wh','cd','nj'].indexOf(currentFilter) >= 0) return j.cityCode === currentFilter;
+    if (currentFilter === 'intern') return j.type === 'Intern';
+    if (currentFilter === 'newgrad') return j.level === '校招' || j.level === '校招/社招';
+    return true;
+  });
+
+  if (sortBy === 'priority') visible.sort(function(a,b){ return b.priority - a.priority; });
+  else if (sortBy === 'salary') visible.sort(function(a,b){
+    if (!a.salary || !b.salary) return 0;
+    var sa = parseFloat(a.salary) || 0;
+    var sb = parseFloat(b.salary) || 0;
+    return sb - sa;
+  });
+  else if (sortBy === 'new') visible.sort(function(a,b){ return b.postedDate.localeCompare(a.postedDate); });
+
+  renderSidebar(visible);
+  renderMarkers(visible);
+}
+
+document.getElementById('sort-select').addEventListener('change', applyFilter);
+
+// 今日新岗位统计
+var newCount = domesticJobs.filter(function(j){ return !j.excluded && isToday(j.postedDate); }).length;
+document.getElementById('new-badge').textContent = newCount + ' 个今日新岗位';
+if (newCount === 0) document.getElementById('new-badge').style.background = 'rgba(255,255,255,0.3)';
+</script>
+</body>
+</html>

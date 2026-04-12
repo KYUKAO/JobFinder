@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>海外 TA 岗位地图 — TA Job Finder</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --primary: #007AFF;
+      --primary-light: #5AC8FA;
+      --accent: #FF6B35;
+      --accent-warm: #FF9500;
+      --success: #34C759;
+      --purple: #AF52DE;
+      --bg: #F5F7FA;
+      --card: #fff;
+      --text: #1A1A2E;
+      --text-secondary: #666;
+      --border: #E8ECF0;
+    }
+
+    body {
+      font-family: 'PingFang SC', 'Microsoft YaHei', 'Helvetica Neue', Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* Header */
+    header {
+      background: linear-gradient(135deg, #FF6B35, #FF9500);
+      padding: 0;
+      flex-shrink: 0;
+      box-shadow: 0 2px 12px rgba(255,107,53,0.3);
+      z-index: 10;
+    }
+    .header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 24px;
+      gap: 16px;
+    }
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .header-back {
+      background: rgba(255,255,255,0.2);
+      color: #fff;
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 600;
+      padding: 6px 14px;
+      border-radius: 20px;
+      transition: background 0.2s;
+    }
+    .header-back:hover { background: rgba(255,255,255,0.3); }
+    .header-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #fff;
+    }
+    .header-meta {
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.8);
+    }
+    #new-badge {
+      background: #fff;
+      color: var(--accent);
+      font-weight: 700;
+      font-size: 0.75rem;
+      padding: 3px 10px;
+      border-radius: 20px;
+    }
+
+    /* Filter bar */
+    .filter-bar {
+      background: var(--card);
+      padding: 10px 24px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .filter-tab {
+      padding: 5px 14px;
+      border-radius: 20px;
+      font-size: 0.78rem;
+      font-weight: 500;
+      cursor: pointer;
+      border: 1.5px solid transparent;
+      background: var(--bg);
+      color: var(--text-secondary);
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .filter-tab:hover { border-color: var(--primary); color: var(--primary-dark); }
+    .filter-tab.active { background: var(--primary-dark); color: #fff; border-color: var(--primary-dark); }
+    .filter-tab.active.indie { background: var(--accent-warm); border-color: var(--accent-warm); }
+    .filter-tab.active.intern { background: var(--purple); border-color: var(--purple); }
+    .filter-tab.active.fang { background: #00B4D8; border-color: #00B4D8; }
+
+    /* Main layout */
+    .container {
+      display: grid;
+      grid-template-columns: 360px 1fr;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      background: var(--card);
+      overflow-y: auto;
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+    }
+    .sidebar-header {
+      padding: 14px 20px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-secondary);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      background: var(--card);
+      z-index: 10;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .job-card {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+      transition: background 0.15s;
+      position: relative;
+    }
+    .job-card:hover, .job-card.active { background: #F8F9FF; }
+    .job-card.active { border-left: 3px solid var(--accent); }
+    .job-card.is-new { background: #FFF8F5; }
+    .job-card.is-new::after {
+      content: '🆕 今日新';
+      position: absolute;
+      top: 10px; right: 12px;
+      background: var(--accent);
+      color: #fff;
+      font-size: 0.62rem;
+      font-weight: 700;
+      padding: 1px 6px;
+      border-radius: 8px;
+    }
+    .job-card.hidden { display: none; }
+
+    .job-company {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--primary);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 4px;
+    }
+    .job-title {
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 6px;
+      line-height: 1.3;
+    }
+    .job-meta {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      font-size: 0.72rem;
+      color: var(--text-secondary);
+    }
+    .badge {
+      display: inline-block;
+      padding: 1px 8px;
+      border-radius: 20px;
+      font-size: 0.68rem;
+      font-weight: 600;
+    }
+    .badge-fulltime { background: #E8F4FF; color: var(--primary); }
+    .badge-contractor { background: #F3E8FF; color: var(--purple); }
+    .badge-aaa { background: #FFF0EB; color: var(--accent); }
+    .badge-indie { background: #FFF8E8; color: var(--accent-warm); }
+    .badge-fang { background: #E8F9FD; color: #00B4D8; }
+    .badge-salary { background: #E8F9ED; color: #34C759; }
+
+    .job-dist {
+      font-size: 0.72rem;
+      color: var(--accent);
+      font-weight: 600;
+      margin-top: 6px;
+    }
+
+    /* Map */
+    .map-wrapper { position: relative; }
+    #map { width: 100%; height: 100%; }
+
+    /* Legend */
+    .map-legend {
+      position: absolute;
+      bottom: 24px;
+      right: 16px;
+      background: rgba(255,255,255,0.95);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 16px;
+      font-size: 0.75rem;
+      z-index: 1000;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+    }
+    .map-legend h4 {
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 5px;
+      color: var(--text);
+    }
+    .legend-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .dot-uou { background: #e94560; }
+    .dot-aaa { background: var(--accent); }
+    .dot-fang { background: #00B4D8; }
+    .dot-indie { background: var(--accent-warm); }
+    .dot-new { background: var(--accent); border: 2px solid #fff; box-shadow: 0 0 6px var(--accent); }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .container { grid-template-columns: 1fr; grid-template-rows: 260px 1fr; }
+      .sidebar { order: 2; }
+      .map-wrapper { order: 1; }
+    }
+
+    /* Scrollbar */
+    .sidebar::-webkit-scrollbar { width: 4px; }
+    .sidebar::-webkit-scrollbar-track { background: var(--border); }
+    .sidebar::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 4px; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="header-left">
+      <a href="index.html" class="header-back">← 首页</a>
+      <div>
+        <div class="header-title">🌎 海外 TA 岗位地图</div>
+        <div class="header-meta">University of Utah 为起点 · 通勤距离一览</div>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <span id="new-badge">— 个今日新岗位</span>
+    </div>
+  </div>
+</header>
+
+<div class="filter-bar">
+  <span class="filter-tab active" data-filter="all">全部</span>
+  <span class="filter-tab" data-filter="aaa">AAA</span>
+  <span class="filter-tab" data-filter="indie">Indie</span>
+  <span class="filter-tab" data-filter="fang">Big Tech</span>
+  <span class="filter-tab" data-filter="intern">实习</span>
+  <div style="flex:1;"></div>
+  <span style="font-size:0.72rem;color:#999;">排序：</span>
+  <select id="sort-select" style="font-size:0.75rem;padding:4px 8px;border-radius:8px;border:1px solid var(--border);">
+    <option value="priority">优先级</option>
+    <option value="distance">距离</option>
+    <option value="new">最新发布</option>
+  </select>
+</div>
+
+<div class="container">
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <span>Open Positions</span>
+      <span id="visible-count" style="font-weight:400;color:var(--accent);">0 / 0</span>
+    </div>
+    <div id="job-list"></div>
+  </div>
+
+  <div class="map-wrapper">
+    <div id="map"></div>
+    <div class="map-legend">
+      <h4>Legend</h4>
+      <div class="legend-item"><div class="legend-dot dot-uou"></div>University of Utah（当前位置）</div>
+      <div class="legend-item"><div class="legend-dot dot-aaa"></div>AAA 游戏公司</div>
+      <div class="legend-item"><div class="legend-dot dot-fang"></div>Big Tech</div>
+      <div class="legend-item"><div class="legend-dot dot-indie"></div>Indie</div>
+      <div class="legend-item"><div class="legend-dot dot-new"></div>🆕 今日新岗位</div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ================================================================
+// 岗位数据（每次更新时修改 postedDate）
+// ================================================================
+var UOU = [40.7649, -111.8421]; // 201 Presidents Cir, SLC
+
+var overseasJobs = [
+  {
+    id: 1,
+    name: "Associate Technical Artist, Characters",
+    company: "Avalanche / WB Games",
+    address: "282 W 3900 S, South Salt Lake, UT",
+    lat: 40.7000,
+    lng: -111.9022,
+    category: "aaa",
+    type: "Full-time",
+    priority: 3,
+    salary: "—",
+    distance: { label: "U of U", text: "~6.2 mi" },
+    url: "https://www.linkedin.com/jobs/view/4394955921/",
+    postedDate: "2026-04-12",
+    excluded: false
+  },
+  {
+    id: 2,
+    name: "Advanced Technical Artist, Environment",
+    company: "Avalanche / WB Games",
+    address: "282 W 3900 S, South Salt Lake, UT",
+    lat: 40.7000,
+    lng: -111.9022,
+    category: "aaa",
+    type: "Full-time",
+    priority: 3,
+    salary: "$151K–$281K",
+    distance: { label: "U of U", text: "~6.2 mi" },
+    url: "https://careers.wbd.com/global/en/job/R000104174/",
+    postedDate: "2026-04-12",
+    excluded: false
+  },
+  {
+    id: 3,
+    name: "Lead Technical Artist — Characters",
+    company: "Warner Bros. Discovery",
+    address: "282 W 3900 S, South Salt Lake, UT",
+    lat: 40.7000,
+    lng: -111.9022,
+    category: "aaa",
+    type: "Full-time",
+    priority: 3,
+    salary: "—",
+    distance: { label: "U of U", text: "~6.2 mi" },
+    url: "https://www.showbizjobs.com/jobs/warner-bros-discovery-lead-technical-artist-characters-in-salt-lake-city/jid-yjk5jk",
+    postedDate: "2026-04-10",
+    excluded: false
+  },
+  {
+    id: 4,
+    name: "Technical Artist — Rendering",
+    company: "Meta",
+    address: "10407 S Commerce Center Dr, South Jordan, UT",
+    lat: 40.5623,
+    lng: -111.9838,
+    category: "fang",
+    type: "Contractor",
+    priority: 2,
+    salary: "$57K–$141K",
+    distance: { label: "U of U", text: "~17.5 mi" },
+    url: "https://www.zippia.com/technical-artist-salt-lake-city-ut-jobs/",
+    postedDate: "2026-04-09",
+    excluded: false
+  }
+];
+
+// ================================================================
+// 判断今日新
+// ================================================================
+var today = new Date();
+var todayStr = today.getFullYear() + '-' + String(today.getMonth()+1).padStart(2,'0') + '-' + String(today.getDate()).padStart(2,'0');
+
+function isToday(dateStr) {
+  return dateStr === todayStr;
+}
+
+// ================================================================
+// 距离计算
+// ================================================================
+function getDistance(lat1, lon1, lat2, lon2) {
+  var R = 3958.8;
+  var dLat = (lat2 - lat1) * Math.PI / 180;
+  var dLon = (lon2 - lon1) * Math.PI / 180;
+  var a = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)**2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+}
+
+// ================================================================
+// 颜色
+// ================================================================
+function getCatColor(cat) {
+  return { aaa: '#FF6B35', indie: '#FF9500', intern: '#AF52DE', fang: '#00B4D8' }[cat] || '#5AC8FA';
+}
+
+// ================================================================
+// 图标
+// ================================================================
+function mkIcon(color, sz, isNew) {
+  sz = sz || 14;
+  var glow = isNew ? 'box-shadow:0 0 10px ' + color + ';' : '';
+  return L.divIcon({
+    className: '',
+    html: '<div style="width:' + sz + 'px;height:' + sz + 'px;background:' + color + ';border:' + (isNew ? '3px' : '2.5px') + ' solid #fff;border-radius:50%;' + glow + '"></div>',
+    iconSize: [sz, sz], iconAnchor: [sz/2, sz/2]
+  });
+}
+
+// ================================================================
+// 地图
+// ================================================================
+var map = L.map('map', { zoomControl: true, scrollWheelZoom: true }).setView(UOU, 11);
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  attribution: '&copy; OSM', maxZoom: 19
+}).addTo(map);
+
+// U of U marker
+L.marker(UOU, { icon: mkIcon('#e94560', 20) })
+  .addTo(map)
+  .bindPopup('<b style="color:#e94560">University of Utah</b><br><small>当前位置 · 201 Presidents Cir</small>');
+
+var markerMap = {};
+
+function renderMarkers(visibleJobs) {
+  // 清除旧标记
+  Object.values(markerMap).forEach(function(m) { map.removeLayer(m); });
+  markerMap = {};
+
+  visibleJobs.forEach(function(j) {
+    if (j.excluded) return;
+    var color = getCatColor(j.category);
+    var isNew = isToday(j.postedDate);
+    var markerColor = isNew ? '#FF6B35' : color;
+    var m = L.marker([j.lat, j.lng], { icon: mkIcon(markerColor, isNew ? 18 : 14, isNew) }).addTo(map);
+    m.bindPopup(buildPopup(j));
+    markerMap[j.id] = m;
+  });
+}
+
+function buildPopup(j) {
+  var stars = '⭐'.repeat(j.priority);
+  var isNew = isToday(j.postedDate);
+  var newTag = isNew ? '<span style="background:#FF6B35;color:#fff;padding:2px 8px;border-radius:8px;font-size:0.75rem;font-weight:700;margin-bottom:6px;display:inline-block;">🆕 今日新</span><br><br>' : '';
+  return '<b style="color:' + getCatColor(j.category) + '">' + j.company + '</b><br>' +
+    '<b>' + j.name + '</b><br><small>' + j.address + '</small><br><br>' +
+    newTag +
+    (j.distance ? '<b>📍 距 U of U：</b>' + j.distance.text + '<br>' : '') +
+    '<b>🏷 类型：</b>' + j.type + '<br>' +
+    (j.salary !== '—' ? '<b>💰 薪资：</b>' + j.salary + '<br>' : '') +
+    '<b>优先级：</b>' + stars + '<br><br>' +
+    '<a href="' + j.url + '" target="_blank" style="color:#007AFF;font-size:0.85em;">🔗 查看职位 →</a>';
+}
+
+// 初始渲染
+renderMarkers(overseasJobs);
+
+// ================================================================
+// 侧边栏
+// ================================================================
+function renderSidebar(visibleJobs) {
+  var listEl = document.getElementById('job-list');
+  document.getElementById('visible-count').textContent = visibleJobs.length + ' / ' + overseasJobs.length;
+
+  listEl.innerHTML = '';
+  visibleJobs.forEach(function(j) {
+    if (j.excluded) return;
+    var isNew = isToday(j.postedDate);
+    var catBadgeClass = { aaa: 'badge-aaa', indie: 'badge-indie', fang: 'badge-fang', intern: 'badge-intern' }[j.category] || '';
+    var typeClass = { 'Full-time': 'badge-fulltime', 'Contractor': 'badge-contractor', 'Intern': 'badge-intern' }[j.type] || 'badge-fulltime';
+    var salaryBadge = (j.salary && j.salary !== '—') ? '<span class="badge badge-salary">' + j.salary + '</span>' : '';
+
+    var el = document.createElement('div');
+    el.className = 'job-card' + (isNew ? ' is-new' : '');
+    el.id = 'card-' + j.id;
+    el.innerHTML =
+      '<div class="job-company">' + j.company + '</div>' +
+      '<div class="job-title">' + j.name + '</div>' +
+      '<div class="job-meta">' +
+        '<span class="badge ' + typeClass + '">' + j.type + '</span>' +
+        (catBadgeClass ? '<span class="badge ' + catBadgeClass + '">' + j.category.toUpperCase() + '</span>' : '') +
+        salaryBadge +
+      '</div>' +
+      (j.distance ? '<div class="job-dist">📍 ' + j.distance.label + ' ' + j.distance.text + '</div>' : '');
+
+    el.addEventListener('click', function() { focusJob(j.id); });
+    listEl.appendChild(el);
+  });
+}
+
+function focusJob(id) {
+  document.querySelectorAll('.job-card').forEach(function(c) { c.classList.remove('active'); });
+  var card = document.getElementById('card-' + id);
+  if (card) { card.classList.add('active'); card.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
+
+  var job = overseasJobs.find(function(j) { return j.id === id; });
+  if (job && markerMap[id]) {
+    map.setView([job.lat, job.lng], 13, { animate: true });
+    setTimeout(function() { markerMap[id].openPopup(); }, 200);
+  }
+}
+
+renderSidebar(overseasJobs);
+
+// ================================================================
+// 过滤
+// ================================================================
+var currentFilter = 'all';
+
+document.querySelectorAll('.filter-tab').forEach(function(tab) {
+  tab.addEventListener('click', function() {
+    document.querySelectorAll('.filter-tab').forEach(function(t) { t.classList.remove('active'); });
+    tab.classList.add('active');
+    currentFilter = tab.dataset.filter;
+    applyFilter();
+  });
+});
+
+function applyFilter() {
+  var sortBy = document.getElementById('sort-select').value;
+  var visible = overseasJobs.filter(function(j) {
+    if (j.excluded) return false;
+    if (currentFilter === 'all') return true;
+    return j.category === currentFilter;
+  });
+
+  if (sortBy === 'priority') visible.sort(function(a,b){ return b.priority - a.priority; });
+  else if (sortBy === 'distance') visible.sort(function(a,b){
+    if (!a.distance || !b.distance) return 0;
+    return parseFloat(a.distance.text) - parseFloat(b.distance.text);
+  });
+  else if (sortBy === 'new') visible.sort(function(a,b){ return b.postedDate.localeCompare(a.postedDate); });
+
+  renderSidebar(visible);
+  renderMarkers(visible);
+}
+
+document.getElementById('sort-select').addEventListener('change', applyFilter);
+
+// 今日新岗位统计
+var newCount = overseasJobs.filter(function(j){ return !j.excluded && isToday(j.postedDate); }).length;
+document.getElementById('new-badge').textContent = newCount + ' 个今日新岗位';
+if (newCount === 0) document.getElementById('new-badge').style.background = 'rgba(255,255,255,0.3)';
+</script>
+</body>
+</html>
