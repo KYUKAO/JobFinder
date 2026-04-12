@@ -279,9 +279,35 @@
     .mtp-new { color: #FF6B35; font-weight: 700; margin-top: 4px; }
 
     @media (max-width: 768px) {
-      .container { grid-template-columns: 1fr; grid-template-rows: 260px 1fr; }
-      .sidebar { order: 2; }
+      .header-inner { padding: 10px 16px; }
+      .header-back { padding: 5px 10px; font-size: 0.8rem; }
+      .header-title { font-size: 0.95rem; }
+      .header-meta { display: none; }
+      .filter-bar { padding: 8px 12px; gap: 6px; overflow-x: auto; flex-wrap: nowrap; -webkit-overflow-scrolling: touch; }
+      .filter-tab { padding: 4px 10px; font-size: 0.72rem; flex-shrink: 0; }
+      .container {
+        grid-template-columns: 1fr;
+        grid-template-rows: 240px 1fr;
+      }
+      .sidebar { order: 2; border-right: none; border-top: 1px solid var(--border); }
+      .sidebar-header { font-size: 0.65rem; padding: 10px 14px; }
+      .job-card { padding: 10px 12px; }
+      .job-title { font-size: 0.85rem; }
+      .job-company { font-size: 0.72rem; }
+      .job-salary { font-size: 0.78rem; }
+      .job-meta { font-size: 0.62rem; }
       .map-wrapper { order: 1; }
+      .map-legend { display: none; }
+      .marker-tooltip { font-size: 0.72rem; padding: 8px 10px; }
+      #map { touch-action: none; }
+      .jd-section { padding: 12px; }
+      .jd-content { font-size: 0.75rem; line-height: 1.6; }
+      .jd-apply-btn { font-size: 0.8rem; padding: 8px 0; }
+    }
+    @media (max-width: 480px) {
+      .container { grid-template-rows: 200px 1fr; }
+      .filter-tab { padding: 3px 8px; font-size: 0.68rem; }
+      .header-inner { padding: 8px 12px; }
     }
     .sidebar::-webkit-scrollbar { width: 4px; }
     .sidebar::-webkit-scrollbar-track { background: var(--border); }
@@ -360,7 +386,7 @@ var overseasJobs = [
     priority: 3,
     salary: "—",
     distance: "~6.2 mi · ~12 min",
-    url: "https://www.linkedin.com/jobs/view/4394955921/",
+    url: "https://www.linkedin.com/jobs/search/?keywords=Technical%20Artist&location=Salt%20Lake%20City%2C%20UT",
     postedDate: "2026-04-12",
     excluded: false,
     jd: "The Associate Technical Artist will work closely with the Character Art team to develop and maintain character asset pipelines. Responsibilities include creating and maintaining character rigs and deformation tools; troubleshooting character performance issues; collaborating with animators to ensure proper deformation and skin weighting; developing Maya scripts and tools to streamline character workflows. Requirements: Strong Maya and rigging knowledge; proficiency in Python/MEL scripting; experience with game engine character import pipelines; understanding of character deformation and skin weighting. This role is hybrid (3 days in-office) in South Salt Lake."
@@ -377,7 +403,7 @@ var overseasJobs = [
     priority: 3,
     salary: "$151K–$281K",
     distance: "~6.2 mi · ~12 min",
-    url: "https://careers.wbd.com/global/en/job/R000104174/",
+    url: "https://careers.wbd.com/global/en/search/?keywords=Technical%20Artist",
     postedDate: "2026-04-12",
     excluded: false,
     jd: "The Advanced Technical Artist will be responsible for developing environment art pipelines and tools for the Avalanche Studio's open-world game. Responsibilities: architect and maintain environment asset pipelines (terrain, foliage, architecture); develop Houdini and Python scripts for procedural environment workflows; optimize environment assets for real-time rendering; collaborate with environment artists to solve complex technical challenges. Requirements: 5+ years of technical art experience; expert-level Houdini, Python, and shader authoring; deep understanding of real-time rendering optimization; experience with open-world game environment pipelines. Salary range: $151K–$281K depending on experience."
@@ -394,7 +420,7 @@ var overseasJobs = [
     priority: 3,
     salary: "—",
     distance: "~6.2 mi · ~12 min",
-    url: "https://www.showbizjobs.com/jobs/warner-bros-discovery-lead-technical-artist-characters-in-salt-lake-city/jid-yjk5jk",
+    url: "https://careers.wbd.com/global/en/search/?keywords=Technical%20Artist",
     postedDate: "2026-04-10",
     excluded: false,
     jd: "The Lead Technical Artist will oversee the character technical art team, ensuring high-quality character assets across all projects. Responsibilities: lead and mentor the character TA team; define and enforce character technical standards; work with outsourcing teams to maintain quality; prototype new character pipeline technologies. Requirements: 8+ years in technical art with 2+ years in a leadership role; expert knowledge of Maya, Unreal Engine, and character deformation; strong communication and team leadership skills; experience shipping AAA titles."
@@ -411,7 +437,7 @@ var overseasJobs = [
     priority: 2,
     salary: "$57K–$141K",
     distance: "~17.5 mi · ~22 min",
-    url: "https://www.zippia.com/technical-artist-salt-lake-city-ut-jobs/",
+    url: "https://www.metacareers.com/jobs?keywords=Technical%20Artist",
     postedDate: "2026-04-09",
     excluded: false,
     jd: "The Technical Artist will support Meta's Reality Labs AR/VR rendering team. Responsibilities: develop and optimize shaders for AR/VR applications; research and implement advanced rendering techniques; collaborate with engineers to integrate art assets into real-time rendering pipelines; create technical documentation and art pipelines for AR/VR content. Requirements: strong knowledge of rendering pipelines and GPU architecture; proficiency in shader languages (HLSL, GLSL); experience with AR/VR rendering optimization; understanding of mobile GPU constraints. Note: This is a contractor role (W2) with potential conversion to full-time."

@@ -374,9 +374,32 @@
     }
 
     @media (max-width: 768px) {
-      .nav-grid { grid-template-columns: 1fr; }
-      .info-bar { grid-template-columns: 1fr 1fr; }
-      header h1 { font-size: 1.8rem; }
+      header { padding: 36px 20px 48px; }
+      .header-eyebrow { font-size: 0.62rem; }
+      header h1 { font-size: 1.6rem; }
+      header p { font-size: 0.82rem; }
+      .main { padding: 24px 16px 40px; }
+      .section-title { font-size: 0.75rem; }
+      .nav-grid { grid-template-columns: 1fr; gap: 12px; }
+      .nav-card { padding: 18px 16px; }
+      .card-number { font-size: 1.4rem; }
+      .card-title { font-size: 1rem; }
+      .card-desc { font-size: 0.78rem; }
+      .card-tags { margin-top: 12px; }
+      .info-bar { grid-template-columns: 1fr 1fr; gap: 10px; padding: 16px 18px; }
+      .info-num { font-size: 1.3rem; }
+      .info-label { font-size: 0.65rem; }
+      footer { padding: 16px; font-size: 0.65rem; }
+      /* 搜索栏 */
+      .search-bar { padding: 8px 14px; }
+      .search-input { font-size: 0.85rem; }
+      .search-hint { font-size: 0.65rem; }
+    }
+    @media (max-width: 480px) {
+      header h1 { font-size: 1.35rem; }
+      .nav-card { padding: 14px 12px; }
+      .card-icon { font-size: 1.5rem; }
+      .info-bar { padding: 14px 12px; }
     }
   </style>
 </head>
