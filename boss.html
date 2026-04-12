@@ -273,6 +273,41 @@
       margin-bottom: 5px;
       color: var(--text);
     }
+
+    /* ================================================================
+       Marker 脉冲动画（今日新岗位）
+    ================================================================ */
+    @keyframes markerPulse {
+      0% { box-shadow: 0 0 0 0 rgba(255,107,53,0.6); }
+      70% { box-shadow: 0 0 0 12px rgba(255,107,53,0); }
+      100% { box-shadow: 0 0 0 0 rgba(255,107,53,0); }
+    }
+    .marker-new {
+      animation: markerPulse 2s ease-out infinite;
+    }
+
+    /* Hover tooltip 跟随鼠标 */
+    .marker-tooltip {
+      position: fixed;
+      z-index: 9999;
+      background: rgba(26,26,46,0.92);
+      color: #fff;
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 0.78rem;
+      line-height: 1.5;
+      max-width: 220px;
+      pointer-events: none;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+      transition: opacity 0.15s;
+      opacity: 0;
+    }
+    .marker-tooltip.visible { opacity: 1; }
+    .marker-tooltip .mtp-company { font-weight: 700; font-size: 0.82rem; }
+    .marker-tooltip .mtp-title { font-size: 0.8rem; margin-top: 4px; }
+    .marker-tooltip .mtp-salary { color: #34C759; font-weight: 600; margin-top: 4px; }
+    .marker-tooltip .mtp-new { color: #FF6B35; font-weight: 700; margin-top: 4px; }
     .legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
 
     @media (max-width: 768px) {
@@ -300,6 +335,14 @@
     <span id="new-badge">— 个今日新岗位</span>
   </div>
 </header>
+
+<!-- 悬浮 tooltip -->
+<div class="marker-tooltip" id="marker-tooltip">
+  <div class="mtp-company" id="mtp-company"></div>
+  <div class="mtp-title" id="mtp-title"></div>
+  <div class="mtp-salary" id="mtp-salary"></div>
+  <div class="mtp-new" id="mtp-new"></div>
+</div>
 
 <div class="filter-bar">
   <span class="filter-tab active" data-filter="all">全部城市</span>
@@ -502,7 +545,8 @@ function getCityColor(c) { return { sh:'#FF9500', bj:'#007AFF', gz:'#FF3B30', hz
 function mkIcon(color, sz, isNew) {
   sz = sz || 14;
   var glow = isNew ? 'box-shadow:0 0 10px ' + color + ';' : '';
-  return L.divIcon({ className:'', html:'<div style="width:'+sz+'px;height:'+sz+'px;background:'+color+';border:'+(isNew?'3px':'2.5px')+' solid #fff;border-radius:50%;'+glow+'"></div>', iconSize:[sz,sz], iconAnchor:[sz/2,sz/2] });
+  var anim = isNew ? 'animation:markerPulse 2s ease-out infinite;' : '';
+  return L.divIcon({ className: isNew ? 'marker-new' : '', html:'<div style="width:'+sz+'px;height:'+sz+'px;background:'+color+';border:'+(isNew?'3px':'2.5px')+' solid #fff;border-radius:50%;'+glow+anim+'"></div>', iconSize:[sz,sz], iconAnchor:[sz/2,sz/2] });
 }
 
 var map = L.map('map', { zoomControl:true, scrollWheelZoom:true }).setView([30.5,120.0], 5);
@@ -602,6 +646,47 @@ function focusJob(id) {
 
 renderSidebar(domesticJobs);
 renderMarkers(domesticJobs);
+
+// ================================================================
+// Marker Hover Tooltip
+// ================================================================
+var tooltip = document.getElementById('marker-tooltip');
+var tooltipCompany = document.getElementById('mtp-company');
+var tooltipTitle = document.getElementById('mtp-title');
+var tooltipSalary = document.getElementById('mtp-salary');
+var tooltipNew = document.getElementById('mtp-new');
+
+document.addEventListener('mousemove', function(e) {
+  tooltip.style.left = (e.clientX + 14) + 'px';
+  tooltip.style.top = (e.clientY - 10) + 'px';
+});
+
+// 为 marker 绑定 hover 事件
+function bindMarkerHover() {
+  Object.keys(markerMap).forEach(function(id) {
+    var marker = markerMap[id];
+    var job = domesticJobs.find(function(j){ return j.id === parseInt(id); });
+    if (!job) return;
+
+    marker.on('mouseover', function() {
+      tooltipCompany.textContent = '[' + job.city + '] ' + job.company;
+      tooltipTitle.textContent = job.name;
+      tooltipSalary.textContent = job.salary ? job.salary : '';
+      var isNew = isToday(job.postedDate);
+      tooltipNew.textContent = isNew ? '🆕 今日新岗位' : '';
+      tooltip.classList.add('visible');
+    });
+    marker.on('mouseout', function() {
+      tooltip.classList.remove('visible');
+    });
+    marker.on('click', function() {
+      tooltip.classList.remove('visible');
+    });
+  });
+}
+
+// marker 渲染后延迟绑定 hover
+setTimeout(bindMarkerHover, 500);
 
 var currentFilter = 'all';
 document.querySelectorAll('.filter-tab').forEach(function(tab) {

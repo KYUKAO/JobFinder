@@ -253,6 +253,31 @@
     }
     .legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
 
+    /* Marker pulse animation */
+    @keyframes markerPulse {
+      0% { box-shadow: 0 0 0 0 rgba(255,107,53,0.6); }
+      70% { box-shadow: 0 0 0 12px rgba(255,107,53,0); }
+      100% { box-shadow: 0 0 0 0 rgba(255,107,53,0); }
+    }
+    .marker-new { animation: markerPulse 2s ease-out infinite; }
+
+    /* Hover tooltip */
+    .marker-tooltip {
+      position: fixed; z-index: 9999;
+      background: rgba(26,26,46,0.92); color: #fff;
+      padding: 10px 14px; border-radius: 10px;
+      font-size: 0.78rem; line-height: 1.5;
+      max-width: 220px; pointer-events: none;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+      transition: opacity 0.15s; opacity: 0;
+    }
+    .marker-tooltip.visible { opacity: 1; }
+    .mtp-company { font-weight: 700; font-size: 0.82rem; }
+    .mtp-title { font-size: 0.8rem; margin-top: 4px; }
+    .mtp-salary { color: #34C759; font-weight: 600; margin-top: 4px; }
+    .mtp-new { color: #FF6B35; font-weight: 700; margin-top: 4px; }
+
     @media (max-width: 768px) {
       .container { grid-template-columns: 1fr; grid-template-rows: 260px 1fr; }
       .sidebar { order: 2; }
@@ -277,6 +302,13 @@
     <span id="new-badge">— 个今日新岗位</span>
   </div>
 </header>
+
+<div class="marker-tooltip" id="marker-tooltip">
+  <div class="mtp-company" id="mtp-company"></div>
+  <div class="mtp-title" id="mtp-title"></div>
+  <div class="mtp-salary" id="mtp-salary"></div>
+  <div class="mtp-new" id="mtp-new"></div>
+</div>
 
 <div class="filter-bar">
   <span class="filter-tab active" data-filter="all">全部</span>
@@ -394,7 +426,8 @@ function getCatColor(c) { return { aaa:'#FF6B35', indie:'#FF9500', fang:'#00B4D8
 function mkIcon(color, sz, isNew) {
   sz = sz || 14;
   var glow = isNew ? 'box-shadow:0 0 10px ' + color + ';' : '';
-  return L.divIcon({ className:'', html:'<div style="width:'+sz+'px;height:'+sz+'px;background:'+color+';border:'+(isNew?'3px':'2.5px')+' solid #fff;border-radius:50%;'+glow+'"></div>', iconSize:[sz,sz], iconAnchor:[sz/2,sz/2] });
+  var anim = isNew ? 'animation:markerPulse 2s ease-out infinite;' : '';
+  return L.divIcon({ className: isNew ? 'marker-new' : '', html:'<div style="width:'+sz+'px;height:'+sz+'px;background:'+color+';border:'+(isNew?'3px':'2.5px')+' solid #fff;border-radius:50%;'+glow+anim+'"></div>', iconSize:[sz,sz], iconAnchor:[sz/2,sz/2] });
 }
 
 var map = L.map('map', { zoomControl:true, scrollWheelZoom:true }).setView(UOU, 11);
@@ -491,6 +524,29 @@ function focusJob(id) {
 
 renderSidebar(overseasJobs);
 renderMarkers(overseasJobs);
+
+// Marker hover tooltip
+var tooltip = document.getElementById('marker-tooltip');
+document.addEventListener('mousemove', function(e) {
+  tooltip.style.left = (e.clientX + 14) + 'px';
+  tooltip.style.top = (e.clientY - 10) + 'px';
+});
+setTimeout(function() {
+  Object.keys(markerMap).forEach(function(id) {
+    var marker = markerMap[id];
+    var job = overseasJobs.find(function(j){ return j.id === parseInt(id); });
+    if (!job) return;
+    marker.on('mouseover', function() {
+      document.getElementById('mtp-company').textContent = job.company;
+      document.getElementById('mtp-title').textContent = job.name;
+      document.getElementById('mtp-salary').textContent = job.salary && job.salary !== '—' ? job.salary : '';
+      document.getElementById('mtp-new').textContent = isToday(job.postedDate) ? '🆕 今日新岗位' : '';
+      tooltip.classList.add('visible');
+    });
+    marker.on('mouseout', function() { tooltip.classList.remove('visible'); });
+    marker.on('click', function() { tooltip.classList.remove('visible'); });
+  });
+}, 600);
 
 var currentFilter = 'all';
 document.querySelectorAll('.filter-tab').forEach(function(tab) {
