@@ -1,0 +1,1146 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SLC TA Jobs — 从 University of Utah 出发的职位地图</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --primary: #5AC8FA;
+      --primary-dark: #007AFF;
+      --accent: #FF6B35;
+      --accent-warm: #FF9500;
+      --success: #34C759;
+      --danger: #FF3B30;
+      --purple: #AF52DE;
+      --bg: #F5F7FA;
+      --card: #fff;
+      --card-hover: #FAFBFC;
+      --text: #1A1A2E;
+      --text-secondary: #666;
+      --text-muted: #999;
+      --border: #E8ECF0;
+      --shadow: 0 2px 12px rgba(0,0,0,0.08);
+      --shadow-hover: 0 4px 20px rgba(0,0,0,0.12);
+      --radius: 12px;
+      --radius-sm: 8px;
+    }
+
+    body {
+      font-family: 'PingFang SC', 'Microsoft YaHei', 'Helvetica Neue', Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* ===== HEADER ===== */
+    header {
+      background: linear-gradient(135deg, #007AFF 0%, #5AC8FA 100%);
+      padding: 0;
+      flex-shrink: 0;
+      box-shadow: 0 2px 12px rgba(0,122,255,0.3);
+    }
+    .header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 28px;
+    }
+    .header-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .header-logo {
+      width: 36px;
+      height: 36px;
+      background: rgba(255,255,255,0.25);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+    }
+    .header-text h1 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #fff;
+    }
+    .header-text p {
+      font-size: 0.72rem;
+      color: rgba(255,255,255,0.8);
+      margin-top: 1px;
+    }
+    .header-actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+    .header-stat {
+      background: rgba(255,255,255,0.2);
+      border-radius: 20px;
+      padding: 5px 14px;
+      font-size: 0.78rem;
+      color: #fff;
+      backdrop-filter: blur(8px);
+    }
+    .header-stat strong {
+      font-weight: 700;
+    }
+    .header-badge {
+      background: #fff;
+      color: var(--primary-dark);
+      border-radius: 20px;
+      padding: 5px 14px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    /* ===== FILTER BAR ===== */
+    .filter-bar {
+      background: #fff;
+      padding: 10px 24px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .filter-group {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .filter-sep {
+      width: 1px;
+      height: 22px;
+      background: var(--border);
+      margin: 0 4px;
+    }
+    .filter-tab {
+      padding: 5px 14px;
+      border-radius: 20px;
+      font-size: 0.78rem;
+      font-weight: 500;
+      cursor: pointer;
+      border: 1.5px solid transparent;
+      background: var(--bg);
+      color: var(--text-secondary);
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .filter-tab:hover {
+      border-color: var(--primary);
+      color: var(--primary-dark);
+    }
+    .filter-tab.active {
+      background: var(--primary-dark);
+      color: #fff;
+      border-color: var(--primary-dark);
+    }
+    .filter-tab.active.indie {
+      background: var(--accent-warm);
+      border-color: var(--accent-warm);
+    }
+    .filter-tab.active.intern {
+      background: var(--purple);
+      border-color: var(--purple);
+    }
+    .filter-tab.active.fang {
+      background: #00B4D8;
+      border-color: #00B4D8;
+    }
+
+    /* Dist filter */
+    .dist-filter {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-left: 4px;
+    }
+    .dist-filter label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+    .dist-slider {
+      -webkit-appearance: none;
+      width: 110px;
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary) 0%, var(--border) 0%);
+      border-radius: 2px;
+      outline: none;
+    }
+    .dist-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 16px;
+      height: 16px;
+      background: var(--primary-dark);
+      border-radius: 50%;
+      cursor: pointer;
+      box-shadow: 0 1px 4px rgba(0,122,255,0.3);
+    }
+    .dist-val {
+      font-size: 0.75rem;
+      color: var(--primary-dark);
+      font-weight: 600;
+      min-width: 44px;
+    }
+
+    /* Sort dropdown */
+    .sort-wrapper {
+      margin-left: auto;
+      position: relative;
+    }
+    .sort-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 12px;
+      border-radius: var(--radius-sm);
+      border: 1.5px solid var(--border);
+      background: #fff;
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .sort-btn:hover { border-color: var(--primary); color: var(--primary-dark); }
+    .sort-btn svg { width: 14px; height: 14px; }
+    .sort-dropdown {
+      position: absolute;
+      top: calc(100% + 4px);
+      right: 0;
+      background: #fff;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      box-shadow: var(--shadow-hover);
+      z-index: 100;
+      min-width: 120px;
+      display: none;
+    }
+    .sort-dropdown.show { display: block; }
+    .sort-option {
+      padding: 8px 14px;
+      font-size: 0.78rem;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .sort-option:hover { background: var(--bg); }
+    .sort-option.active { color: var(--primary-dark); font-weight: 600; }
+
+    /* ===== MAIN ===== */
+    .main-wrapper {
+      display: grid;
+      grid-template-columns: 400px 1fr;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    /* ===== SIDEBAR ===== */
+    .sidebar {
+      background: var(--bg);
+      overflow-y: auto;
+      border-right: 1px solid var(--border);
+    }
+    .sidebar-header {
+      padding: 12px 20px;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+    .sidebar-header strong { color: var(--primary-dark); }
+
+    /* ===== JOB CARD ===== */
+    .job-list { padding: 8px 12px; display: flex; flex-direction: column; gap: 10px; }
+
+    .job-card {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 16px;
+      cursor: pointer;
+      border: 1.5px solid var(--border);
+      transition: all 0.2s;
+      position: relative;
+      box-shadow: var(--shadow);
+    }
+    .job-card:hover {
+      border-color: var(--primary);
+      box-shadow: var(--shadow-hover);
+      transform: translateY(-1px);
+    }
+    .job-card.active {
+      border-color: var(--primary-dark);
+      background: linear-gradient(135deg, #fff 0%, #EEF6FF 100%);
+      box-shadow: 0 0 0 3px rgba(0,122,255,0.12), var(--shadow-hover);
+    }
+
+    /* Card top */
+    .jc-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 8px;
+      gap: 8px;
+    }
+    .jc-company {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      margin-bottom: 3px;
+    }
+    .jc-company.aaa { color: var(--danger); }
+    .jc-company.indie { color: var(--accent-warm); }
+    .jc-company.intern { color: var(--purple); }
+    .jc-company.fang { color: #00B4D8; }
+    .jc-company.school { color: var(--text-muted); }
+
+    .jc-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.35;
+      margin-bottom: 8px;
+    }
+
+    /* Tags */
+    .jc-tags {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+    .jc-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      padding: 3px 9px;
+      border-radius: 20px;
+      font-size: 0.7rem;
+      font-weight: 600;
+    }
+    .tag-remote { background: #E8F8EF; color: #1A9F5A; }
+    .tag-hybrid { background: #FFF4E6; color: #E67E22; }
+    .tag-onsite { background: #FFEBEB; color: #E74C3C; }
+    .tag-type { background: var(--bg); color: var(--text-secondary); }
+    .tag-urgent { background: #FFEBEB; color: var(--danger); }
+
+    /* Meta row */
+    .jc-meta {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      flex-wrap: wrap;
+      margin-bottom: 8px;
+    }
+    .jc-meta .dist {
+      color: var(--primary-dark);
+      font-weight: 700;
+      font-size: 0.8rem;
+    }
+    .jc-meta .sep { color: var(--border); }
+    .jc-meta .level { color: var(--text); font-weight: 600; }
+    .jc-meta .level span {
+      background: #FFF3E0;
+      color: var(--accent-warm);
+      padding: 1px 5px;
+      border-radius: 4px;
+      font-weight: 700;
+      font-size: 0.7rem;
+    }
+
+    /* Salary + deadline */
+    .jc-row2 {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .jc-salary {
+      font-size: 1rem;
+      font-weight: 800;
+      color: var(--danger);
+    }
+    .jc-deadline {
+      font-size: 0.72rem;
+      padding: 3px 9px;
+      border-radius: 20px;
+      font-weight: 500;
+    }
+    .ddl-soon { background: #FFEBEB; color: var(--danger); }
+    .ddl-week { background: #FFF4E6; color: var(--accent-warm); }
+    .ddl-normal { background: var(--bg); color: var(--text-muted); }
+
+    /* Company size */
+    .jc-size {
+      font-size: 0.68rem;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-weight: 600;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      display: inline-block;
+    }
+    .jc-size.enterprise { color: #00B4D8; border-color: rgba(0,180,216,0.3); background: rgba(0,180,216,0.06); }
+    .jc-size.large { color: var(--primary-dark); border-color: rgba(0,122,255,0.3); background: rgba(0,122,255,0.06); }
+    .jc-size.medium { color: var(--accent-warm); border-color: rgba(255,149,0,0.3); background: rgba(255,149,0,0.06); }
+    .jc-size.small { color: #1A9F5A; border-color: rgba(26,159,90,0.3); background: rgba(26,159,90,0.06); }
+
+    /* JD expand */
+    .jc-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      margin-top: 10px;
+    }
+    .btn {
+      padding: 7px 16px;
+      border-radius: var(--radius-sm);
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      border: none;
+      transition: all 0.2s;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+      color: #fff;
+      box-shadow: 0 2px 8px rgba(0,122,255,0.3);
+    }
+    .btn-primary:hover {
+      box-shadow: 0 4px 12px rgba(0,122,255,0.4);
+      transform: translateY(-1px);
+    }
+    .btn-outline {
+      background: transparent;
+      color: var(--primary-dark);
+      border: 1.5px solid var(--primary-dark);
+    }
+    .btn-outline:hover { background: rgba(0,122,255,0.06); }
+    .btn-sm { padding: 5px 12px; font-size: 0.72rem; }
+
+    .jc-jd-toggle {
+      font-size: 0.72rem;
+      color: var(--primary-dark);
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 5px 0;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-weight: 500;
+    }
+    .jc-jd-toggle:hover { color: var(--primary); }
+    .jc-jd-toggle svg { transition: transform 0.2s; }
+    .jc-jd-toggle.open svg { transform: rotate(180deg); }
+
+    .jc-jd {
+      display: none;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
+    }
+    .jc-jd.open { display: block; }
+    .jc-jd-content {
+      background: var(--bg);
+      border-radius: var(--radius-sm);
+      padding: 14px;
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      max-height: 260px;
+      overflow-y: auto;
+      margin-bottom: 12px;
+    }
+    .jc-jd-content::-webkit-scrollbar { width: 3px; }
+    .jc-jd-content::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+    .jc-jd-content h4 { color: var(--text); font-size: 0.82rem; margin: 10px 0 4px; font-weight: 700; }
+    .jc-jd-content h4:first-child { margin-top: 0; }
+    .jc-jd-content ul { margin: 4px 0 8px 16px; }
+    .jc-jd-content li { margin: 3px 0; }
+
+    /* Priority strip */
+    .job-card.priority {
+      border-left: 4px solid var(--accent);
+    }
+
+    /* ===== MAP ===== */
+    .map-wrapper { position: relative; }
+    #map { width: 100%; height: 100%; }
+
+    /* Popup override */
+    .leaflet-popup-content-wrapper {
+      background: #fff !important;
+      border-radius: var(--radius) !important;
+      box-shadow: var(--shadow-hover) !important;
+      border: 1.5px solid var(--border) !important;
+    }
+    .leaflet-popup-content {
+      margin: 14px 16px !important;
+      font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif !important;
+    }
+    .leaflet-popup-tip { background: #fff !important; }
+    .leaflet-popup-close-button { color: var(--text-muted) !important; font-size: 18px !important; top: 8px !important; right: 10px !important; }
+
+    /* Map legend */
+    .map-legend {
+      position: absolute;
+      bottom: 28px;
+      right: 16px;
+      background: rgba(255,255,255,0.95);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px 16px;
+      font-size: 0.72rem;
+      z-index: 1000;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(8px);
+      min-width: 150px;
+    }
+    .map-legend h4 {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 5px;
+      color: var(--text-secondary);
+    }
+    .legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    /* ===== MOBILE ===== */
+    @media (max-width: 768px) {
+      body { overflow: hidden; }
+
+      .header-top { padding: 12px 16px; }
+      .header-stat { display: none; }
+
+      .filter-bar { padding: 8px 12px; overflow-x: auto; flex-wrap: nowrap; }
+      .filter-bar::-webkit-scrollbar { display: none; }
+      .filter-sep { display: none; }
+      .sort-wrapper { display: none; }
+
+      .main-wrapper { grid-template-columns: 1fr; grid-template-rows: 220px 1fr; }
+      .sidebar { order: 2; display: none; overflow-y: auto; }
+      .sidebar.mobile-show { display: block; }
+      .map-wrapper { order: 1; }
+
+      .map-legend { display: none; }
+
+      /* Mobile tabs */
+      .mobile-tabs {
+        display: flex;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: #fff;
+        border-top: 1.5px solid var(--border);
+        z-index: 1500;
+        box-shadow: 0 -2px 12px rgba(0,0,0,0.08);
+      }
+      .mobile-tab {
+        flex: 1;
+        padding: 10px;
+        text-align: center;
+        font-size: 0.75rem;
+        color: var(--text-muted);
+        cursor: pointer;
+        border: none;
+        background: none;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2px;
+      }
+      .mobile-tab.active { color: var(--primary-dark); }
+      .mobile-tab svg { width: 22px; height: 22px; }
+    }
+    @media (min-width: 769px) {
+      .mobile-tabs { display: none; }
+    }
+
+    /* Empty state */
+    .empty-state {
+      padding: 60px 20px;
+      text-align: center;
+      color: var(--text-muted);
+    }
+    .empty-state .emoji { font-size: 3rem; margin-bottom: 12px; }
+    .empty-state p { font-size: 0.85rem; }
+
+    /* Scrollbar */
+    .sidebar::-webkit-scrollbar { width: 4px; }
+    .sidebar::-webkit-scrollbar-track { background: var(--bg); }
+    .sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-top">
+    <div class="header-title">
+      <div class="header-logo">🗺️</div>
+      <div class="header-text">
+        <h1>SLC TA Jobs</h1>
+        <p>从 University of Utah 出发的职位地图</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <div class="header-stat">有效职位 <strong id="stat-active">0</strong></div>
+      <div class="header-badge">✨ Updated 2026-04-12</div>
+    </div>
+  </div>
+</header>
+
+<div class="filter-bar">
+  <div class="filter-group">
+    <button class="filter-tab active" data-filter="all" onclick="setFilter('all', this)">全部</button>
+    <button class="filter-tab" data-filter="aaa" onclick="setFilter('aaa', this)">🎮 AAA</button>
+    <button class="filter-tab indie" data-filter="indie" onclick="setFilter('indie', this)">🏠 Indie</button>
+    <button class="filter-tab intern" data-filter="intern" onclick="setFilter('intern', this)">🎓 实习</button>
+    <button class="filter-tab fang" data-filter="fang" onclick="setFilter('fang', this)">🏢 大厂</button>
+  </div>
+  <div class="filter-sep"></div>
+  <div class="dist-filter">
+    <label>距离</label>
+    <input type="range" class="dist-slider" id="dist-slider" min="0" max="50" value="50" oninput="setDist(this.value)">
+    <span class="dist-val" id="dist-val">不限</span>
+  </div>
+  <div class="sort-wrapper">
+    <button class="sort-btn" onclick="toggleSort()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="6" y1="12" x2="18" y2="12"/><line x1="9" y1="18" x2="15" y2="18"/></svg>
+      <span id="sort-label">按距离</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px;"><polyline points="6 9 12 15 18 9"/></svg>
+    </button>
+    <div class="sort-dropdown" id="sort-dropdown">
+      <div class="sort-option active" data-sort="dist" onclick="setSort('dist')">按距离</div>
+      <div class="sort-option" data-sort="salary" onclick="setSort('salary')">按薪资</div>
+      <div class="sort-option" data-sort="level" onclick="setSort('level')">按年限</div>
+      <div class="sort-option" data-sort="ddl" onclick="setSort('ddl')">按截止日</div>
+    </div>
+  </div>
+</div>
+
+<div class="main-wrapper">
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <span>找到 <strong id="jc-count">0</strong> 个职位</span>
+    </div>
+    <div class="job-list" id="job-list"></div>
+  </div>
+
+  <div class="map-wrapper">
+    <div id="map"></div>
+    <div class="map-legend">
+      <h4>图例</h4>
+      <div class="legend-item"><div class="legend-dot" style="background:#e94560;box-shadow:0 0 4px rgba(233,69,96,0.5)"></div>U of U（起点）</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#5AC8FA"></div>普通职位</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#FF6B35"></div>AAA 公司</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#FF9500"></div>Indie 公司</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#AF52DE"></div>实习</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#00B4D8"></div>大厂 (Meta 等)</div>
+    </div>
+  </div>
+</div>
+
+<!-- Mobile Tab Bar -->
+<div class="mobile-tabs">
+  <button class="mobile-tab active" id="tab-map" onclick="switchTab('map')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 20l-5.447-2.724A1 1 0 0 1 3 16.382V5.618a1 1 0 0 1 1.447-.894L9 7m0 13l6-3m-6 3V7m6 10l5.447 2.724A1 1 0 0 0 21 18.382V7.618a1 1 0 0 0-.553-.894L15 4m0 13V4m0 0L9 7"/></svg>
+    地图
+  </button>
+  <button class="mobile-tab" id="tab-list" onclick="switchTab('list')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><circle cx="3" cy="6" r="1" fill="currentColor"/><circle cx="3" cy="12" r="1" fill="currentColor"/><circle cx="3" cy="18" r="1" fill="currentColor"/></svg>
+    职位列表
+  </button>
+</div>
+
+<script>
+// ================================================================
+// 职位数据
+// ================================================================
+const UOU = [40.7649, -111.8421];
+
+const jobs = [
+  {
+    id: 1,
+    name: "Associate Technical Artist — Characters",
+    company: "Avalanche Studios / WB Games",
+    category: "aaa",
+    companySize: "large",
+    address: "282 W 3900 S, South Salt Lake, UT",
+    lat: 40.7000, lng: -111.9022,
+    type: "Full-time",
+    workStyle: "Hybrid",
+    priority: 3,
+    expLevel: "Mid",
+    expYears: 2,
+    salary: "$95K–$135K",
+    url: "https://www.linkedin.com/jobs/view/4394955921/",
+    deadline: "2026-05-01",
+    distance: 6.2,
+    jd: `<h4>主要职责</h4><ul><li>与角色艺术家和动画师紧密合作，确保角色模型在游戏引擎中表现最佳</li><li>创建和维护角色绑定与变形目标（blendshapes）</li><li>开发自动化工具和工作流程，提升角色资产生产效率</li><li>与引擎团队协作，优化渲染性能</li></ul><h4>任职要求</h4><ul><li>美术或技术艺术相关本科学位</li><li>2年以上游戏行业经验</li><li>精通 Maya 或 Blender，熟悉 Python/MEL 脚本</li><li>了解实时渲染管线（PBR、游戏引擎）</li></ul><h4>加分项</h4><ul><li>有 AAA 游戏项目经验</li><li>熟悉 Houdini 程序化工作流</li><li>有 Substance 材质制作经验</li></ul>`
+  },
+  {
+    id: 2,
+    name: "Advanced Technical Artist — Environment",
+    company: "Avalanche Studios / WB Games",
+    category: "aaa",
+    companySize: "large",
+    address: "282 W 3900 S, South Salt Lake, UT",
+    lat: 40.7000, lng: -111.9022,
+    type: "Full-time",
+    workStyle: "Hybrid",
+    priority: 3,
+    expLevel: "Senior",
+    expYears: 5,
+    salary: "$151K–$281K",
+    url: "https://careers.wbd.com/global/en/job/R000104174/",
+    deadline: "2026-04-25",
+    distance: 6.2,
+    jd: `<h4>主要职责</h4><ul><li>领导环境资产技术方向，制定技术标准和最佳实践</li><li>与关卡设计和美术团队协作，实现高质量开放世界环境</li><li>开发 Houdini 程序化工具，用于大规模场景生成和资产管理</li><li>性能分析与优化，确保帧率和内存使用达标</li></ul><h4>任职要求</h4><ul><li>5年以上游戏行业技术艺术经验</li><li>精通 Houdini 程序化工作流，有节点编程能力</li><li>有 AAA 级游戏完整项目经验</li><li>熟悉 Unreal Engine 或自研引擎</li></ul>`
+  },
+  {
+    id: 3,
+    name: "Lead Technical Artist — Characters",
+    company: "Warner Bros. Discovery",
+    category: "aaa",
+    companySize: "enterprise",
+    address: "282 W 3900 S, South Salt Lake, UT",
+    lat: 40.7000, lng: -111.9022,
+    type: "Full-time",
+    workStyle: "Hybrid",
+    priority: 3,
+    expLevel: "Lead",
+    expYears: 7,
+    salary: "$170K–$250K",
+    url: "https://www.showbizjobs.com/jobs/warner-bros-discovery-lead-technical-artist-characters-in-salt-lake-city/jid-yjk5jk",
+    deadline: "2026-04-30",
+    distance: 6.2,
+    jd: `<h4>主要职责</h4><ul><li>领导角色技术艺术团队，指导 3-5 名技术艺术家</li><li>与角色总监和制作团队协作，制定角色资产管线</li><li>评估新技术和工具，持续改进角色资产流程</li><li>与其他部门（动画、绑定、渲染）协调技术需求</li></ul><h4>任职要求</h4><ul><li>7年以上游戏/影视行业经验，3年以上团队领导经验</li><li>精通 Maya、ZBrush、Substance，有 Shader 开发经验</li><li>熟悉 Unreal Engine 或 Unity</li><li>出色的沟通和跨团队协作能力</li></ul>`
+  },
+  {
+    id: 4,
+    name: "Technical Artist — Rendering",
+    company: "Meta",
+    category: "fang",
+    companySize: "enterprise",
+    address: "10407 S Commerce Center Dr, South Jordan, UT",
+    lat: 40.5623, lng: -111.9838,
+    type: "Contractor",
+    workStyle: "Remote",
+    priority: 2,
+    expLevel: "Mid",
+    expYears: 3,
+    salary: "$57/hr–$141/hr",
+    url: "https://www.zippia.com/technical-artist-salt-lake-city-ut-jobs/",
+    deadline: "2026-05-15",
+    distance: 17.5,
+    jd: `<h4>主要职责</h4><ul><li>为 Meta Reality Labs 的 AR/VR 项目开发渲染技术和 Shader</li><li>与硬件团队协作，优化移动端渲染性能</li><li>创建技术文档和内部工具</li><li>原型验证新渲染技术的可行性</li></ul><h4>任职要求</h4><ul><li>3年以上图形编程或技术艺术经验</li><li>精通 HLSL/GLSL Shader 编程</li><li>有实时渲染性能优化经验</li><li>了解移动端 GPU 架构（Adreno/Mali）</li></ul>`
+  },
+  {
+    id: 5,
+    name: "Junior Technical Artist",
+    company: "Mighty Rabbit Studios",
+    category: "indie",
+    companySize: "small",
+    address: "68 S Main St, Salt Lake City, UT",
+    lat: 40.7580, lng: -111.8910,
+    type: "Full-time",
+    workStyle: "Hybrid",
+    priority: 1,
+    expLevel: "Junior",
+    expYears: 1,
+    salary: "$55K–$75K",
+    url: "https://www.mightyrabbitstudios.com/careers",
+    deadline: "2026-04-20",
+    distance: 5.1,
+    jd: `<h4>主要职责</h4><ul><li>为独立游戏项目创建游戏内特效和动画</li><li>协助技术美术团队开发内部工具</li><li>制作和优化游戏资产</li></ul><h4>任职要求</h4><ul><li>1年以上相关经验或实习经验</li><li>熟悉 Unity 或 Unreal Engine</li><li>有 Shader 编写基础</li></ul>`
+  },
+  {
+    id: 6,
+    name: "Technical Artist Intern — Summer 2026",
+    company: "Double Fine Productions",
+    category: "indie",
+    companySize: "medium",
+    address: "350 W 800 S #300, Salt Lake City, UT",
+    lat: 40.7520, lng: -111.8960,
+    type: "Intern",
+    workStyle: "On-site",
+    priority: 2,
+    expLevel: "Intern",
+    expYears: 0,
+    salary: "$28/hr",
+    url: "https://careers.doublefine.com/internships",
+    deadline: "2026-04-18",
+    distance: 5.8,
+    jd: `<h4>实习内容</h4><ul><li>参与 Double Fine 最新独立游戏项目的技术美术工作</li><li>在 mentor 指导下完成一个完整的实习项目</li><li>参与团队技术分享和内部研讨会</li></ul><h4>任职要求</h4><ul><li>在校学生（计算机科学、美术或相关专业）</li><li>有使用 Unity/UE 或 3D 软件的经验</li><li>对技术艺术有浓厚兴趣</li></ul>`
+  },
+  {
+    id: 7,
+    name: "Senior Technical Artist — Sci-Fi Project",
+    company: "Clever Endeavour (Indie)",
+    category: "indie",
+    companySize: "small",
+    address: "150 S State St, Salt Lake City, UT",
+    lat: 40.7550, lng: -111.8880,
+    type: "Full-time",
+    workStyle: "Remote",
+    priority: 2,
+    expLevel: "Senior",
+    expYears: 5,
+    salary: "$95K–$130K",
+    url: "https://cleverendeavour.com/careers",
+    deadline: "2026-05-10",
+    distance: 4.9,
+    jd: `<h4>主要职责</h4><ul><li>为科幻风格独立游戏设计材质和视觉效果</li><li>开发程序化工作流处理大规模场景</li><li>与作曲家协作实现音画同步特效</li></ul><h4>任职要求</h4><ul><li>5年以上技术艺术经验</li><li>精通 Substance Designer/Painter</li><li>有科幻/太空题材项目经验</li></ul>`
+  }
+];
+
+// ================================================================
+// 工具函数
+// ================================================================
+function getDistance(lat1, lon1, lat2, lon2) {
+  const R = 3958.8;
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLon = (lon2 - lon1) * Math.PI / 180;
+  const a = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)**2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+}
+
+function estimateDrive(d) {
+  if (d < 5) return Math.round(d * 3) + ' min';
+  if (d < 15) return Math.round(d * 1.4) + ' min';
+  return Math.round(d * 1.2) + ' min';
+}
+
+function formatDeadline(dateStr) {
+  const diff = Math.ceil((new Date(dateStr) - new Date()) / 86400000);
+  if (diff < 0) return { text: '已截止', cls: 'ddl-soon' };
+  if (diff <= 7) return { text: diff + '天后截止', cls: 'ddl-soon' };
+  if (diff <= 30) return { text: diff + '天后', cls: 'ddl-week' };
+  return { text: dateStr, cls: 'ddl-normal' };
+}
+
+function parseSalaryNum(s) {
+  const m = s.match(/[\d,]+/g);
+  return m ? parseInt(m[m.length-1].replace(/,/g,'')) : 0;
+}
+
+function getWorkTag(s) {
+  return { 'Remote': 'tag-remote', 'Hybrid': 'tag-hybrid', 'On-site': 'tag-onsite' }[s] || 'tag-onsite';
+}
+
+function getSizeLabel(s) {
+  return { 'enterprise': 'Enterprise', 'large': '1000+人', 'medium': '100-999人', 'small': '<100人' }[s] || s;
+}
+
+// ================================================================
+// 状态
+// ================================================================
+let curFilter = 'all';
+let curDist = 50;
+let curSort = 'dist';
+
+function setFilter(f, el) {
+  curFilter = f;
+  document.querySelectorAll('.filter-tab').forEach(function(e) { e.classList.remove('active'); });
+  el.classList.add('active');
+  apply();
+}
+
+function setDist(v) {
+  curDist = parseInt(v);
+  document.getElementById('dist-val').textContent = v === '50' ? '不限' : '<' + v + 'mi';
+  apply();
+}
+
+function toggleSort() {
+  document.getElementById('sort-dropdown').classList.toggle('show');
+}
+
+function setSort(s) {
+  curSort = s;
+  document.getElementById('sort-dropdown').classList.remove('show');
+  const labels = { dist: '按距离', salary: '按薪资', level: '按年限', ddl: '按截止日' };
+  document.getElementById('sort-label').textContent = labels[s];
+  document.querySelectorAll('.sort-option').forEach(function(e) {
+    e.classList.toggle('active', e.dataset.sort === s);
+  });
+  apply();
+}
+
+// ================================================================
+// 筛选 + 排序 + 渲染
+// ================================================================
+function apply() {
+  let list = jobs.filter(function(j) {
+    if (curFilter !== 'all' && j.category !== curFilter) return false;
+    if (j.distance > curDist) return false;
+    return true;
+  });
+
+  list.sort(function(a, b) {
+    if (curSort === 'dist') return a.distance - b.distance;
+    if (curSort === 'salary') {
+      const sa = a.salary.includes('/hr') ? 2080 * parseSalaryNum(a.salary) : parseSalaryNum(a.salary);
+      const sb = b.salary.includes('/hr') ? 2080 * parseSalaryNum(b.salary) : parseSalaryNum(b.salary);
+      return sb - sa;
+    }
+    if (curSort === 'level') return b.expYears - a.expYears;
+    if (curSort === 'ddl') return new Date(a.deadline) - new Date(b.deadline);
+    return 0;
+  });
+
+  render(list);
+  updateStats(list);
+  refreshMap(list);
+}
+
+function render(list) {
+  const container = document.getElementById('job-list');
+  document.getElementById('jc-count').textContent = list.length;
+
+  if (list.length === 0) {
+    container.innerHTML = '<div class="empty-state"><div class="emoji">🔍</div><p>没有找到符合条件的职位<br><span style="font-size:0.75rem;color:#999">试试调整筛选条件</span></p></div>';
+    return;
+  }
+
+  let html = '';
+  list.forEach(function(j) {
+    const drive = estimateDrive(j.distance);
+    const ddl = formatDeadline(j.deadline);
+    const catCls = j.category || '';
+    const workTag = getWorkTag(j.workStyle);
+    const sizeLabel = getSizeLabel(j.companySize);
+
+    html += '<div class="job-card' + (j.priority >= 3 ? ' priority' : '') + '" id="jc-' + j.id + '" onclick="onCard(' + j.id + ')">';
+
+    // Company + deadline
+    html += '<div class="jc-top">';
+    html += '<div>';
+    html += '<div class="jc-company ' + catCls + '">' + j.company + '</div>';
+    html += '<div class="jc-title">' + j.name + '</div>';
+    html += '</div>';
+    html += '<span class="jc-deadline ' + ddl.cls + '">' + ddl.text + '</span>';
+    html += '</div>';
+
+    // Tags
+    html += '<div class="jc-tags">';
+    html += '<span class="jc-tag ' + workTag + '">' + j.workStyle + '</span>';
+    html += '<span class="jc-tag tag-type">' + j.type + '</span>';
+    html += '<span class="jc-size ' + j.companySize + '">' + sizeLabel + '</span>';
+    html += '</div>';
+
+    // Meta
+    html += '<div class="jc-meta">';
+    html += '<span class="dist">' + j.distance.toFixed(1) + ' mi</span>';
+    html += '<span class="sep">·</span>';
+    html += '<span>🚗 ' + drive + '</span>';
+    if (j.expYears > 0) {
+      html += '<span class="sep">·</span>';
+      html += '<span class="level">' + j.expLevel + ' <span>' + j.expYears + 'yr</span></span>';
+    } else {
+      html += '<span class="sep">·</span>';
+      html += '<span class="level">' + j.expLevel + '</span>';
+    }
+    html += '</div>';
+
+    // Salary
+    if (j.salary && j.salary !== '—') {
+      html += '<div class="jc-row2">';
+      html += '<div class="jc-salary">' + j.salary + '</div>';
+      html += '</div>';
+    }
+
+    // JD toggle
+    html += '<button class="jc-jd-toggle" id="jt-' + j.id + '" onclick="event.stopPropagation();toggleJD(' + j.id + ')">';
+    html += '<svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"><path d="M2 4l4 4 4-4"/></svg>查看完整 JD</button>';
+
+    // JD content
+    html += '<div class="jc-jd" id="jd-' + j.id + '">';
+    html += '<div class="jc-jd-content">' + j.jd + '</div>';
+    html += '<div class="jc-actions">';
+    html += '<a href="' + j.url + '" target="_blank" class="btn btn-primary btn-sm">🔗 立即申请</a>';
+    html += '<button class="btn btn-outline btn-sm" onclick="event.stopPropagation();toggleJD(' + j.id + ')">收起</button>';
+    html += '</div></div>';
+
+    html += '</div>';
+  });
+
+  container.innerHTML = html;
+}
+
+function updateStats(list) {
+  document.getElementById('stat-active').textContent = jobs.length;
+}
+
+// ================================================================
+// JD 展开/收起
+// ================================================================
+function toggleJD(id) {
+  const jd = document.getElementById('jd-' + id);
+  const btn = document.getElementById('jt-' + id);
+  if (!jd) return;
+  const open = jd.classList.contains('open');
+
+  // Close all
+  document.querySelectorAll('.jc-jd.open').forEach(function(e) { e.classList.remove('open'); });
+  document.querySelectorAll('.jc-jd-toggle.open').forEach(function(e) {
+    e.classList.remove('open');
+    e.innerHTML = '<svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"><path d="M2 4l4 4 4-4"/></svg>查看完整 JD';
+  });
+
+  if (!open) {
+    jd.classList.add('open');
+    btn.classList.add('open');
+    btn.innerHTML = '<svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor" style="transform:rotate(180deg)"><path d="M2 4l4 4 4-4"/></svg>收起 JD';
+  }
+}
+
+// ================================================================
+// 卡片点击
+// ================================================================
+function onCard(id) {
+  const card = document.getElementById('jc-' + id);
+  if (!card) return;
+
+  document.querySelectorAll('.job-card').forEach(function(c) { c.classList.remove('active'); });
+  card.classList.add('active');
+  card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+  const job = jobs.find(function(j) { return j.id === id; });
+  if (job && markerMap[id]) {
+    map.setView([job.lat, job.lng], 13, { animate: true });
+    setTimeout(function() { markerMap[id].openPopup(); }, 200);
+  }
+}
+
+// ================================================================
+// 移动端
+// ================================================================
+function switchTab(tab) {
+  document.querySelectorAll('.mobile-tab').forEach(function(t) { t.classList.remove('active'); });
+  document.getElementById('tab-' + tab).classList.add('active');
+  const sb = document.getElementById('sidebar');
+  if (tab === 'list') sb.classList.add('mobile-show');
+  else sb.classList.remove('mobile-show');
+}
+
+// ================================================================
+// 地图
+// ================================================================
+var map = L.map('map', { zoomControl: true, scrollWheelZoom: true }).setView(UOU, 11);
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  attribution: '&copy; OSM',
+  maxZoom: 19
+}).addTo(map);
+
+var markerMap = {};
+
+function getCatColor(cat) {
+  return { aaa: '#FF6B35', indie: '#FF9500', intern: '#AF52DE', fang: '#00B4D8' }[cat] || '#5AC8FA';
+}
+
+function mkIcon(color, sz) {
+  sz = sz || 14;
+  return L.divIcon({
+    className: '',
+    html: '<div style="width:' + sz + 'px;height:' + sz + 'px;background:' + color + ';border:3px solid #fff;border-radius:50%;box-shadow:0 2px 8px ' + color + '55;"></div>',
+    iconSize: [sz, sz], iconAnchor: [sz/2, sz/2]
+  });
+}
+
+// U of U marker
+L.marker(UOU, { icon: mkIcon('#e94560', 20) })
+  .addTo(map)
+  .bindPopup('<b style="color:#e94560;font-size:1rem;">University of Utah</b><br><span style="color:#666;font-size:0.8em;">你的当前位置</span><br><small style="color:#999">201 Presidents Cir, SLC</small>');
+
+function refreshMap(visible) {
+  Object.values(markerMap).forEach(function(m) { map.removeLayer(m); });
+  markerMap = {};
+
+  visible.forEach(function(j) {
+    const color = getCatColor(j.category);
+    const m = L.marker([j.lat, j.lng], { icon: mkIcon(color) }).addTo(map);
+    markerMap[j.id] = m;
+
+    const ddl = formatDeadline(j.deadline);
+    const sizeLabel = getSizeLabel(j.companySize);
+
+    let popup = '<div style="min-width:220px;font-family:PingFang SC,Microsoft YaHei,sans-serif">';
+    popup += '<b style="color:' + color + ';font-size:0.95rem;">' + j.company + '</b><br>';
+    popup += '<b style="font-size:0.88rem;color:#1A1A2E;">' + j.name + '</b>';
+    popup += '<hr style="border:none;border-top:1px solid #E8ECF0;margin:8px 0;">';
+    popup += '<div style="font-size:0.78em;color:#666;line-height:1.8;">';
+    popup += '📍 <b style="color:#007AFF;">' + j.distance.toFixed(1) + ' mi</b> · 🚗 ' + estimateDrive(j.distance) + '<br>';
+    popup += '🏷 ' + j.expLevel + (j.expYears > 0 ? ' <b style="color:#FF9500;">' + j.expYears + 'yr</b>' : '') + '<br>';
+    if (j.salary) popup += '💰 <b style="color:#FF3B30;">' + j.salary + '</b><br>';
+    popup += '⏰ ' + ddl.text + ' · ' + j.workStyle + '<br>';
+    popup += '🏢 ' + sizeLabel;
+    popup += '</div>';
+    popup += '<div style="margin-top:10px;"><a href="' + j.url + '" target="_blank" style="background:linear-gradient(135deg,#007AFF,#5AC8FA);color:#fff;padding:7px 16px;border-radius:8px;text-decoration:none;font-size:0.78em;font-weight:600;display:inline-block;box-shadow:0 2px 8px rgba(0,122,255,0.3);">🔗 申请</a></div>';
+    popup += '</div>';
+
+    m.bindPopup(popup);
+    m.on('click', function() {
+      document.querySelectorAll('.job-card').forEach(function(c) { c.classList.remove('active'); });
+      const card = document.getElementById('jc-' + j.id);
+      if (card) { card.classList.add('active'); card.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
+    });
+
+    // Connection line
+    L.polyline([UOU, [j.lat, j.lng]], {
+      color: color, weight: 1.5, opacity: 0.25, dashArray: '4,5'
+    }).addTo(map);
+  });
+}
+
+// ================================================================
+// 启动
+// ================================================================
+apply();
+
+// Close sort dropdown on outside click
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('.sort-wrapper')) {
+    document.getElementById('sort-dropdown').classList.remove('show');
+  }
+});
+</script>
+</body>
+</html>
