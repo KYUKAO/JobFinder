@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>竞争力分析 — TA Job Finder</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --primary: #FF6B35;
+      --primary-light: #FFB340;
+      --accent: #5856D6;
+      --success: #34C759;
+      --danger: #FF3B30;
+      --bg: #F5F7FA;
+      --card: #fff;
+      --text: #1A1A2E;
+      --text-secondary: #666;
+      --border: #E8ECF0;
+    }
+    body {
+      font-family: 'PingFang SC', 'Microsoft YaHei', 'Helvetica Neue', Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+    header {
+      background: linear-gradient(135deg, #FF6B35, #FFB340);
+      padding: 48px 40px 60px;
+      text-align: center;
+      position: relative;
+    }
+    header::after {
+      content: ''; position: absolute; bottom: -2px; left: 0; right: 0;
+      height: 44px; background: var(--bg); border-radius: 50% 50% 0 0;
+    }
+    .header-eyebrow { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.15em; color: rgba(255,255,255,0.7); margin-bottom: 10px; }
+    header h1 { font-size: 2rem; font-weight: 800; color: #fff; margin-bottom: 10px; letter-spacing: -0.5px; }
+    header p { font-size: 0.9rem; color: rgba(255,255,255,0.85); }
+    .back-btn { position: absolute; top: 20px; left: 24px; background: rgba(255,255,255,0.2); color: #fff; text-decoration: none; font-size: 0.82rem; font-weight: 600; padding: 6px 14px; border-radius: 20px; z-index: 10; }
+    .back-btn:hover { background: rgba(255,255,255,0.3); }
+
+    .main { max-width: 1100px; margin: 0 auto; padding: 40px 24px 60px; }
+
+    .source-note {
+      background: rgba(255,149,0,0.08); border: 1px solid rgba(255,149,0,0.2);
+      border-radius: 12px; padding: 16px 20px; margin-bottom: 24px;
+      font-size: 0.85rem; color: var(--text-secondary); line-height: 1.6;
+    }
+    .source-note strong { color: var(--text); }
+    .source-note a { color: var(--primary); text-decoration: none; font-weight: 600; }
+
+    .section-title { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: var(--text-secondary); margin-bottom: 16px; margin-top: 28px; }
+
+    /* 技能对比 */
+    .comparison-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px; }
+    .comp-card { background: var(--card); border-radius: 16px; padding: 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.04); }
+    .comp-card-title { font-size: 1rem; font-weight: 700; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; }
+    .comp-badge { font-size: 0.75rem; font-weight: 600; padding: 4px 12px; border-radius: 12px; }
+    .comp-badge.up { background: rgba(52,199,89,0.15); color: var(--success); }
+    .comp-badge.mid { background: rgba(255,149,0,0.15); color: var(--primary); }
+    .skill-row { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+    .skill-name { width: 110px; font-size: 0.82rem; color: var(--text); flex-shrink: 0; }
+    .skill-bars { display: flex; gap: 6px; flex: 1; }
+    .skill-bar { height: 8px; border-radius: 4px; background: var(--bg); flex: 1; }
+    .skill-bar.filled.me { background: var(--success); }
+    .skill-bar.filled.comp { background: var(--primary); }
+    .skill-bar.filled.avg { background: #ccc; }
+
+    /* 经验分布 */
+    .level-dist { background: var(--card); border-radius: 16px; padding: 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.04); }
+    .level-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .level-region-title { font-size: 0.8rem; font-weight: 700; color: var(--text-secondary); margin-bottom: 12px; }
+    .level-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+    .level-label { font-size: 0.75rem; width: 70px; color: var(--text); }
+    .level-track { flex: 1; height: 10px; background: var(--bg); border-radius: 5px; overflow: hidden; }
+    .level-fill { height: 100%; border-radius: 5px; transition: width 0.8s ease; }
+    .level-count { font-size: 0.72rem; font-weight: 600; color: var(--text-secondary); width: 24px; text-align: right; }
+
+    /* 热门细分 */
+    .hot-cats { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; }
+    .hot-cat-card { background: var(--card); border-radius: 12px; padding: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); text-align: center; }
+    .hot-cat-icon { font-size: 1.5rem; margin-bottom: 6px; }
+    .hot-cat-name { font-size: 0.85rem; font-weight: 700; margin-bottom: 4px; }
+    .hot-cat-count { font-size: 0.75rem; color: var(--text-secondary); }
+    .hot-cat-bar { height: 4px; background: var(--bg); border-radius: 2px; margin-top: 8px; overflow: hidden; }
+    .hot-cat-fill { height: 100%; border-radius: 2px; }
+
+    /* 薪资分析 */
+    .salary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .salary-card { background: var(--card); border-radius: 12px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+    .salary-region { font-size: 0.75rem; font-weight: 700; color: var(--text-secondary); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.1em; }
+    .salary-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--border); }
+    .salary-row:last-child { border-bottom: none; }
+    .salary-cat { font-size: 0.82rem; font-weight: 600; }
+    .salary-range { font-size: 0.82rem; font-weight: 700; color: var(--primary); }
+
+    /* 建议 */
+    .tips { background: linear-gradient(135deg, rgba(255,149,0,0.05), rgba(88,86,214,0.05)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; }
+    .tips-title { font-size: 1rem; font-weight: 700; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+    .tip-item { display: flex; gap: 12px; padding: 12px 16px; background: var(--card); border-radius: 10px; margin-bottom: 10px; }
+    .tip-num { width: 24px; height: 24px; border-radius: 50%; background: var(--primary); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 0.72rem; font-weight: 700; flex-shrink: 0; }
+    .tip-text { font-size: 0.85rem; color: var(--text); line-height: 1.6; }
+
+    /* 差距分析 */
+    .gap-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .gap-card { background: var(--card); border-radius: 12px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+    .gap-card-title { font-size: 0.85rem; font-weight: 700; margin-bottom: 12px; }
+    .gap-item { display: flex; align-items: center; gap: 10px; padding: 8px 12px; background: var(--bg); border-radius: 8px; margin-bottom: 8px; }
+    .gap-icon { width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; flex-shrink: 0; }
+    .gap-text { font-size: 0.82rem; color: var(--text); }
+    .gap-level { font-size: 0.72rem; font-weight: 600; padding: 3px 8px; border-radius: 10px; margin-left: auto; flex-shrink: 0; }
+    .gap-level.high { background: rgba(52,199,89,0.15); color: var(--success); }
+    .gap-level.medium { background: rgba(255,149,0,0.15); color: var(--primary); }
+    .gap-level.low { background: rgba(255,59,48,0.15); color: var(--danger); }
+
+    .portfolio-section { background: var(--card); border-radius: 16px; padding: 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.04); margin-bottom: 24px; border: 2px solid var(--primary); }
+    .portfolio-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+    .portfolio-title { font-size: 1rem; font-weight: 700; color: var(--primary); display: flex; align-items: center; gap: 8px; }
+    .portfolio-link { font-size: 0.85rem; color: var(--primary); text-decoration: none; font-weight: 600; }
+    .portfolio-link:hover { text-decoration: underline; }
+    .portfolio-skills { display: flex; flex-wrap: wrap; gap: 8px; }
+    .skill-tag { padding: 6px 14px; border-radius: 20px; font-size: 0.8rem; background: rgba(255,149,0,0.1); color: var(--text); }
+
+    .empty-state { text-align: center; padding: 40px 20px; color: var(--text-secondary); }
+    .empty-state .empty-icon { font-size: 2.5rem; margin-bottom: 12px; }
+    .empty-state .empty-title { font-size: 1rem; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+    .empty-state .empty-desc { font-size: 0.85rem; }
+
+    @media (max-width: 768px) {
+      .comparison-grid, .level-grid, .level-dist, .gap-grid, .salary-grid { grid-template-columns: 1fr; }
+      header { padding: 40px 20px 50px; }
+      header h1 { font-size: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <a href="index.html" class="back-btn">← 返回主页</a>
+  <div class="header-eyebrow">Competitive Analysis</div>
+  <h1>竞争力分析 & 市场洞察</h1>
+  <p>对比你的技能与竞争者，找到差异化定位</p>
+</header>
+
+<main class="main">
+  <div class="source-note">
+    <strong>数据来源：</strong>基于收集的岗位数据 + 竞争者简历库，对比分析 TA 市场需求。
+    你的作品集：<a href="#" id="my-portfolio" target="_blank">点击查看（待配置）</a>
+  </div>
+
+  <div class="section-title">你的技能档案</div>
+  <div class="portfolio-section" id="my-profile-section">
+    <div class="portfolio-header">
+      <div class="portfolio-title">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        我的简历分析
+      </div>
+      <a href="#" class="portfolio-link" id="portfolio-link">更新作品集链接</a>
+    </div>
+    <div class="portfolio-skills" id="my-skills">
+      <span class="skill-tag">请配置你的简历信息</span>
+    </div>
+  </div>
+
+  <div class="section-title">市场最热门的 TA 细分方向</div>
+  <div class="hot-cats" id="hot-categories"></div>
+
+  <div class="section-title">技能对比</div>
+  <div class="comparison-grid">
+    <div class="comp-card">
+      <div class="comp-card-title">
+        <span>🇨🇳 国内岗位核心技能</span>
+        <span class="comp-badge up">高于平均</span>
+      </div>
+      <div id="tech-skills-domestic"></div>
+      <div style="display:flex;gap:16px;margin-top:16px;padding-top:12px;border-top:1px solid var(--border);">
+        <div style="display:flex;align-items:center;gap:6px;font-size:0.72rem;color:var(--text-secondary);"><div style="width:10px;height:10px;border-radius:50%;background:var(--success);"></div>我的水平</div>
+        <div style="display:flex;align-items:center;gap:6px;font-size:0.72rem;color:var(--text-secondary);"><div style="width:10px;height:10px;border-radius:50%;background:var(--primary);"></div>市场需求</div>
+      </div>
+    </div>
+    <div class="comp-card">
+      <div class="comp-card-title">
+        <span>🌎 海外岗位核心技能</span>
+        <span class="comp-badge mid">中等</span>
+      </div>
+      <div id="tech-skills-overseas"></div>
+      <div style="display:flex;gap:16px;margin-top:16px;padding-top:12px;border-top:1px solid var(--border);">
+        <div style="display:flex;align-items:center;gap:6px;font-size:0.72rem;color:var(--text-secondary);"><div style="width:10px;height:10px;border-radius:50%;background:var(--success);"></div>My Level</div>
+        <div style="display:flex;align-items:center;gap:6px;font-size:0.72rem;color:var(--text-secondary);"><div style="width:10px;height:10px;border-radius:50%;background:var(--primary);"></div>Market Demand</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-title">经验等级市场分布</div>
+  <div class="level-dist">
+    <div class="level-grid">
+      <div>
+        <div class="level-region-title">🇨🇳 国内</div>
+        <div id="domestic-level-bars"></div>
+      </div>
+      <div>
+        <div class="level-region-title">🌎 海外</div>
+        <div id="overseas-level-bars"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-title">各细分薪资参考</div>
+  <div class="salary-grid">
+    <div class="salary-card">
+      <div class="salary-region">🇨🇳 国内（K/月 × 薪）</div>
+      <div id="salary-domestic"></div>
+    </div>
+    <div class="salary-card">
+      <div class="salary-region">🌎 海外（$/年）</div>
+      <div id="salary-overseas"></div>
+    </div>
+  </div>
+
+  <div class="section-title">差距分析 & 提升建议</div>
+  <div class="gap-grid">
+    <div class="gap-card">
+      <div class="gap-card-title">✅ 你的优势</div>
+      <div id="strengths"></div>
+    </div>
+    <div class="gap-card">
+      <div class="gap-card-title">⚠️ 需要提升</div>
+      <div id="weaknesses"></div>
+    </div>
+  </div>
+
+  <div class="tips" style="margin-top:28px;">
+    <div class="tips-title">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+      投递策略建议
+    </div>
+    <div class="tip-item">
+      <div class="tip-num">1</div>
+      <div class="tip-text">重点投递 <strong>渲染 TA</strong> 岗位，目前市场需求最大（国内 13 个岗位占 50%），且薪资高（25-50K·15薪）。</div>
+    </div>
+    <div class="tip-item">
+      <div class="tip-num">2</div>
+      <div class="tip-text">国内 1-3 年经验岗位最多（18 个），匹配度高。腾讯/米哈游/网易三家公司合计 7 个岗位，建议优先投递。</div>
+    </div>
+    <div class="tip-item">
+      <div class="tip-num">3</div>
+      <div class="tip-text">海外岗位建议先从 Riot/Epic/Naughty Dog 的 Entry/Mid 级入手，关注 LinkedIn + 官网直投。</div>
+    </div>
+    <div class="tip-item">
+      <div class="tip-num">4</div>
+      <div class="tip-text">每个岗位 JD 的关键词必须读完再投，Shader/HLSL/Python 是渲染 TA 高频词，ATS 筛选直接决定是否进入面试。</div>
+    </div>
+    <div class="tip-item">
+      <div class="tip-num">5</div>
+      <div class="tip-text">建议准备一份英文简历 + 英文版作品集，增加海外岗位申请成功率。</div>
+    </div>
+  </div>
+</main>
+
+<script>
+var catColors = {
+  rendering: '#FF9500', character: '#5856D6', pipeline: '#34C759',
+  environment: '#00B4D8', ui: '#FF2D55', general: '#FF6B35'
+};
+var catLabels = {
+  rendering: '渲染 TA', character: '角色 TA', pipeline: '流程 TA',
+  environment: '环境 TA', ui: 'UI TA', general: '综合 TA'
+};
+
+async function loadAnalysis() {
+  try {
+    var [domResp, overResp, summaryResp, profileResp] = await Promise.all([
+      fetch('jobs-domestic.json').then(function(r){ return r.json().catch(function(){ return {}; }); }),
+      fetch('jobs-overseas.json').then(function(r){ return r.json().catch(function(){ return {}; }); }),
+      fetch('summary.json').then(function(r){ return r.json().catch(function(){ return {}; }); }),
+      fetch('github_contents.json').then(function(r){ return r.json().catch(function(){ return {}; }); }),
+    ]);
+
+    var domJobs = domResp.domesticJobs || [];
+    var overJobs = overResp.overseasJobs || [];
+    var summary = summaryResp;
+    var profile = profileResp;
+
+    // 我的技能
+    var mySkills = profile.myProfile && profile.myProfile.skills || [];
+    var skillsEl = document.getElementById('my-skills');
+    if (mySkills.length > 0) {
+      skillsEl.innerHTML = mySkills.map(function(s) {
+        return '<span class="skill-tag">' + s + '</span>';
+      }).join('');
+    }
+
+    // 作品集链接
+    var portfolioUrl = profile.myPortfolio || '';
+    if (portfolioUrl) {
+      document.getElementById('my-portfolio').href = portfolioUrl;
+      document.getElementById('portfolio-link').href = portfolioUrl;
+      document.getElementById('portfolio-link').textContent = '查看我的作品集 →';
+    }
+
+    // 热门细分
+    var catBreakdown = summary.categoryBreakdown || {domestic:{general:26}, overseas:{general:20}};
+    var domCat = catBreakdown.domestic || {};
+    var overCat = catBreakdown.overseas || {};
+    var allCat = {};
+    Object.keys(domCat).forEach(function(k){ allCat[k] = (allCat[k]||0) + (domCat[k]||0); });
+    Object.keys(overCat).forEach(function(k){ allCat[k] = (allCat[k]||0) + (overCat[k]||0); });
+    var total = Object.values(allCat).reduce(function(a,b){ return a+b; }, 0) || 1;
+    var hotCats = Object.entries(allCat).sort(function(a,b){ return b[1]-a[1]; }).slice(0,6);
+    var hotCatsEl = document.getElementById('hot-categories');
+    hotCatsEl.innerHTML = hotCats.map(function(entry) {
+      var cat = entry[0], count = entry[1];
+      var pct = Math.round(count / total * 100);
+      var color = catColors[cat] || '#FF6B35';
+      var icon = {'rendering':'🎨','character':'🧑‍🎨','pipeline':'⚙️','environment':'🌍','ui':'🖼️','general':'🎯'}[cat] || '📊';
+      return '<div class="hot-cat-card">' +
+        '<div class="hot-cat-icon">' + icon + '</div>' +
+        '<div class="hot-cat-name">' + (catLabels[cat]||cat) + '</div>' +
+        '<div class="hot-cat-count">' + count + ' 个岗位（' + pct + '%）</div>' +
+        '<div class="hot-cat-bar"><div class="hot-cat-fill" style="width:' + pct + '%;background:' + color + ';"></div></div>' +
+      '</div>';
+    }).join('');
+
+    // 技能对比 - 国内
+    var domSkills = [
+      {name:'Unity', me:4, market:3.5}, {name:'Unreal', me:3, market:3.2},
+      {name:'HLSL/GLSL', me:4, market:3.8}, {name:'Python', me:3, market:2.8},
+      {name:'Maya/Max', me:3, market:3.5}, {name:'Substance', me:3, market:3.2},
+    ];
+    document.getElementById('tech-skills-domestic').innerHTML = domSkills.map(function(s) {
+      return '<div class="skill-row">' +
+        '<div class="skill-name">' + s.name + '</div>' +
+        '<div class="skill-bars">' +
+          [1,2,3,4,5].map(function(i){ return '<div class="skill-bar ' + (i<=s.me?'filled me':'') + '"></div>'; }).join('') +
+        '</div></div>' +
+        '<div class="skill-row" style="margin-top:-8px;margin-bottom:4px;">' +
+        '<div class="skill-name" style="font-size:0.72rem;color:var(--text-secondary);">市场需求</div>' +
+        '<div class="skill-bars">' +
+          [1,2,3,4,5].map(function(i){ return '<div class="skill-bar ' + (i<=s.market?'filled comp':'') + '"></div>'; }).join('') +
+        '</div></div>';
+    }).join('');
+
+    // 技能对比 - 海外
+    var overSkills = [
+      {name:'Unreal Engine', me:3, market:4.2}, {name:'HLSL/GLSL', me:4, market:4.0},
+      {name:'Python/MEL', me:3, market:3.5}, {name:'Houdini', me:2, market:3.0},
+      {name:'Maya', me:3, market:3.8}, {name:'Shader Graph', me:4, market:3.5},
+    ];
+    document.getElementById('tech-skills-overseas').innerHTML = overSkills.map(function(s) {
+      return '<div class="skill-row">' +
+        '<div class="skill-name">' + s.name + '</div>' +
+        '<div class="skill-bars">' +
+          [1,2,3,4,5].map(function(i){ return '<div class="skill-bar ' + (i<=s.me?'filled me':'') + '"></div>'; }).join('') +
+        '</div></div>' +
+        '<div class="skill-row" style="margin-top:-8px;margin-bottom:4px;">' +
+        '<div class="skill-name" style="font-size:0.72rem;color:var(--text-secondary);">Market Demand</div>' +
+        '<div class="skill-bars">' +
+          [1,2,3,4,5].map(function(i){ return '<div class="skill-bar ' + (i<=s.market?'filled comp':'') + '"></div>'; }).join('') +
+        '</div></div>';
+    }).join('');
+
+    // 经验分布
+    var levelData = summary.levelBreakdown || {};
+    var levels = ['intern','entry','mid','senior','lead'];
+    var levelColors = {'intern':'#34C759','entry':'#5AC8FA','mid':'#FF6B35','senior':'#AF52DE','lead':'#FF3B30'};
+    var levelLabels = {'intern':'实习','entry':'1年以下','mid':'1-3年','senior':'3-5年','lead':'5年+'};
+    var levelLabelsEn = {'intern':'Intern','entry':'Entry','mid':'Mid','senior':'Senior','lead':'Lead'};
+
+    ['domestic','overseas'].forEach(function(region) {
+      var container = document.getElementById(region + '-level-bars');
+      if (!container) return;
+      var ldata = levelData[region] || levelData || {};
+      var totalL = Object.values(ldata).reduce(function(a,b){ return a+(typeof b==='number'?b:0); }, 0) || 1;
+      container.innerHTML = levels.map(function(lvl) {
+        var count = typeof ldata[lvl]==='number' ? ldata[lvl] : 0;
+        var pct = Math.round(count / totalL * 100);
+        var label = region === 'domestic' ? levelLabels[lvl] : levelLabelsEn[lvl];
+        var color = levelColors[lvl];
+        return '<div class="level-row">' +
+          '<span class="level-label">' + label + '</span>' +
+          '<div class="level-track"><div class="level-fill" style="width:' + pct + '%;background:' + color + ';"></div></div>' +
+          '<span class="level-count">' + count + '</span>' +
+        '</div>';
+      }).join('');
+    });
+
+    // 薪资
+    var salaryDomEl = document.getElementById('salary-domestic');
+    var salaryOverEl = document.getElementById('salary-overseas');
+    var domSalaryData = [
+      {cat:'渲染 TA', range:'25-50K·15薪'},
+      {cat:'角色 TA', range:'22-45K·16薪'},
+      {cat:'流程 TA', range:'20-40K·14薪'},
+      {cat:'环境 TA', range:'18-35K·14薪'},
+      {cat:'实习', range:'150-400/天'},
+    ];
+    var overSalaryData = [
+      {cat:'Rendering TA', range:'$90-140K'},
+      {cat:'Character TA', range:'$88-165K'},
+      {cat:'Pipeline TA', range:'$95-145K'},
+      {cat:'Senior (3-5y)', range:'$110-165K'},
+      {cat:'Lead (5y+)', range:'$140-200K'},
+    ];
+    salaryDomEl.innerHTML = domSalaryData.map(function(s) {
+      return '<div class="salary-row"><span class="salary-cat">' + s.cat + '</span><span class="salary-range">' + s.range + '</span></div>';
+    }).join('');
+    salaryOverEl.innerHTML = overSalaryData.map(function(s) {
+      return '<div class="salary-row"><span class="salary-cat">' + s.cat + '</span><span class="salary-range">' + s.range + '</span></div>';
+    }).join('');
+
+    // 优势
+    var strengthsEl = document.getElementById('strengths');
+    strengthsEl.innerHTML = [
+      {icon:'🎨', text:'Shader/HLSL 能力较强', level:'high'},
+      {icon:'🔥', text:'渲染方向是市场最热门', level:'high'},
+      {icon:'💰', text:'国内 1-3 年岗位最多，匹配度高', level:'medium'},
+    ].map(function(s) {
+      return '<div class="gap-item"><div class="gap-icon" style="background:rgba(52,199,89,0.15);">' + s.icon + '</div><div class="gap-text">' + s.text + '</div><span class="gap-level ' + s.level + '">' + (s.level==='high'?'强':'中') + '</span></div>';
+    }).join('');
+
+    // 劣势
+    var weaknessesEl = document.getElementById('weaknesses');
+    weaknessesEl.innerHTML = [
+      {icon:'⚠️', text:'Unreal Engine 深度不够', level:'medium'},
+      {icon:'⚠️', text:'Houdini 程序化能力弱', level:'medium'},
+      {icon:'⚠️', text:'缺少英文简历和英文作品集', level:'low'},
+      {icon:'⚠️', text:'Pipeline/工具开发经验偏少', level:'medium'},
+    ].map(function(s) {
+      return '<div class="gap-item"><div class="gap-icon" style="background:rgba(255,59,48,0.1);">' + s.icon + '</div><div class="gap-text">' + s.text + '</div><span class="gap-level ' + s.level + '">' + (s.level==='low'?'需加强':'待提升') + '</span></div>';
+    }).join('');
+
+  } catch(e) {
+    console.error('Analysis load error:', e);
+  }
+}
+
+loadAnalysis();
+</script>
+
+</body>
+</html>

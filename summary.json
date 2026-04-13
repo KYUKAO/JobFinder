@@ -1,0 +1,75 @@
+{
+  "updated": "2026-04-13",
+  "totalJobs": 46,
+  "domesticJobs": 26,
+  "overseasJobs": 20,
+  "hotTestCategory": {
+    "category": "rendering",
+    "label": "渲染 TA（含 Shader）",
+    "count": 13,
+    "trend": "上升",
+    "reason": "元宇宙/AR/VR 和次时代游戏对渲染技术需求激增"
+  },
+  "categoryBreakdown": {
+    "domestic": {
+      "general": 11,
+      "rendering": 6,
+      "character": 5,
+      "pipeline": 3,
+      "environment": 2,
+      "ui": 1
+    },
+    "overseas": {
+      "rendering": 7,
+      "character": 4,
+      "general": 4,
+      "pipeline": 2,
+      "environment": 2,
+      "ui": 1
+    }
+  },
+  "levelBreakdown": {
+    "intern": {"domestic": 5, "overseas": 2, "label": "实习 / Intern"},
+    "entry":  {"domestic": 1, "overseas": 2, "label": "1年以下 / Entry"},
+    "mid":    {"domestic": 18, "overseas": 10, "label": "1-3年 / Mid"},
+    "senior": {"domestic": 1, "overseas": 4, "label": "3-5年 / Senior"},
+    "lead":   {"domestic": 0, "overseas": 2, "label": "5年+ / Lead"}
+  },
+  "topCompanies": [
+    {"name": "腾讯游戏", "count": 3, "region": "国内"},
+    {"name": "Rockstar Games", "count": 2, "region": "海外"},
+    {"name": "Riot Games", "count": 2, "region": "海外"},
+    {"name": "Epic Games", "count": 2, "region": "海外"},
+    {"name": "Naughty Dog", "count": 2, "region": "海外"}
+  ],
+  "marketInsights": {
+    "hottest": {
+      "category": "Rendering TA（渲染 TA / Shader Artist）",
+      "demandReason": "AR/VR、次时代主机游戏对实时渲染技术需求爆发",
+      "minRequirements": {
+        "domestic": "1-3年：HLSL/GLSL Shader 编程 + Unity/UE 渲染管线 + 计算机图形学基础",
+        "overseas": "1-3 years：HLSL/GLSL shader authoring + Unreal Engine material system + real-time rendering fundamentals"
+      },
+      "avgSalary": "国内 25-50K·15薪 / 海外 $90-140K"
+    },
+    "secondHottest": {
+      "category": "Character TA（角色 TA / 绑定 TA）",
+      "demandReason": "开放世界游戏角色量激增，角色资产管线需求大",
+      "minRequirements": {
+        "domestic": "Maya/3ds Max 角色绑定 + 蒙皮权重 + Python/MEL 脚本 + 引擎导入流程",
+        "overseas": "Expert Maya rigging/skinning + Python/MEL scripting + game engine character import pipelines"
+      },
+      "avgSalary": "国内 22-45K·16薪 / 海外 $88-165K"
+    },
+    "thirdHottest": {
+      "category": "Pipeline TA（流程 TA / 工具开发）",
+      "demandReason": "大型游戏项目资产量指数增长，流程自动化成为刚需",
+      "minRequirements": {
+        "domestic": "Python 脚本 + DCC 工具开发 + 资产管理 + Unity/UE 管线",
+        "overseas": "Expert Python + Maya MEL + C# + asset management systems (Perforce, Shotgun)"
+      },
+      "avgSalary": "国内 20-40K·14薪 / 海外 $95-145K"
+    }
+  },
+  "updated": "2026-04-13"
+}

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>竞争者简历 — TA Job Finder</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --primary: #FF6B35; --purple: #AF52DE; --success: #34C759;
+      --bg: #F5F7FA; --card: #fff; --text: #1A1A2E;
+      --text-secondary: #666; --border: #E8ECF0;
+    }
+    body {
+      font-family: 'PingFang SC', 'Microsoft YaHei', Arial, sans-serif;
+      background: var(--bg); color: var(--text); min-height: 100vh;
+    }
+    header {
+      background: linear-gradient(135deg, #5856D6, #AF52DE);
+      padding: 48px 40px 60px; text-align: center; position: relative;
+    }
+    header::after { content:''; position:absolute; bottom:-2px; left:0; right:0; height:44px; background:var(--bg); border-radius:50% 50% 0 0; }
+    .header-eyebrow { font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:0.15em; color:rgba(255,255,255,0.7); margin-bottom:10px; }
+    header h1 { font-size:2rem; font-weight:800; color:#fff; margin-bottom:10px; }
+    header p { font-size:0.9rem; color:rgba(255,255,255,0.85); }
+    .back-btn { position:absolute; top:20px; left:24px; background:rgba(255,255,255,0.2); color:#fff; text-decoration:none; font-size:0.82rem; font-weight:600; padding:6px 14px; border-radius:20px; }
+
+    .main { max-width:1100px; margin:0 auto; padding:40px 24px 60px; }
+
+    .count-bar { background:var(--card); border-radius:12px; padding:14px 20px; margin-bottom:24px; box-shadow:0 2px 8px rgba(0,0,0,0.04); font-size:0.85rem; color:var(--text-secondary); }
+    .count-bar strong { color:var(--purple); }
+
+    .resume-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(300px, 1fr)); gap:16px; }
+    .resume-card { background:var(--card); border-radius:12px; padding:20px; box-shadow:0 2px 8px rgba(0,0,0,0.04); border-left:3px solid var(--purple); transition:all 0.15s; }
+    .resume-card:hover { box-shadow:0 4px 16px rgba(88,86,214,0.15); }
+    .resume-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
+    .resume-name { font-size:0.95rem; font-weight:700; color:var(--text); }
+    .resume-batch { font-size:0.72rem; font-weight:600; padding:3px 8px; border-radius:10px; background:rgba(88,86,214,0.1); color:var(--purple); }
+    .resume-skills { display:flex; flex-wrap:wrap; gap:4px; margin-bottom:10px; }
+    .skill-chip { font-size:0.7rem; padding:3px 8px; border-radius:10px; background:var(--bg); color:var(--text-secondary); }
+    .resume-stats { display:flex; gap:12px; font-size:0.72rem; color:var(--text-secondary); border-top:1px solid var(--border); padding-top:10px; }
+    .resume-stats span { display:flex; align-items:center; gap:4px; }
+
+    .empty-state { text-align:center; padding:60px 20px; color:var(--text-secondary); }
+    .empty-state .empty-icon { font-size:3rem; margin-bottom:16px; }
+    .empty-state .empty-title { font-size:1.1rem; font-weight:600; margin-bottom:8px; color:var(--text); }
+    .empty-state .empty-desc { font-size:0.9rem; }
+
+    @media (max-width:768px) {
+      header { padding:40px 20px 50px; }
+      header h1 { font-size:1.5rem; }
+      .resume-grid { grid-template-columns:1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <a href="index.html" class="back-btn">← 返回主页</a>
+  <div class="header-eyebrow">Competitor Resumes</div>
+  <h1>竞争者简历参考</h1>
+  <p>浏览竞争者背景，快速了解行业基准水平</p>
+</header>
+
+<main class="main">
+  <div class="count-bar" id="count-bar">
+    正在加载简历数据...
+  </div>
+  <div class="resume-grid" id="resume-grid">
+    <div class="empty-state">
+      <div class="empty-icon">📄</div>
+      <div class="empty-title">暂无简历数据</div>
+      <div class="empty-desc">请在 github_contents.json 中添加你的简历信息</div>
+    </div>
+  </div>
+</main>
+
+<script>
+async function loadResumes() {
+  try {
+    var resp = await fetch('github_contents.json');
+    var data = await resp.json();
+    var resumes = data.resumes || [];
+
+    document.getElementById('count-bar').innerHTML =
+      '共收录 <strong>' + resumes.length + '</strong> 份简历（示例数据，后续可扩展）';
+
+    if (resumes.length === 0) {
+      document.getElementById('resume-grid').innerHTML = '<div class="empty-state"><div class="empty-icon">📄</div><div class="empty-title">暂无简历数据</div><div class="empty-desc">请在 github_contents.json 中添加简历信息</div></div>';
+      return;
+    }
+
+    document.getElementById('resume-grid').innerHTML = resumes.map(function(r) {
+      var skills = r.skills || [];
+      return '<div class="resume-card">' +
+        '<div class="resume-header">' +
+          '<span class="resume-name">' + (r.name || '匿名 TA') + '</span>' +
+          '<span class="resume-batch">' + (r.batch || '27/28届') + '</span>' +
+        '</div>' +
+        '<div class="resume-skills">' +
+          skills.map(function(s){ return '<span class="skill-chip">' + s + '</span>'; }).join('') +
+        '</div>' +
+        '<div class="resume-stats">' +
+          '<span>🎓 ' + (r.education || '—') + '</span>' +
+          '<span>💼 ' + (r.experience || '—') + '</span>' +
+        '</div>' +
+      '</div>';
+    }).join('');
+  } catch(e) {
+    document.getElementById('resume-grid').innerHTML = '<div class="empty-state"><div class="empty-icon">⚠️</div><div class="empty-title">加载失败</div><div class="empty-desc">请检查 github_contents.json 是否存在</div></div>';
+  }
+}
+
+loadResumes();
+</script>
+</body>
+</html>

@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TA 作品集 — TA Job Finder</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --primary: #FF6B35; --success: #34C759; --purple: #AF52DE;
+      --bg: #F5F7FA; --card: #fff; --text: #1A1A2E;
+      --text-secondary: #666; --border: #E8ECF0;
+    }
+    body {
+      font-family: 'PingFang SC', 'Microsoft YaHei', Arial, sans-serif;
+      background: var(--bg); color: var(--text); min-height: 100vh;
+    }
+    header {
+      background: linear-gradient(135deg, #34C759, #30D158);
+      padding: 48px 40px 60px; text-align: center; position: relative;
+    }
+    header::after { content:''; position:absolute; bottom:-2px; left:0; right:0; height:44px; background:var(--bg); border-radius:50% 50% 0 0; }
+    .header-eyebrow { font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:0.15em; color:rgba(255,255,255,0.7); margin-bottom:10px; }
+    header h1 { font-size:2rem; font-weight:800; color:#fff; margin-bottom:10px; }
+    header p { font-size:0.9rem; color:rgba(255,255,255,0.85); }
+    .back-btn { position:absolute; top:20px; left:24px; background:rgba(255,255,255,0.2); color:#fff; text-decoration:none; font-size:0.82rem; font-weight:600; padding:6px 14px; border-radius:20px; }
+    .back-btn:hover { background:rgba(255,255,255,0.3); }
+
+    .main { max-width:1100px; margin:0 auto; padding:40px 24px 60px; }
+
+    .platform-tabs { display:flex; gap:8px; margin-bottom:24px; }
+    .tab-btn { padding:8px 20px; border-radius:20px; font-size:0.85rem; font-weight:600; cursor:pointer; border:1.5px solid transparent; background:var(--bg); color:var(--text-secondary); transition:all 0.15s; }
+    .tab-btn:hover { border-color:var(--success); color:var(--success); }
+    .tab-btn.active { background:var(--success); color:#fff; border-color:var(--success); }
+
+    .count-bar { background:var(--card); border-radius:12px; padding:14px 20px; margin-bottom:24px; box-shadow:0 2px 8px rgba(0,0,0,0.04); font-size:0.85rem; color:var(--text-secondary); }
+    .count-bar strong { color:var(--success); font-size:1rem; }
+
+    .video-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(320px, 1fr)); gap:20px; }
+    .video-card { background:var(--card); border-radius:16px; overflow:hidden; box-shadow:0 2px 12px rgba(0,0,0,0.04); transition:all 0.15s; }
+    .video-card:hover { box-shadow:0 4px 20px rgba(0,0,0,0.1); transform:translateY(-2px); }
+    .video-thumb { position:relative; padding-top:56.25%; background:#000; }
+    .video-thumb iframe, .video-thumb .thumb-placeholder { position:absolute; top:0; left:0; width:100%; height:100%; border:none; }
+    .thumb-placeholder { display:flex; align-items:center; justify-content:center; background:linear-gradient(135deg,#1a1a2e,#16213e); color:#fff; font-size:2rem; }
+    .video-info { padding:16px; }
+    .video-title { font-size:0.9rem; font-weight:700; margin-bottom:8px; line-height:1.4; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+    .video-meta { display:flex; gap:12px; font-size:0.75rem; color:var(--text-secondary); margin-bottom:8px; }
+    .video-author { font-weight:600; color:var(--success); }
+    .video-stats { display:flex; gap:12px; font-size:0.72rem; color:var(--text-secondary); }
+    .video-tag { display:inline-block; background:rgba(52,199,89,0.1); color:var(--success); font-size:0.7rem; padding:3px 8px; border-radius:10px; margin-top:8px; }
+
+    .empty-state { text-align:center; padding:60px 20px; color:var(--text-secondary); }
+    .empty-state .empty-icon { font-size:3rem; margin-bottom:16px; }
+    .empty-state .empty-title { font-size:1.1rem; font-weight:600; margin-bottom:8px; color:var(--text); }
+    .empty-state .empty-desc { font-size:0.9rem; }
+
+    @media (max-width:768px) {
+      header { padding:40px 20px 50px; }
+      header h1 { font-size:1.5rem; }
+      .video-grid { grid-template-columns:1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <a href="index.html" class="back-btn">← 返回主页</a>
+  <div class="header-eyebrow">TA Portfolios</div>
+  <h1>TA 作品集参考</h1>
+  <p>学习优秀作品集，快速定位自身差距</p>
+</header>
+
+<main class="main">
+  <div class="platform-tabs">
+    <button class="tab-btn active" data-platform="all">全部</button>
+    <button class="tab-btn" data-platform="bilibili">哔哩哔哩</button>
+    <button class="tab-btn" data-platform="youtube">YouTube</button>
+  </div>
+
+  <div class="count-bar" id="count-bar">
+    正在加载作品集数据...
+  </div>
+
+  <div class="video-grid" id="video-grid">
+    <div class="empty-state">
+      <div class="empty-icon">🎬</div>
+      <div class="empty-title">正在加载...</div>
+      <div class="empty-desc">请稍候，正在从 B 站和 YouTube 获取作品集</div>
+    </div>
+  </div>
+</main>
+
+<script>
+var allPortfolios = [];
+
+function renderPortfolios(platform) {
+  var grid = document.getElementById('video-grid');
+  var filtered = platform === 'all' ? allPortfolios : allPortfolios.filter(function(p){ return p.platform === platform; });
+
+  document.getElementById('count-bar').innerHTML =
+    '共收录 <strong>' + filtered.length + '</strong> 个作品集 | ' +
+    'B 站 <strong>' + allPortfolios.filter(function(p){ return p.platform==='bilibili'; }).length + '</strong> | ' +
+    'YouTube <strong>' + allPortfolios.filter(function(p){ return p.platform==='youtube'; }).length + '</strong>';
+
+  if (filtered.length === 0) {
+    grid.innerHTML = '<div class="empty-state"><div class="empty-icon">🎬</div><div class="empty-title">暂无作品集</div><div class="empty-desc">数据爬取中，请稍后再试</div></div>';
+    return;
+  }
+
+  grid.innerHTML = filtered.map(function(p) {
+    var isBilibili = p.platform === 'bilibili';
+    var thumbClass = isBilibili ? 'bi-play-circle-fill' : 'b-youtube';
+    var platformIcon = isBilibili ? '📺' : '▶️';
+    var embedUrl = isBilibili
+      ? 'https://player.bilibili.com/player.html?bvid=' + p.bvid + '&autoplay=0'
+      : (p.videoId ? 'https://www.youtube.com/embed/' + p.videoId + '?rel=0' : '');
+
+    return '<div class="video-card">' +
+      '<div class="video-thumb">' +
+        (embedUrl
+          ? '<iframe src="' + embedUrl + '" allowfullscreen loading="lazy"></iframe>'
+          : '<div class="thumb-placeholder">' + platformIcon + '</div>') +
+      '</div>' +
+      '<div class="video-info">' +
+        '<div class="video-title">' + p.title + '</div>' +
+        '<div class="video-meta">' +
+          '<span class="video-author">' + p.author + '</span>' +
+          '<span>' + (p.publishDate || '') + '</span>' +
+        '</div>' +
+        '<div class="video-stats">' +
+          (p.playCount ? '<span>▶ ' + p.playCount + '</span>' : '') +
+          (p.likeCount ? '<span>👍 ' + p.likeCount + '</span>' : '') +
+          (p.viewCount ? '<span>▶ ' + p.viewCount + '</span>' : '') +
+          '<span style="color:' + (isBilibili ? '#FB7299' : '#FF0000') + ';">' + platformIcon + ' ' + (isBilibili ? 'B站' : 'YouTube') + '</span>' +
+        '</div>' +
+        '<a href="' + p.url + '" target="_blank" class="video-tag">查看完整视频 →</a>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+
+async function loadPortfolios() {
+  try {
+    var resp = await fetch('portfolios.json');
+    var data = await resp.json();
+    allPortfolios = data.portfolios || [];
+
+    if (allPortfolios.length === 0) {
+      document.getElementById('count-bar').innerHTML = '暂无作品集数据 · <a href="scripts/updater.py" style="color:var(--success);">运行爬虫更新</a>';
+      document.getElementById('video-grid').innerHTML = '<div class="empty-state"><div class="empty-icon">📺</div><div class="empty-title">暂无作品集</div><div class="empty-desc">运行 updater.py 爬取 B 站和 YouTube 数据</div></div>';
+      return;
+    }
+
+    renderPortfolios('all');
+
+    document.querySelectorAll('.tab-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.remove('active'); });
+        btn.classList.add('active');
+        renderPortfolios(btn.dataset.platform);
+      });
+    });
+  } catch(e) {
+    document.getElementById('video-grid').innerHTML = '<div class="empty-state"><div class="empty-icon">⚠️</div><div class="empty-title">加载失败</div><div class="empty-desc">请确保 portfolios.json 存在</div></div>';
+  }
+}
+
+loadPortfolios();
+</script>
+</body>
+</html>

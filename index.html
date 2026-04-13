@@ -395,6 +395,61 @@
       .search-input { font-size: 0.85rem; }
       .search-hint { font-size: 0.65rem; }
     }
+
+    /* 市场分析摘要卡片 */
+    .insights-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; margin-bottom: 24px; }
+    .insight-card { background: var(--card); border-radius: 12px; padding: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+    .insight-hot { border-left: 3px solid #FF3B30; }
+    .insight-salary { border-left: 3px solid #FF9500; }
+    .insight-count { border-left: 3px solid #007AFF; }
+    .insight-deadline { border-left: 3px solid #34C759; }
+    .insight-icon { font-size: 1.2rem; margin-bottom: 6px; }
+    .insight-label { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-secondary); margin-bottom: 4px; }
+    .insight-title { font-size: 0.95rem; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+    .insight-detail { font-size: 0.78rem; color: var(--text-secondary); line-height: 1.5; }
+
+    .category-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+    .category-section { background: var(--card); border-radius: 12px; padding: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+    .category-section-title { font-size: 0.8rem; font-weight: 700; color: var(--text-secondary); margin-bottom: 12px; }
+    .cat-bar-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+    .cat-bar-label { font-size: 0.75rem; color: var(--text); width: 70px; flex-shrink: 0; }
+    .cat-bar-track { flex: 1; height: 8px; background: var(--bg); border-radius: 4px; overflow: hidden; }
+    .cat-bar-fill { height: 100%; border-radius: 4px; transition: width 0.6s ease; }
+    .cat-bar-count { font-size: 0.72rem; font-weight: 600; color: var(--text-secondary); width: 28px; text-align: right; flex-shrink: 0; }
+
+    .level-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+    .level-section { background: var(--card); border-radius: 12px; padding: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+    .level-section-title { font-size: 0.8rem; font-weight: 700; color: var(--text-secondary); margin-bottom: 12px; }
+    .level-bar-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+    .level-bar-label { font-size: 0.75rem; color: var(--text); width: 70px; flex-shrink: 0; }
+    .level-bar-track { flex: 1; height: 8px; background: var(--bg); border-radius: 4px; overflow: hidden; }
+    .level-bar-fill { height: 100%; border-radius: 4px; transition: width 0.6s ease; }
+    .level-bar-count { font-size: 0.72rem; font-weight: 600; color: var(--text-secondary); width: 28px; text-align: right; flex-shrink: 0; }
+
+    .company-list { display: flex; flex-direction: column; gap: 8px; }
+    .company-item { display: flex; align-items: center; gap: 12px; background: var(--card); border-radius: 10px; padding: 12px 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+    .company-rank { font-size: 0.85rem; font-weight: 800; color: var(--primary); width: 20px; flex-shrink: 0; }
+    .company-name { flex: 1; font-size: 0.85rem; font-weight: 600; color: var(--text); }
+    .company-count { font-size: 0.8rem; font-weight: 700; color: var(--primary); }
+    .company-region { font-size: 0.72rem; padding: 2px 8px; border-radius: 10px; background: var(--bg); color: var(--text-secondary); }
+
+    .top-jobs { display: flex; flex-direction: column; gap: 8px; }
+    .top-job-card { display: flex; align-items: center; gap: 12px; background: var(--card); border-radius: 10px; padding: 12px 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); border-left: 3px solid var(--primary); }
+    .top-job-info { flex: 1; }
+    .top-job-title { font-size: 0.85rem; font-weight: 700; color: var(--text); margin-bottom: 3px; }
+    .top-job-meta { font-size: 0.75rem; color: var(--text-secondary); }
+    .top-job-req { font-size: 0.75rem; color: var(--text-secondary); max-width: 200px; text-align: right; }
+    .top-job-salary { font-size: 0.8rem; font-weight: 700; color: #CC7700; flex-shrink: 0; }
+
+    .tips-list { display: flex; flex-direction: column; gap: 8px; }
+    .tip-card { display: flex; gap: 12px; background: var(--card); border-radius: 10px; padding: 12px 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+    .tip-icon { font-size: 1.2rem; flex-shrink: 0; }
+    .tip-text { font-size: 0.82rem; color: var(--text); line-height: 1.6; }
+
+    @media (max-width: 768px) {
+      .category-grid, .level-grid { grid-template-columns: 1fr; }
+      .insights-grid { grid-template-columns: 1fr 1fr; }
+    }
     @media (max-width: 480px) {
       header h1 { font-size: 1.35rem; }
       .nav-card { padding: 14px 12px; }
@@ -522,12 +577,69 @@
 
   </div>
 
-  <div class="section-title">数据概览</div>
-  <div class="info-bar">
-    <div class="info-item">
-      <div class="info-num" id="stat-jobs">—</div>
-      <div class="info-label">收录岗位</div>
+  <div class="section-title">市场分析摘要</div>
+  <div class="insights-grid">
+    <div class="insight-card insight-hot">
+      <div class="insight-icon">🔥</div>
+      <div class="insight-label">最热门方向</div>
+      <div class="insight-title" id="hottest-category">加载中...</div>
+      <div class="insight-detail" id="hottest-detail">—</div>
     </div>
+    <div class="insight-card insight-salary">
+      <div class="insight-icon">💰</div>
+      <div class="insight-label">薪资参考</div>
+      <div class="insight-title" id="avg-salary-domestic">—</div>
+      <div class="insight-title" id="avg-salary-overseas" style="font-size:0.8rem;margin-top:2px;color:#AF52DE;">—</div>
+    </div>
+    <div class="insight-card insight-count">
+      <div class="insight-icon">📊</div>
+      <div class="insight-label">本次收录</div>
+      <div class="insight-title" id="stat-jobs">—</div>
+      <div class="insight-detail" id="stat-breakdown"></div>
+    </div>
+    <div class="insight-card insight-deadline">
+      <div class="insight-icon">⏰</div>
+      <div class="insight-label">即将截止</div>
+      <div class="insight-title" id="deadline-soon">—</div>
+      <div class="insight-detail" id="deadline-list"></div>
+    </div>
+  </div>
+
+  <div class="section-title" style="margin-top:20px;">TA 细分岗位分布</div>
+  <div class="category-grid">
+    <div class="category-section">
+      <div class="category-section-title">🇨🇳 国内岗位（按方向）</div>
+      <div class="category-bars" id="domestic-category-bars"></div>
+    </div>
+    <div class="category-section">
+      <div class="category-section-title">🌎 海外岗位（按方向）</div>
+      <div class="category-bars" id="overseas-category-bars"></div>
+    </div>
+  </div>
+
+  <div class="section-title" style="margin-top:20px;">经验等级分布</div>
+  <div class="level-grid">
+    <div class="level-section">
+      <div class="level-section-title">🇨🇳 国内</div>
+      <div class="level-bars" id="domestic-level-bars"></div>
+    </div>
+    <div class="level-section">
+      <div class="level-section-title">🌎 海外</div>
+      <div class="level-bars" id="overseas-level-bars"></div>
+    </div>
+  </div>
+
+  <div class="section-title" style="margin-top:20px;">热门公司 TOP 5</div>
+  <div class="company-list" id="company-list"></div>
+
+  <div class="section-title" style="margin-top:20px;">热门岗位详情</div>
+  <div class="top-jobs" id="top-jobs"></div>
+
+  <div class="section-title" style="margin-top:20px;">投递建议</div>
+  <div class="tips-list" id="tips-list"></div>
+
+  <div class="section-title" style="margin-top:20px;">数据概览</div>
+  <div class="info-bar">
     <div class="info-item">
       <div class="info-num" id="stat-portfolios">—</div>
       <div class="info-label">收录作品集</div>
@@ -659,45 +771,261 @@
     var resEl = document.getElementById('stat-resumes');
     var jobsText = jobsEl.textContent;
     var portsText = portsEl.textContent;
-    var resText = resEl.textContent;
-    var jobsNum = parseInt(jobsText) || 0;
-    var portsNum = parseInt(portsText) || 0;
-    var resNum = parseInt(resText) || 0;
-    animateNumber(jobsEl, jobsNum, ' 个');
-    animateNumber(portsEl, portsNum, ' 个');
-    animateNumber(resEl, resNum, ' 份');
+  var resText = resEl ? resEl.textContent : '0';
+  var portsNum = parseInt(portsEl && portsEl.textContent || '0') || 0;
+  var resNum = parseInt(resText) || 0;
+  animateNumber(portsEl, portsNum, ' 个');
+  animateNumber(resEl, resNum, ' 份');
   }, 600);
 
   // ================================================================
   // 动态加载统计数字
   // ================================================================
-  Promise.all([
-    fetch('boss.html').then(function(r){ return r.text(); }).catch(function(){ return ''; }),
-    fetch('portfolios.html').then(function(r){ return r.text(); }).catch(function(){ return ''; }),
-    fetch('resumes.html').then(function(r){ return r.text(); }).catch(function(){ return ''; })
-  ]).then(function(results) {
-    var bossText = results[0];
-    var portText = results[1];
-    var resText = results[2];
+// ================================================================
+// 智能分析数据加载
+// ================================================================
+var catColors = {
+  rendering: '#FF9500', character: '#5856D6', pipeline: '#34C759',
+  environment: '#00B4D8', ui: '#FF2D55', general: '#FF6B35'
+};
+var catLabels = {
+  rendering: '渲染 TA', character: '角色 TA', pipeline: '流程 TA',
+  environment: '环境 TA', ui: 'UI TA', general: '综合 TA'
+};
+var catLabelsEn = {
+  rendering: 'Rendering', character: 'Character', pipeline: 'Pipeline',
+  environment: 'Environment', ui: 'UI/UX', general: 'General'
+};
+var levelLabels = {
+  intern: '实习/Intern', entry: '1年以下/Entry', mid: '1-3年/Mid',
+  senior: '3-5年/Senior', lead: '5年+/Lead'
+};
+var levelColors = {
+  intern: '#34C759', entry: '#5AC8FA', mid: '#FF6B35',
+  senior: '#AF52DE', lead: '#FF3B30'
+};
 
-    var jobMatch = bossText.match(/var domesticJobs = \[([\s\S]*?)\];/);
-    if (jobMatch) {
-      var count = (jobMatch[0].match(/\{/g) || []).length;
-      document.getElementById('stat-jobs').textContent = count > 0 ? count + ' 个' : '—';
-    }
+function renderCategoryBars(containerId, data, labels, colors) {
+  var container = document.getElementById(containerId);
+  if (!container) return;
+  var total = Object.values(data).reduce(function(a,b){ return a+b; }, 0) || 1;
+  container.innerHTML = Object.entries(data).map(function(entry) {
+    var cat = entry[0], count = entry[1];
+    var pct = Math.round(count / total * 100);
+    var label = labels[cat] || cat;
+    var color = colors[cat] || '#FF6B35';
+    return '<div class="cat-bar-row">' +
+      '<span class="cat-bar-label">' + label + '</span>' +
+      '<div class="cat-bar-track"><div class="cat-bar-fill" style="width:' + pct + '%;background:' + color + ';"></div></div>' +
+      '<span class="cat-bar-count">' + count + '</span></div>';
+  }).join('');
+}
 
-    var portMatch = portText.match(/var portfolios = \[([\s\S]*?)\];/);
-    if (portMatch) {
-      var count = (portMatch[0].match(/\{/g) || []).length;
-      document.getElementById('stat-portfolios').textContent = count > 0 ? count + ' 个' : '—';
-    }
+function renderLevelBars(containerId, data, region) {
+  var container = document.getElementById(containerId);
+  if (!container) return;
+  var levelMap = region === 'overseas' ? data.levelBreakdown_overseas || {} : data.levelBreakdown_domestic || {};
+  var levels = ['intern','entry','mid','senior','lead'];
+  var total = Object.values(levelMap).reduce(function(a,b){ return a+(typeof b==='number'?b:0); }, 0) || 1;
+  container.innerHTML = levels.map(function(lvl) {
+    var count = typeof levelMap[lvl]==='number' ? levelMap[lvl] : 0;
+    var pct = Math.round(count / total * 100);
+    var color = levelColors[lvl] || '#FF6B35';
+    return '<div class="level-bar-row">' +
+      '<span class="level-bar-label">' + levelLabels[lvl] + '</span>' +
+      '<div class="level-bar-track"><div class="level-bar-fill" style="width:' + pct + '%;background:' + color + ';"></div></div>' +
+      '<span class="level-bar-count">' + count + '</span></div>';
+  }).join('');
+}
 
-    var resMatch = resText.match(/var resumes = \[([\s\S]*?)\];/);
-    if (resMatch) {
-      var count = (resMatch[0].match(/\{/g) || []).length;
-      document.getElementById('stat-resumes').textContent = count > 0 ? count + ' 份' : '—';
+// 加载 JSON 数据并渲染
+Promise.all([
+  fetch('jobs-domestic.json').then(function(r){ return r.json().catch(function(){ return {}; }); }),
+  fetch('jobs-overseas.json').then(function(r){ return r.json().catch(function(){ return {}; }); }),
+  fetch('portfolios.json').then(function(r){ return r.json().catch(function(){ return {}; }); }),
+  fetch('summary.json').then(function(r){ return r.json().catch(function(){ return {}; }); }),
+]).then(function(results) {
+  var dom = results[0], over = results[1], ports = results[2], summary = results[3];
+
+  var domCount = (dom.domesticJobs||[]).filter(function(j){ return !j.excluded; }).length;
+  var overCount = (over.overseasJobs||[]).filter(function(j){ return !j.excluded; }).length;
+  var totalCount = domCount + overCount;
+
+  var jobsEl = document.getElementById('stat-jobs');
+  if (jobsEl) jobsEl.textContent = totalCount + ' 个';
+
+  var portsEl = document.getElementById('stat-portfolios');
+  if (portsEl) portsEl.textContent = (ports.portfolios||[]).length > 0 ? (ports.portfolios||[]).length + ' 个' : '—';
+
+  var dateEl = document.getElementById('stat-date');
+  if (dateEl) dateEl.textContent = (dom.updated || over.updated || todayStr).slice(5);
+
+  // 热门方向
+  var hottest = summary.hotTestCategory || {};
+  var hottestEl = document.getElementById('hottest-category');
+  var hottestDetailEl = document.getElementById('hottest-detail');
+  if (hottestEl) hottestEl.textContent = (hottest.label || '综合 TA') + ' ↑';
+  if (hottestDetailEl) {
+    hottestDetailEl.innerHTML = (hottest.reason || '岗位多、薪资高、门槛明确') +
+      '<br>共 <strong>' + (hottest.count || 0) + '</strong> 个岗位';
+  }
+
+  // 薪资参考
+  var insights = summary.marketInsights || {};
+  if (insights.hottest) {
+    var salaryParts = insights.hottest.avgSalary ? insights.hottest.avgSalary.split('/') : [];
+    var salDom = document.getElementById('avg-salary-domestic');
+    var salOver = document.getElementById('avg-salary-overseas');
+    if (salDom) salDom.textContent = salaryParts[0] || '—';
+    if (salOver) salOver.textContent = salaryParts[1] || '—';
+  }
+
+  // 截止日期提醒
+  var allJobs = (dom.domesticJobs||[]).concat(over.overseasJobs||[]);
+  var urgentJobs = allJobs.filter(function(j){ return j.daysLeft <= 7 && !j.excluded; }).slice(0,3);
+  var dlSoonEl = document.getElementById('deadline-soon');
+  var dlListEl = document.getElementById('deadline-list');
+  if (dlSoonEl) dlSoonEl.textContent = urgentJobs.length + ' 个即将截止';
+  if (dlListEl) {
+    dlListEl.innerHTML = urgentJobs.map(function(j) {
+      return '<div style="margin-top:4px;">⏰ <strong>' + j.company + '</strong> ' + j.name.substring(0,10) + '（剩' + j.daysLeft + '天）</div>';
+    }).join('');
+  }
+
+  // 细分分布
+  var domCat = (dom.summary||{}).categoryBreakdown || {general: domCount};
+  var overCat = (over.summary||{}).categoryBreakdown || {general: overCount};
+  if (!domCat.general && !domCat.rendering && !domCat.character) domCat = {general: domCount};
+  if (!overCat.general && !overCat.rendering && !overCat.character) overCat = {general: overCount};
+  renderCategoryBars('domestic-category-bars', domCat, catLabels, catColors);
+  renderCategoryBars('overseas-category-bars', overCat, catLabelsEn, catColors);
+
+  // 经验分布
+  var levelData = summary.levelBreakdown || {domestic:{}, overseas:{}};
+  renderLevelBars('domestic-level-bars', {levelBreakdown_domestic: levelData.domestic||levelData}, 'domestic');
+  renderLevelBars('overseas-level-bars', {levelBreakdown_overseas: levelData.overseas||levelData}, 'overseas');
+
+  // 热门公司
+  var topCompanies = ((dom.summary||{}).topCompanies||[]).slice(0,5);
+  var companyList = document.getElementById('company-list');
+  if (companyList) {
+    companyList.innerHTML = topCompanies.map(function(c, i) {
+      return '<div class="company-item">' +
+        '<span class="company-rank">#' + (i+1) + '</span>' +
+        '<span class="company-name">' + c.name + '</span>' +
+        '<span class="company-count">' + c.count + ' 个岗位</span>' +
+      '</div>';
+    }).join('');
+  }
+
+  // 热门岗位
+  var topJobsEl = document.getElementById('top-jobs');
+  if (topJobsEl && insights.hottest) {
+    var h = insights.hottest;
+    topJobsEl.innerHTML = '<div class="top-job-card">' +
+      '<span class="top-job-priority">🔥</span>' +
+      '<div class="top-job-info">' +
+        '<div class="top-job-title">' + h.category + '</div>' +
+        '<div class="top-job-meta">需求量最大 · 起薪高 · 门槛明确</div>' +
+      '</div>' +
+      '<div class="top-job-req">' + (h.minRequirements ? (h.minRequirements.domestic||'') : '') + '</div>' +
+    '</div>';
+    if (insights.secondHottest) {
+      var sh = insights.secondHottest;
+      topJobsEl.innerHTML += '<div class="top-job-card" style="border-color:#5856D6;">' +
+        '<span class="top-job-priority">⭐</span>' +
+        '<div class="top-job-info">' +
+          '<div class="top-job-title">' + sh.category + '</div>' +
+          '<div class="top-job-meta">角色资产管线需求大 · 薪资可观</div>' +
+        '</div>' +
+        '<div class="top-job-req">' + (sh.minRequirements ? (sh.minRequirements.domestic||'') : '') + '</div>' +
+      '</div>';
     }
-  }).catch(function(){});
+  }
+
+  // 投递建议
+  var tips = [
+    { icon: '🎯', text: '目前最推荐投递：<strong>渲染 TA</strong>，岗位多、薪资高、门槛明确，重点准备 Shader 作品集。' },
+    { icon: '📋', text: '国内 1-3 年经验岗位最多，建议聚焦腾讯/米哈游/网易，匹配好技能标签再投递。' },
+    { icon: '🌐', text: '海外岗位建议从 Riot/Epic/Naughty Dog 入手，关注 LinkedIn + Indeed + 官网直投三条渠道。' },
+    { icon: '📝', text: '每个岗位 JD 第一句必须读完再投，关键词匹配度直接影响简历通过率（ATS 筛选）。' },
+  ];
+  var tipsList = document.getElementById('tips-list');
+  if (tipsList) {
+    tipsList.innerHTML = tips.map(function(t) {
+      return '<div class="tip-card"><span class="tip-icon">' + t.icon + '</span><span class="tip-text">' + t.text + '</span></div>';
+    }).join('');
+  }
+
+}).catch(function(e){ console.error('Summary load error:', e); });
+
+// 数字动画
+function animateNumber(el, target, suffix) {
+  suffix = suffix || '';
+  var duration = 1200, start = performance.now();
+  function step(now) {
+    var progress = Math.min((now - start) / duration, 1);
+    var eased = 1 - Math.pow(1 - progress, 3);
+    el.textContent = Math.round(eased * target) + suffix;
+    if (progress < 1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+setTimeout(function() {
+  var els = ['stat-jobs','stat-portfolios'];
+  els.forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el) {
+      var text = el.textContent;
+      var num = parseInt(text) || 0;
+      if (num > 0) animateNumber(el, num, '');
+    }
+  });
+}, 800);
+
+// 搜索
+function initSearch() {
+  var navCards = Array.from(document.querySelectorAll('.nav-card'));
+  var clearBtn = document.getElementById('search-clear');
+  var countEl = document.getElementById('search-count');
+  function performSearch(query) {
+    query = query.trim().toLowerCase();
+    if (!query) {
+      navCards.forEach(function(c){ c.classList.remove('search-hidden','search-match'); });
+      if (clearBtn) clearBtn.style.display = 'none';
+      if (countEl) countEl.style.display = 'none';
+      return;
+    }
+    if (clearBtn) clearBtn.style.display = 'block';
+    var matches = navCards.filter(function(c){ return c.textContent.toLowerCase().indexOf(query) >= 0; });
+    navCards.forEach(function(c){ c.classList.add('search-hidden'); c.classList.remove('search-match'); });
+    matches.forEach(function(c){ c.classList.remove('search-hidden'); c.classList.add('search-match'); });
+    if (countEl) {
+      countEl.style.display = 'block';
+      countEl.textContent = matches.length + ' 个匹配';
+      countEl.style.color = matches.length > 0 ? 'var(--primary)' : '#FF6B35';
+    }
+  }
+  var input = document.getElementById('search-input');
+  if (input) input.addEventListener('input', function(e){ performSearch(e.target.value); });
+  if (clearBtn) clearBtn.addEventListener('click', function(){
+    if (input) { input.value = ''; performSearch(''); }
+  });
+}
+initSearch();
+
+// 涟漪效果
+document.querySelectorAll('.nav-card').forEach(function(card) {
+  card.addEventListener('click', function(e) {
+    var ripple = document.createElement('span');
+    ripple.className = 'ripple';
+    var rect = card.getBoundingClientRect();
+    var size = Math.max(rect.width, rect.height);
+    ripple.style.cssText = 'width:'+size+'px;height:'+size+'px;left:'+(e.clientX-rect.left-size/2)+'px;top:'+(e.clientY-rect.top-size/2)+'px;';
+    card.appendChild(ripple);
+    setTimeout(function(){ ripple.remove(); }, 700);
+  });
+});
 </script>
 </body>
 </html>

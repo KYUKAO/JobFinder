@@ -3,17 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>海外 TA 岗位地图 — TA Job Finder</title>
+  <title>海外 TA 岗位 — TA Job Finder</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     :root {
-      --primary: #007AFF;
-      --accent: #FF6B35;
-      --accent-warm: #FF9500;
+      --primary: #FF6B35;
+      --primary-dark: #E55A1F;
+      --accent: #FF9500;
+      --success: #34C759;
+      --danger: #FF3B30;
       --purple: #AF52DE;
+      --blue: #007AFF;
       --bg: #F5F7FA;
       --card: #fff;
       --text: #1A1A2E;
@@ -32,286 +35,198 @@
     }
 
     header {
-      background: linear-gradient(135deg, #FF6B35, #FF9500);
+      background: linear-gradient(135deg, #5856D6, #AF52DE);
       flex-shrink: 0;
-      box-shadow: 0 2px 12px rgba(255,107,53,0.3);
+      box-shadow: 0 2px 12px rgba(88,86,214,0.3);
       z-index: 10;
     }
     .header-inner {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 14px 24px;
-      gap: 16px;
+      padding: 12px 20px;
+      gap: 12px;
     }
-    .header-left { display: flex; align-items: center; gap: 12px; }
+    .header-left { display: flex; align-items: center; gap: 10px; }
     .header-back {
       background: rgba(255,255,255,0.2);
       color: #fff;
       text-decoration: none;
-      font-size: 0.85rem;
+      font-size: 0.82rem;
       font-weight: 600;
-      padding: 6px 14px;
+      padding: 5px 12px;
       border-radius: 20px;
     }
     .header-back:hover { background: rgba(255,255,255,0.3); }
-    .header-title { font-size: 1.1rem; font-weight: 700; color: #fff; }
-    .header-meta { font-size: 0.75rem; color: rgba(255,255,255,0.8); margin-top: 2px; }
-    #new-badge {
-      background: #fff;
-      color: var(--accent);
-      font-weight: 700;
-      font-size: 0.75rem;
-      padding: 3px 10px;
-      border-radius: 20px;
-    }
+    .header-title { font-size: 1.05rem; font-weight: 700; color: #fff; }
+    .header-meta { font-size: 0.72rem; color: rgba(255,255,255,0.8); margin-top: 1px; }
 
-    .filter-bar {
+    .filter-panel {
       background: var(--card);
-      padding: 10px 24px;
+      padding: 8px 20px;
       display: flex;
-      align-items: center;
-      gap: 8px;
-      flex-wrap: wrap;
+      flex-direction: column;
+      gap: 6px;
       border-bottom: 1px solid var(--border);
       flex-shrink: 0;
     }
-    .filter-tab {
-      padding: 5px 14px;
-      border-radius: 20px;
-      font-size: 0.78rem;
+    .filter-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .filter-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--text-secondary);
+      min-width: 60px;
+      flex-shrink: 0;
+    }
+    .filter-btn {
+      padding: 4px 12px;
+      border-radius: 16px;
+      font-size: 0.75rem;
       font-weight: 500;
       cursor: pointer;
       border: 1.5px solid transparent;
       background: var(--bg);
       color: var(--text-secondary);
-      transition: all 0.2s;
+      transition: all 0.15s;
       white-space: nowrap;
     }
-    .filter-tab:hover { border-color: var(--accent); color: var(--accent); }
-    .filter-tab.active { background: var(--accent); color: #fff; border-color: var(--accent); }
-    .filter-tab.active.indie { background: var(--accent-warm); border-color: var(--accent-warm); }
-    .filter-tab.active.fang { background: #00B4D8; border-color: #00B4D8; }
+    .filter-btn:hover { border-color: var(--purple); color: var(--purple); }
+    .filter-btn.active { background: var(--purple); color: #fff; border-color: var(--purple); }
+
+    .filter-btn.level-intern.active { background: #34C759; border-color: #34C759; }
+    .filter-btn.level-entry.active { background: #5AC8FA; border-color: #5AC8FA; }
+    .filter-btn.level-mid.active { background: var(--purple); border-color: var(--purple); }
+    .filter-btn.level-senior.active { background: #AF52DE; border-color: #AF52DE; }
+    .filter-btn.level-lead.active { background: #FF3B30; border-color: #FF3B30; }
+
+    .filter-btn.ta-rendering.active { background: #FF9500; border-color: #FF9500; }
+    .filter-btn.ta-character.active { background: #5856D6; border-color: #5856D6; }
+    .filter-btn.ta-pipeline.active { background: #34C759; border-color: #34C759; }
+    .filter-btn.ta-environment.active { background: #00B4D8; border-color: #00B4D8; }
+    .filter-btn.ta-ui.active { background: #FF2D55; border-color: #FF2D55; }
+    .filter-btn.ta-general.active { background: var(--purple); border-color: var(--purple); }
+
+    .stats-bar {
+      background: rgba(88,86,214,0.06);
+      padding: 6px 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+      flex-shrink: 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .stats-bar strong { color: var(--purple); }
 
     .container {
       display: grid;
-      grid-template-columns: 400px 1fr;
+      grid-template-columns: 380px 1fr;
       flex: 1;
       overflow: hidden;
     }
 
     .sidebar {
       background: var(--card);
-      overflow-y: auto;
       border-right: 1px solid var(--border);
       display: flex;
       flex-direction: column;
+      overflow: hidden;
     }
     .sidebar-header {
-      padding: 14px 20px;
-      font-size: 0.7rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: var(--text-secondary);
+      padding: 10px 16px;
       border-bottom: 1px solid var(--border);
-      position: sticky;
-      top: 0;
-      background: var(--card);
-      z-index: 10;
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+      flex-shrink: 0;
+    }
+    .sidebar-header strong { color: var(--purple); font-size: 0.85rem; }
+    .job-list { flex: 1; overflow-y: auto; padding: 8px; }
+
+    .job-card {
+      background: var(--bg);
+      border-radius: 10px;
+      padding: 12px 14px;
+      margin-bottom: 8px;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: all 0.15s;
+    }
+    .job-card:hover { border-color: var(--purple); background: #fff; }
+    .job-card.focused { border-color: var(--purple); background: #fff; box-shadow: 0 2px 12px rgba(88,86,214,0.15); }
+
+    .job-new-tag {
+      display: inline-block;
+      background: var(--purple);
+      color: #fff;
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 8px;
+      margin-bottom: 4px;
+    }
+    .job-company { font-size: 0.85rem; font-weight: 600; color: var(--text); margin-bottom: 3px; }
+    .job-title { font-size: 0.9rem; font-weight: 700; color: var(--text); margin-bottom: 6px; line-height: 1.4; }
+    .job-badges { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 6px; }
+
+    .badge {
+      font-size: 0.68rem;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 10px;
+    }
+    .badge-level-intern { background: rgba(52,199,89,0.15); color: #34C759; }
+    .badge-level-entry { background: rgba(90,200,250,0.15); color: #5AC8FA; }
+    .badge-level-mid { background: rgba(88,86,214,0.15); color: #5856D6; }
+    .badge-level-senior { background: rgba(175,82,222,0.15); color: #AF52DE; }
+    .badge-level-lead { background: rgba(255,59,48,0.15); color: #FF3B30; }
+    .badge-salary { background: rgba(255,149,0,0.15); color: #CC7700; }
+    .badge-source { background: var(--border); color: var(--text-secondary); }
+    .badge-ta { background: rgba(88,86,214,0.12); color: #5856D6; }
+
+    .job-meta-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
-    }
-
-    .job-card {
-      padding: 16px 20px;
-      border-bottom: 1px solid var(--border);
-      cursor: pointer;
-      transition: background 0.15s;
-      position: relative;
-    }
-    .job-card:hover, .job-card.active { background: #FFF8F5; }
-    .job-card.active { border-left: 3px solid var(--accent); }
-
-    .job-company {
-      font-size: 0.72rem;
-      font-weight: 700;
-      color: var(--accent);
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      margin-bottom: 4px;
-    }
-    .job-title {
-      font-size: 0.88rem;
-      font-weight: 600;
-      color: var(--text);
-      margin-bottom: 6px;
-      line-height: 1.3;
-    }
-    .job-meta {
-      display: flex;
-      gap: 6px;
-      flex-wrap: wrap;
       font-size: 0.72rem;
       color: var(--text-secondary);
-      margin-bottom: 4px;
     }
-    .badge {
-      display: inline-block;
-      padding: 1px 8px;
-      border-radius: 20px;
-      font-size: 0.68rem;
-      font-weight: 600;
-    }
-    .badge-fulltime { background: #E8F4FF; color: var(--primary); }
-    .badge-contractor { background: #F3E8FF; color: var(--purple); }
-    .badge-aaa { background: #FFF0EB; color: var(--accent); }
-    .badge-indie { background: #FFF8E8; color: var(--accent-warm); }
-    .badge-fang { background: #E8F9FD; color: #00B4D8; }
-    .badge-salary { background: #E8F9ED; color: #34C759; }
-    .badge-new {
-      background: var(--accent);
-      color: #fff;
-      position: absolute;
-      top: 10px; right: 12px;
-      font-size: 0.62rem;
-      font-weight: 700;
-      padding: 1px 6px;
-      border-radius: 8px;
-    }
-    .job-dist { font-size: 0.75rem; color: var(--accent); font-weight: 600; margin-top: 4px; }
-    .job-address { font-size: 0.72rem; color: #999; margin-top: 4px; }
+    .job-deadline { font-weight: 600; }
+    .job-deadline.urgent { color: var(--danger); animation: blink 1s infinite; }
+    .job-deadline.soon { color: #FF9500; }
+    .job-deadline.normal { color: var(--success); }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.5} }
 
-    .jd-section {
-      background: #FAFAFA;
-      border-top: 1px solid var(--border);
-      padding: 16px 20px;
-      margin-top: 8px;
-      border-radius: 0 0 8px 8px;
-      display: none;
-    }
+    .jd-section { display: none; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); font-size: 0.82rem; line-height: 1.7; color: var(--text-secondary); }
     .jd-section.open { display: block; }
-    .jd-label {
-      font-size: 0.68rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: var(--text-secondary);
-      margin-bottom: 8px;
-    }
-    .jd-content {
-      font-size: 0.8rem;
-      color: var(--text);
-      line-height: 1.7;
-    }
-    .jd-content p { margin-bottom: 8px; }
-    .jd-content ul { padding-left: 16px; margin-bottom: 8px; }
-    .jd-apply-btn {
-      display: inline-block;
-      background: var(--accent);
-      color: #fff;
-      text-decoration: none;
-      font-size: 0.8rem;
-      font-weight: 600;
-      padding: 8px 20px;
-      border-radius: 20px;
-      margin-top: 12px;
-      transition: background 0.2s;
-    }
-    .jd-apply-btn:hover { background: #E05A2B; }
+    .jd-label { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--purple); margin-bottom: 6px; }
+    .jd-content { max-height: 180px; overflow-y: auto; padding-right: 4px; margin-bottom: 8px; }
+    .jd-apply-btn { display: inline-block; background: var(--purple); color: #fff; text-decoration: none; font-size: 0.8rem; font-weight: 700; padding: 6px 16px; border-radius: 20px; transition: background 0.15s; }
+    .jd-apply-btn:hover { background: #4B48B8; }
 
-    .map-wrapper { position: relative; }
-    #map { width: 100%; height: 100%; }
+    #map { flex: 1; min-height: 0; }
 
-    .map-legend {
-      position: absolute;
-      bottom: 24px;
-      right: 16px;
-      background: rgba(255,255,255,0.95);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 12px 16px;
-      font-size: 0.75rem;
-      z-index: 1000;
-      backdrop-filter: blur(8px);
-      box-shadow: 0 4px 16px rgba(0,0,0,0.1);
-    }
-    .map-legend h4 {
-      font-size: 0.68rem;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: var(--text-secondary);
-      margin-bottom: 8px;
-    }
-    .legend-item {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 5px;
-      color: var(--text);
-    }
-    .legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
-
-    /* Marker pulse animation */
-    @keyframes markerPulse {
-      0% { box-shadow: 0 0 0 0 rgba(255,107,53,0.6); }
-      70% { box-shadow: 0 0 0 12px rgba(255,107,53,0); }
-      100% { box-shadow: 0 0 0 0 rgba(255,107,53,0); }
-    }
-    .marker-new { animation: markerPulse 2s ease-out infinite; }
-
-    /* Hover tooltip */
-    .marker-tooltip {
-      position: fixed; z-index: 9999;
-      background: rgba(26,26,46,0.92); color: #fff;
-      padding: 10px 14px; border-radius: 10px;
-      font-size: 0.78rem; line-height: 1.5;
-      max-width: 220px; pointer-events: none;
-      backdrop-filter: blur(8px);
-      box-shadow: 0 4px 20px rgba(0,0,0,0.25);
-      transition: opacity 0.15s; opacity: 0;
-    }
-    .marker-tooltip.visible { opacity: 1; }
-    .mtp-company { font-weight: 700; font-size: 0.82rem; }
-    .mtp-title { font-size: 0.8rem; margin-top: 4px; }
-    .mtp-salary { color: #34C759; font-weight: 600; margin-top: 4px; }
-    .mtp-new { color: #FF6B35; font-weight: 700; margin-top: 4px; }
+    .leaflet-popup-content-wrapper { border-radius: 12px; font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+    .popup-new { display:inline-block; background:#5856D6; color:#fff; font-size:0.7rem; font-weight:700; padding:2px 8px; border-radius:8px; margin-bottom:6px; }
+    .popup-deadline { font-size:0.78rem; font-weight:600; margin:4px 0; }
+    .popup-link { color:#5856D6; font-size:0.82rem; font-weight:600; text-decoration:none; }
+    .popup-link:hover { text-decoration:underline; }
 
     @media (max-width: 768px) {
-      .header-inner { padding: 10px 16px; }
-      .header-back { padding: 5px 10px; font-size: 0.8rem; }
+      body { height: auto; overflow: auto; }
+      .container { grid-template-columns: 1fr; }
+      #map { height: 300px; order: -1; }
+      .sidebar { height: auto; max-height: 60vh; }
+      .job-list { max-height: 50vh; }
+      .header-inner { padding: 10px 12px; }
       .header-title { font-size: 0.95rem; }
-      .header-meta { display: none; }
-      .filter-bar { padding: 8px 12px; gap: 6px; overflow-x: auto; flex-wrap: nowrap; -webkit-overflow-scrolling: touch; }
-      .filter-tab { padding: 4px 10px; font-size: 0.72rem; flex-shrink: 0; }
-      .container {
-        grid-template-columns: 1fr;
-        grid-template-rows: 240px 1fr;
-      }
-      .sidebar { order: 2; border-right: none; border-top: 1px solid var(--border); }
-      .sidebar-header { font-size: 0.65rem; padding: 10px 14px; }
-      .job-card { padding: 10px 12px; }
-      .job-title { font-size: 0.85rem; }
-      .job-company { font-size: 0.72rem; }
-      .job-salary { font-size: 0.78rem; }
-      .job-meta { font-size: 0.62rem; }
-      .map-wrapper { order: 1; }
-      .map-legend { display: none; }
-      .marker-tooltip { font-size: 0.72rem; padding: 8px 10px; }
-      #map { touch-action: none; }
-      .jd-section { padding: 12px; }
-      .jd-content { font-size: 0.75rem; line-height: 1.6; }
-      .jd-apply-btn { font-size: 0.8rem; padding: 8px 0; }
+      .filter-panel { padding: 8px 12px; }
     }
-    @media (max-width: 480px) {
-      .container { grid-template-rows: 200px 1fr; }
-      .filter-tab { padding: 3px 8px; font-size: 0.68rem; }
-      .header-inner { padding: 8px 12px; }
-    }
-    .sidebar::-webkit-scrollbar { width: 4px; }
-    .sidebar::-webkit-scrollbar-track { background: var(--border); }
-    .sidebar::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 4px; }
   </style>
 </head>
 <body>
@@ -319,292 +234,246 @@
 <header>
   <div class="header-inner">
     <div class="header-left">
-      <a href="index.html" class="header-back">← 首页</a>
+      <a href="index.html" class="header-back">← 返回</a>
       <div>
-        <div class="header-title">🌎 海外 TA 岗位地图</div>
-        <div class="header-meta">University of Utah 为起点 · 通勤距离一览</div>
+        <div class="header-title">海外 TA 岗位</div>
+        <div class="header-meta" id="header-meta">加载中...</div>
       </div>
     </div>
-    <span id="new-badge">— 个今日新岗位</span>
   </div>
 </header>
 
-<div class="marker-tooltip" id="marker-tooltip">
-  <div class="mtp-company" id="mtp-company"></div>
-  <div class="mtp-title" id="mtp-title"></div>
-  <div class="mtp-salary" id="mtp-salary"></div>
-  <div class="mtp-new" id="mtp-new"></div>
+<div class="filter-panel">
+  <div class="filter-row">
+    <span class="filter-label">Experience</span>
+    <button class="filter-btn level-all active" data-filter="level" data-value="all">全部</button>
+    <button class="filter-btn level-intern" data-filter="level" data-value="intern">Intern</button>
+    <button class="filter-btn level-entry" data-filter="level" data-value="entry">Entry</button>
+    <button class="filter-btn level-mid" data-filter="level" data-value="mid">Mid (1-3y)</button>
+    <button class="filter-btn level-senior" data-filter="level" data-value="senior">Senior (3-5y)</button>
+    <button class="filter-btn level-lead" data-filter="level" data-value="lead">Lead (5y+)</button>
+  </div>
+  <div class="filter-row">
+    <span class="filter-label">TA Focus</span>
+    <button class="filter-btn ta-all active" data-filter="ta" data-value="all">全部</button>
+    <button class="filter-btn ta-rendering" data-filter="ta" data-value="rendering">Rendering</button>
+    <button class="filter-btn ta-character" data-filter="ta" data-value="character">Character</button>
+    <button class="filter-btn ta-pipeline" data-filter="ta" data-value="pipeline">Pipeline</button>
+    <button class="filter-btn ta-environment" data-filter="ta" data-value="environment">Environment</button>
+    <button class="filter-btn ta-ui" data-filter="ta" data-value="ui">UI/UX</button>
+    <button class="filter-btn ta-general" data-filter="ta" data-value="general">General</button>
+  </div>
 </div>
 
-<div class="filter-bar">
-  <span class="filter-tab active" data-filter="all">全部</span>
-  <span class="filter-tab" data-filter="aaa">AAA</span>
-  <span class="filter-tab indie" data-filter="indie">Indie</span>
-  <span class="filter-tab fang" data-filter="fang">Big Tech</span>
-  <div style="flex:1;"></div>
-  <select id="sort-select" style="font-size:0.75rem;padding:4px 8px;border-radius:8px;border:1px solid var(--border);">
-    <option value="priority">优先级</option>
-    <option value="distance">距离</option>
-    <option value="new">最新发布</option>
-  </select>
-</div>
+<div class="stats-bar" id="stats-bar">加载中...</div>
 
 <div class="container">
   <div class="sidebar">
-    <div class="sidebar-header">
-      <span>Open Positions</span>
-      <span id="visible-count" style="font-weight:400;color:var(--accent);">0 / 0</span>
-    </div>
-    <div id="job-list"></div>
+    <div class="sidebar-header" id="sidebar-header">加载中...</div>
+    <div class="job-list" id="job-list"></div>
   </div>
-
-  <div class="map-wrapper">
-    <div id="map"></div>
-    <div class="map-legend">
-      <h4>Legend 图例</h4>
-      <div class="legend-item"><div class="legend-dot" style="background:#e94560;"></div>U of U（当前位置）</div>
-      <div class="legend-item"><div class="legend-dot" style="background:#FF6B35;"></div>AAA 公司</div>
-      <div class="legend-item"><div class="legend-dot" style="background:#FF9500;"></div>Indie</div>
-      <div class="legend-item"><div class="legend-dot" style="background:#00B4D8;"></div>Big Tech</div>
-    </div>
-  </div>
+  <div id="map"></div>
 </div>
 
 <script>
-var UOU = [40.7649, -111.8421];
-
-var overseasJobs = [
-  {
-    id: 1,
-    name: "Associate Technical Artist, Characters",
-    company: "Avalanche / WB Games",
-    address: "282 W 3900 S, South Salt Lake, UT",
-    lat: 40.7000,
-    lng: -111.9022,
-    category: "aaa",
-    type: "Full-time",
-    priority: 3,
-    salary: "—",
-    distance: "~6.2 mi · ~12 min",
-    url: "https://www.linkedin.com/jobs/search/?keywords=Technical%20Artist&location=Salt%20Lake%20City%2C%20UT",
-    postedDate: "2026-04-12",
-    excluded: false,
-    jd: "The Associate Technical Artist will work closely with the Character Art team to develop and maintain character asset pipelines. Responsibilities include creating and maintaining character rigs and deformation tools; troubleshooting character performance issues; collaborating with animators to ensure proper deformation and skin weighting; developing Maya scripts and tools to streamline character workflows. Requirements: Strong Maya and rigging knowledge; proficiency in Python/MEL scripting; experience with game engine character import pipelines; understanding of character deformation and skin weighting. This role is hybrid (3 days in-office) in South Salt Lake."
-  },
-  {
-    id: 2,
-    name: "Advanced Technical Artist, Environment",
-    company: "Avalanche / WB Games",
-    address: "282 W 3900 S, South Salt Lake, UT",
-    lat: 40.7000,
-    lng: -111.9022,
-    category: "aaa",
-    type: "Full-time",
-    priority: 3,
-    salary: "$151K–$281K",
-    distance: "~6.2 mi · ~12 min",
-    url: "https://careers.wbd.com/global/en/search/?keywords=Technical%20Artist",
-    postedDate: "2026-04-12",
-    excluded: false,
-    jd: "The Advanced Technical Artist will be responsible for developing environment art pipelines and tools for the Avalanche Studio's open-world game. Responsibilities: architect and maintain environment asset pipelines (terrain, foliage, architecture); develop Houdini and Python scripts for procedural environment workflows; optimize environment assets for real-time rendering; collaborate with environment artists to solve complex technical challenges. Requirements: 5+ years of technical art experience; expert-level Houdini, Python, and shader authoring; deep understanding of real-time rendering optimization; experience with open-world game environment pipelines. Salary range: $151K–$281K depending on experience."
-  },
-  {
-    id: 3,
-    name: "Lead Technical Artist — Characters",
-    company: "Warner Bros. Discovery",
-    address: "282 W 3900 S, South Salt Lake, UT",
-    lat: 40.7000,
-    lng: -111.9022,
-    category: "aaa",
-    type: "Full-time",
-    priority: 3,
-    salary: "—",
-    distance: "~6.2 mi · ~12 min",
-    url: "https://careers.wbd.com/global/en/search/?keywords=Technical%20Artist",
-    postedDate: "2026-04-10",
-    excluded: false,
-    jd: "The Lead Technical Artist will oversee the character technical art team, ensuring high-quality character assets across all projects. Responsibilities: lead and mentor the character TA team; define and enforce character technical standards; work with outsourcing teams to maintain quality; prototype new character pipeline technologies. Requirements: 8+ years in technical art with 2+ years in a leadership role; expert knowledge of Maya, Unreal Engine, and character deformation; strong communication and team leadership skills; experience shipping AAA titles."
-  },
-  {
-    id: 4,
-    name: "Technical Artist — Rendering",
-    company: "Meta",
-    address: "10407 S Commerce Center Dr, South Jordan, UT",
-    lat: 40.5623,
-    lng: -111.9838,
-    category: "fang",
-    type: "Contractor",
-    priority: 2,
-    salary: "$57K–$141K",
-    distance: "~17.5 mi · ~22 min",
-    url: "https://www.metacareers.com/jobs?keywords=Technical%20Artist",
-    postedDate: "2026-04-09",
-    excluded: false,
-    jd: "The Technical Artist will support Meta's Reality Labs AR/VR rendering team. Responsibilities: develop and optimize shaders for AR/VR applications; research and implement advanced rendering techniques; collaborate with engineers to integrate art assets into real-time rendering pipelines; create technical documentation and art pipelines for AR/VR content. Requirements: strong knowledge of rendering pipelines and GPU architecture; proficiency in shader languages (HLSL, GLSL); experience with AR/VR rendering optimization; understanding of mobile GPU constraints. Note: This is a contractor role (W2) with potential conversion to full-time."
-  }
-];
+var overseasJobs = [];
+var currentLevel = 'all';
+var currentTa = 'all';
+var focusedId = null;
 
 var today = new Date();
 var todayStr = today.getFullYear() + '-' + String(today.getMonth()+1).padStart(2,'0') + '-' + String(today.getDate()).padStart(2,'0');
-
 function isToday(d) { return d === todayStr; }
-function getCatColor(c) { return { aaa:'#FF6B35', indie:'#FF9500', fang:'#00B4D8' }[c] || '#5AC8FA'; }
-function mkIcon(color, sz, isNew) {
-  sz = sz || 14;
-  var glow = isNew ? 'box-shadow:0 0 10px ' + color + ';' : '';
-  var anim = isNew ? 'animation:markerPulse 2s ease-out infinite;' : '';
-  return L.divIcon({ className: isNew ? 'marker-new' : '', html:'<div style="width:'+sz+'px;height:'+sz+'px;background:'+color+';border:'+(isNew?'3px':'2.5px')+' solid #fff;border-radius:50%;'+glow+anim+'"></div>', iconSize:[sz,sz], iconAnchor:[sz/2,sz/2] });
+
+function getDeadlineClass(daysLeft) {
+  if (daysLeft <= 3) return 'urgent';
+  if (daysLeft <= 7) return 'soon';
+  return 'normal';
+}
+function getDeadlineText(daysLeft) {
+  if (daysLeft <= 0) return 'Closed';
+  if (daysLeft === 1) return 'Due tomorrow';
+  if (daysLeft <= 7) return daysLeft + ' days left';
+  return daysLeft + ' days';
+}
+function getDeadlineColor(daysLeft) {
+  if (daysLeft <= 3) return '#FF3B30';
+  if (daysLeft <= 7) return '#FF9500';
+  return '#34C759';
 }
 
-var map = L.map('map', { zoomControl:true, scrollWheelZoom:true }).setView(UOU, 11);
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-  attribution: '&copy; OSM', maxZoom: 19
-}).addTo(map);
+function getFiltered() {
+  return overseasJobs.filter(function(j) {
+    if (j.excluded) return false;
+    if (currentLevel !== 'all' && j.level !== currentLevel) return false;
+    if (currentTa !== 'all' && j.taSubCategory !== currentTa) return false;
+    return true;
+  });
+}
 
-L.marker(UOU, {icon:mkIcon('#e94560', 20)})
-  .addTo(map)
-  .bindPopup('<b style="color:#e94560">University of Utah</b><br><small>当前位置 · 201 Presidents Cir</small>');
+function renderSidebar(jobs) {
+  var listEl = document.getElementById('job-list');
+  var total = overseasJobs.filter(function(j){ return !j.excluded; }).length;
+  document.getElementById('sidebar-header').innerHTML = '<strong>' + jobs.length + '</strong> / ' + total + ' positions';
+  listEl.innerHTML = '';
+
+  if (jobs.length === 0) {
+    listEl.innerHTML = '<div style="text-align:center;padding:40px 20px;color:#666;">No matching positions found</div>';
+    return;
+  }
+
+  jobs.forEach(function(j) {
+    var isNew = isToday(j.postedDate);
+    var dlClass = getDeadlineClass(j.daysLeft);
+    var dlText = getDeadlineText(j.daysLeft);
+    var dlColor = getDeadlineColor(j.daysLeft);
+    var hasJd = j.jd && j.jd.length > 10;
+
+    var el = document.createElement('div');
+    el.className = 'job-card';
+    el.id = 'card-' + j.id;
+    el.innerHTML =
+      (isNew ? '<span class="job-new-tag">🆕 New</span>' : '') +
+      '<div class="job-company">' + j.company + '</div>' +
+      '<div class="job-title">' + j.name + '</div>' +
+      '<div class="job-badges">' +
+        '<span class="badge badge-level-' + j.level + '">' + j.levelLabel + '</span>' +
+        '<span class="badge badge-ta">' + j.taSubLabel + '</span>' +
+        (j.salary !== '—' ? '<span class="badge badge-salary">' + j.salary + '</span>' : '') +
+        '<span class="badge badge-source">' + j.source + '</span>' +
+      '</div>' +
+      '<div class="job-meta-row">' +
+        '<span style="color:' + dlColor + ';font-weight:600;font-size:0.72rem;">⏰ ' + dlText + '</span>' +
+        '<span style="font-size:0.7rem;color:#999;">' + j.address + '</span>' +
+      '</div>' +
+      (hasJd ? '<div class="jd-section" id="jd-' + j.id + '">' +
+        '<div class="jd-label">Job Description & Requirements</div>' +
+        '<div class="jd-content">' + j.jd.replace(/\n/g, '<br>') + '</div>' +
+        '<a href="' + j.url + '" target="_blank" class="jd-apply-btn">Apply Now →</a>' +
+       '</div>' : '<a href="' + j.url + '" target="_blank" class="jd-apply-btn" style="margin-top:8px;">Apply Now →</a>');
+
+    el.addEventListener('click', function(e) {
+      if (hasJd) {
+        var jdEl = document.getElementById('jd-' + j.id);
+        if (jdEl) { jdEl.classList.toggle('open'); e.stopPropagation(); }
+      }
+      focusJob(j.id);
+    });
+    listEl.appendChild(el);
+  });
+}
+
+function focusJob(id) {
+  document.querySelectorAll('.job-card').forEach(function(c){ c.classList.remove('focused'); });
+  var card = document.getElementById('card-' + id);
+  if (card) { card.classList.add('focused'); card.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
+  focusedId = id;
+  var marker = markerMap[id];
+  if (marker) { marker.openPopup(); map.setView(marker.getLatLng(), 11); }
+}
+
+var map = L.map('map', { zoomControl:true, scrollWheelZoom:true }).setView([39.0, -98.0], 4);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OSM', maxZoom: 19 }).addTo(map);
 
 var markerMap = {};
 
+function getLevelColor(level) {
+  var colors = {'intern':'#34C759','entry':'#5AC8FA','mid':'#5856D6','senior':'#AF52DE','lead':'#FF3B30'};
+  return colors[level] || '#5856D6';
+}
+function mkIcon(color, sz) {
+  sz = sz || 12;
+  return L.divIcon({
+    className:'',
+    html:'<div style="width:'+sz+'px;height:'+sz+'px;background:'+color+';border:2.5px solid #fff;border-radius:50%;box-shadow:0 2px 6px rgba(0,0,0,0.3);"></div>',
+    iconSize:[sz,sz], iconAnchor:[sz/2,sz/2]
+  });
+}
+
 function buildPopup(j) {
   var isNew = isToday(j.postedDate);
-  var stars = '⭐'.repeat(j.priority);
-  var newTag = isNew ? '<span style="background:#FF6B35;color:#fff;padding:2px 8px;border-radius:8px;font-size:0.75rem;font-weight:700;margin-bottom:6px;display:inline-block;">🆕 今日新</span><br><br>' : '';
-  return '<b style="color:'+getCatColor(j.category)+'">'+j.company+'</b><br>' +
-    '<b>'+j.name+'</b><br><small>'+j.address+'</small><br><br>' +
-    newTag +
-    (j.distance?'<b>📍 距 U of U：</b>'+j.distance+'<br>':'') +
-    (j.salary!=='—'?'<b>💰 薪资：</b>'+j.salary+'<br>':'') +
-    '<b>🏷 类型：</b>'+j.type+'<br>' +
-    '<b>优先级：</b>'+stars+'<br><br>' +
-    '<a href="'+j.url+'" target="_blank" style="color:#007AFF;font-size:0.85em;">🔗 查看职位 →</a>';
+  var dlText = getDeadlineText(j.daysLeft);
+  var dlColor = getDeadlineColor(j.daysLeft);
+  var newTag = isNew ? '<span class="popup-new">🆕 New Today</span><br>' : '';
+  return '<b style="color:#5856D6;font-size:0.9rem;">' + j.company + '</b><br>' +
+    '<b style="font-size:0.85rem;">' + j.name + '</b><br>' + newTag +
+    '<span style="font-size:0.78rem;color:#666;">' + j.address + ' · ' + j.levelLabel + ' · ' + j.taSubLabel + '</span><br>' +
+    (j.salary !== '—' ? '<b style="font-size:0.82rem;color:#CC7700;">' + j.salary + '</b><br>' : '') +
+    '<span style="color:' + dlColor + ';font-size:0.78rem;font-weight:600;">⏰ ' + dlText + '</span><br><br>' +
+    '<a href="' + j.url + '" target="_blank" class="popup-link">View Job →</a>';
 }
 
 function renderMarkers(visibleJobs) {
   Object.values(markerMap).forEach(function(m){ map.removeLayer(m); });
   markerMap = {};
   visibleJobs.forEach(function(j) {
-    if (j.excluded) return;
-    var color = getCatColor(j.category);
-    var isNew = isToday(j.postedDate);
-    var m = L.marker([j.lat,j.lng],{icon:mkIcon(isNew?'#FF6B35':color, isNew?18:14, isNew)}).addTo(map);
+    var lat = j.lat || 39.0;
+    var lng = j.lng || -98.0;
+    var color = getLevelColor(j.level);
+    var sz = j.level === 'intern' ? 10 : j.level === 'senior' || j.level === 'lead' ? 14 : 12;
+    var m = L.marker([lat, lng], {icon: mkIcon(color, sz)}).addTo(map);
     m.bindPopup(buildPopup(j));
+    m.on('click', function() { focusJob(j.id); });
     markerMap[j.id] = m;
   });
 }
 
-function renderSidebar(visibleJobs) {
-  var listEl = document.getElementById('job-list');
-  document.getElementById('visible-count').textContent = visibleJobs.length + ' / ' + overseasJobs.length;
-  listEl.innerHTML = '';
-  visibleJobs.forEach(function(j) {
-    if (j.excluded) return;
-    var isNew = isToday(j.postedDate);
-    var typeClass = { 'Full-time':'badge-fulltime', 'Contractor':'badge-contractor' }[j.type] || 'badge-fulltime';
-    var catBadge = j.category ? '<span class="badge badge-'+j.category+'">'+j.category.toUpperCase()+'</span>' : '';
-    var salaryBadge = j.salary && j.salary !== '—' ? '<span class="badge badge-salary">'+j.salary+'</span>' : '';
-    var stars = '⭐'.repeat(j.priority);
-    var el = document.createElement('div');
-    el.className = 'job-card';
-    el.id = 'card-' + j.id;
-    el.innerHTML =
-      (isNew?'<span class="badge badge-new">🆕 今日新</span>':'') +
-      '<div class="job-company">'+j.company+'</div>' +
-      '<div class="job-title">'+j.name+'</div>' +
-      '<div class="job-meta">' +
-        '<span class="badge '+typeClass+'">'+j.type+'</span>' +
-        catBadge +
-        salaryBadge +
-      '</div>' +
-      '<div class="job-dist">📍 距 U of U '+j.distance+'</div>' +
-      '<div class="job-address">'+j.address+'</div>' +
-      '<div class="jd-section" id="jd-'+j.id+'">' +
-        '<div class="jd-label">Job Description</div>' +
-        '<div class="jd-content">'+j.jd.replace(/\n/g, '<br>')+'</div>' +
-        '<a href="'+j.url+'" target="_blank" class="jd-apply-btn">Apply Now →</a>' +
-      '</div>';
-    el.addEventListener('click', function(e){ e.stopPropagation(); focusJob(j.id); });
-    listEl.appendChild(el);
+function renderStats(jobs) {
+  var total = overseasJobs.filter(function(j){ return !j.excluded; });
+  var deadlineSoon = total.filter(function(j){ return j.daysLeft <= 7; }).length;
+  var levelCounts = {intern:0, entry:0, mid:0, senior:0, lead:0};
+  var taCounts = {};
+  total.forEach(function(j) {
+    if (levelCounts.hasOwnProperty(j.level)) levelCounts[j.level]++;
+    taCounts[j.taSubCategory] = (taCounts[j.taSubCategory]||0) + 1;
   });
+  var maxTa = Object.keys(taCounts).sort(function(a,b){ return taCounts[b]-taCounts[a]; })[0] || 'general';
+  var taLabels = {character:'Character TA', environment:'Environment TA', rendering:'Rendering TA',
+                  pipeline:'Pipeline TA', ui:'UI/UX TA', general:'General TA'};
+  document.getElementById('stats-bar').innerHTML =
+    'Total <strong>' + total.length + '</strong> positions | ' +
+    'Filtered <strong>' + jobs.length + '</strong> | ' +
+    '<span style="color:#FF3B30;font-weight:600;">⚠ ' + deadlineSoon + ' closing soon</span> | ' +
+    'Hot: <strong>' + (taLabels[maxTa]||'General') + '</strong> (' + taCounts[maxTa] + ')';
 }
 
-function focusJob(id) {
-  document.querySelectorAll('.job-card').forEach(function(c){ c.classList.remove('active'); });
-  var card = document.getElementById('card-'+id);
-  if (!card) return;
-  card.classList.add('active');
-  card.scrollIntoView({behavior:'smooth',block:'nearest'});
-  var jdEl = document.getElementById('jd-'+id);
-  if (jdEl) {
-    var wasOpen = jdEl.classList.contains('open');
-    document.querySelectorAll('.jd-section').forEach(function(el){ el.classList.remove('open'); });
-    if (!wasOpen) jdEl.classList.add('open');
-  }
-  var job = overseasJobs.find(function(j){ return j.id===id; });
-  if (job && markerMap[id]) {
-    map.setView([job.lat,job.lng], 13, {animate:true});
-    setTimeout(function(){ markerMap[id].openPopup(); }, 200);
-  }
-}
-
-renderSidebar(overseasJobs);
-renderMarkers(overseasJobs);
-
-// Marker hover tooltip
-var tooltip = document.getElementById('marker-tooltip');
-document.addEventListener('mousemove', function(e) {
-  tooltip.style.left = (e.clientX + 14) + 'px';
-  tooltip.style.top = (e.clientY - 10) + 'px';
-});
-setTimeout(function() {
-  Object.keys(markerMap).forEach(function(id) {
-    var marker = markerMap[id];
-    var job = overseasJobs.find(function(j){ return j.id === parseInt(id); });
-    if (!job) return;
-    marker.on('mouseover', function() {
-      document.getElementById('mtp-company').textContent = job.company;
-      document.getElementById('mtp-title').textContent = job.name;
-      document.getElementById('mtp-salary').textContent = job.salary && job.salary !== '—' ? job.salary : '';
-      document.getElementById('mtp-new').textContent = isToday(job.postedDate) ? '🆕 今日新岗位' : '';
-      tooltip.classList.add('visible');
+function initFilters() {
+  document.querySelectorAll('.filter-btn[data-filter]').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var filterType = btn.dataset.filter;
+      var value = btn.dataset.value;
+      document.querySelectorAll('.filter-btn[data-filter="'+filterType+'"]').forEach(function(b){ b.classList.remove('active'); });
+      btn.classList.add('active');
+      if (filterType === 'level') currentLevel = value;
+      if (filterType === 'ta') currentTa = value;
+      applyFilters();
     });
-    marker.on('mouseout', function() { tooltip.classList.remove('visible'); });
-    marker.on('click', function() { tooltip.classList.remove('visible'); });
   });
-}, 600);
-
-var currentFilter = 'all';
-document.querySelectorAll('.filter-tab').forEach(function(tab) {
-  tab.addEventListener('click', function() {
-    document.querySelectorAll('.filter-tab').forEach(function(t){ t.classList.remove('active'); });
-    tab.classList.add('active');
-    currentFilter = tab.dataset.filter;
-    applyFilter();
-  });
-});
-
-function applyFilter() {
-  var sortBy = document.getElementById('sort-select').value;
-  var visible = overseasJobs.filter(function(j) {
-    if (j.excluded) return false;
-    if (currentFilter === 'all') return true;
-    return j.category === currentFilter;
-  });
-  if (sortBy==='priority') visible.sort(function(a,b){return b.priority-a.priority;});
-  else if (sortBy==='distance') visible.sort(function(a,b){
-    var da = parseFloat(a.distance)||0, db = parseFloat(b.distance)||0;
-    return da-db;
-  });
-  else if (sortBy==='new') visible.sort(function(a,b){return b.postedDate.localeCompare(a.postedDate);});
-  renderSidebar(visible);
-  renderMarkers(visible);
 }
-document.getElementById('sort-select').addEventListener('change', applyFilter);
 
-var newCount = overseasJobs.filter(function(j){return !j.excluded && isToday(j.postedDate);}).length;
-document.getElementById('new-badge').textContent = newCount + ' 个今日新岗位';
-if (newCount===0) document.getElementById('new-badge').style.background='rgba(255,255,255,0.3)';
+function applyFilters() {
+  var filtered = getFiltered();
+  renderSidebar(filtered);
+  renderMarkers(filtered);
+  renderStats(filtered);
+}
+
+async function loadData() {
+  try {
+    var resp = await fetch('jobs-overseas.json');
+    var data = await resp.json();
+    overseasJobs = data.overseasJobs || data || [];
+    var total = overseasJobs.filter(function(j){ return !j.excluded; }).length;
+    document.getElementById('header-meta').textContent = total + ' positions · Updated ' + (data.updated || todayStr);
+    document.title = 'Overseas TA Jobs（' + total + '） — TA Job Finder';
+    applyFilters();
+  } catch(e) {
+    document.getElementById('job-list').innerHTML = '<div style="padding:20px;text-align:center;color:#999;">Failed to load data</div>';
+  }
+}
+
+initFilters();
+loadData();
 </script>
 </body>
 </html>
