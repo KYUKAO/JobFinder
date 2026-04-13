@@ -1,10 +1,10 @@
 {
-  "myPortfolio": "",
+  "myPortfolio": "https://www.artstation.com/your-username",
   "myProfile": {
-    "name": "",
-    "skills": [],
-    "experience": "",
-    "github": ""
+    "name": "你的名字",
+    "skills": ["HLSL", "Unity", "Unreal", "Maya", "Python"],
+    "experience": "1-3年",
+    "github": "https://github.com/your-username"
   },
   "resumes": []
 }
