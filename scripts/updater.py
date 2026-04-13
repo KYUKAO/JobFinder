@@ -57,6 +57,21 @@ def create_session():
     })
     return session
 
+def create_bilibili_session():
+    """创建B站专用session，添加更多请求头"""
+    session = requests.Session()
+    session.headers.update({
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        'Referer': 'https://www.bilibili.com',
+        'Origin': 'https://www.bilibili.com',
+        'Accept': 'application/json, text/plain, */*',
+        'Accept-Language': 'zh-CN,zh;q=0.9',
+        'Accept-Encoding': 'gzip, deflate',
+        'Connection': 'keep-alive',
+        'Cookie': 'SESSDATA=; bili_jct=;',  # 空cookie避免被识别为爬虫
+    })
+    return session
+
 # ================================================================
 # 经验等级分类
 # ================================================================
@@ -334,39 +349,77 @@ def scrape_bilibili_portfolios():
     if not HAS_DEPS:
         return portfolios
 
-    session = create_session()
+    session = create_bilibili_session()
 
-    # B站 TA 相关标签视频
-    search_urls = [
-        'https://api.bilibili.com/x/web-interface/search/type?search_type=video&keyword=TA%E6%8A%80%E6%9C%AF%E7%BE%8E%E6%9C%AF',
-        'https://api.bilibili.com/x/web-interface/search/type?search_type=video&keyword=shader%E6%95%99%E7%A8%8B',
-        'https://api.bilibili.com/x/web-interface/search/type?search_type=video&keyword=%E6%B8%B8%E6%8F%BD%E5%99%A8',
+    # B站 TA 相关标签视频 - 经过测试的可用的关键字
+    search_keywords = [
+        # 渲染/Shader类
+        'UE渲染', '渲染引擎',
+        # 特效类
+        '游戏特效', 'UE特效', 'VFX', '粒子特效',
+        # TA相关
+        '技术美术', '图形程序', 'TA教程',
+        # 程序化
+        'houdini教程', '程序化生成',
+        # 综合
+        '游戏美术', 'Unity shader', 'game vfx', 'unity教程',
+        '场景美术', '动画特效',
     ]
 
-    for url in search_urls:
+    for keyword in search_keywords:
         try:
+            url = f'https://api.bilibili.com/x/web-interface/search/type?search_type=video&keyword={quote_plus(keyword)}&page=1'
             resp = session.get(url, timeout=15)
-            data = resp.json()
-            videos = data.get('data', {}).get('result', [])
 
-            for v in videos[:15]:
+            # 如果被封，跳过
+            if resp.status_code == 412 or (resp.text and '"code":-412' in resp.text):
+                log(f'  B站 [{keyword}] 请求被封，跳过')
+                time.sleep(2)
+                continue
+
+            data = resp.json()
+
+            # 检查 API 返回
+            if data.get('code') != 0:
+                log(f'  B站 [{keyword}] API错误: {data.get("message")}')
+                continue
+
+            # B站API返回结构可能变化，尝试多种路径
+            result = data.get('data', {})
+            videos = result.get('result', []) if isinstance(result, dict) else result
+
+            if not videos:
+                continue
+
+            for v in videos[:10]:
+                if not isinstance(v, dict):
+                    continue
                 bvid = v.get('bvid', '')
                 if not bvid or any(p.get('bvid') == bvid for p in portfolios):
                     continue
 
+                # 处理标题中的HTML标签
+                title = v.get('title', '')
+                if isinstance(title, str):
+                    title = title.replace('<em class="keyword">', '').replace('</em>', '').replace('<em>', '').replace('</em>', '')
+
                 portfolios.append({
                     'bvid': bvid,
-                    'title': v.get('title', '').replace('<em>', '').replace('</em>', ''),
+                    'title': title,
                     'author': v.get('author', ''),
                     'description': v.get('description', ''),
                     'duration': v.get('duration', ''),
                     'views': v.get('play', 0),
                     'category': 'TA',
+                    'platform': 'bilibili',
+                    'url': f'https://www.bilibili.com/video/{bvid}',
                     'addedDate': TODAY_STR,
                 })
-            time.sleep(random.uniform(0.5, 1))
+
+            time.sleep(random.uniform(1, 2))
+
         except Exception as e:
-            log(f'  B站 失败: {e}')
+            log(f'  B站 [{keyword}] 失败: {e}')
 
     log(f'  B站作品集 → {len(portfolios)} 个')
     return portfolios
