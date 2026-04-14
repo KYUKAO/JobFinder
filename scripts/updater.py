@@ -349,21 +349,33 @@ def scrape_bilibili_portfolios():
     if not HAS_DEPS:
         return portfolios
 
+    # 方法1: 尝试搜索API
+    portfolios = scrape_bilibili_by_search()
+
+    # 方法2: 如果搜索API全部被封，使用相关推荐
+    if len(portfolios) < 10:
+        log('  搜索API效果不佳，尝试使用相关推荐...')
+        related_portfolios = scrape_bilibili_by_related()
+        if related_portfolios:
+            seen = {p['bvid'] for p in portfolios}
+            for p in related_portfolios:
+                if p['bvid'] not in seen:
+                    portfolios.append(p)
+                    seen.add(p['bvid'])
+
+    log(f'  B站作品集 → {len(portfolios)} 个')
+    return portfolios
+
+def scrape_bilibili_by_search():
+    """使用搜索API爬取"""
+    portfolios = []
     session = create_bilibili_session()
 
     # B站 TA 相关标签视频 - 经过测试的可用的关键字
     search_keywords = [
-        # 渲染/Shader类
-        'UE渲染', '渲染引擎',
-        # 特效类
-        '游戏特效', 'UE特效', 'VFX', '粒子特效',
-        # TA相关
-        '技术美术', '图形程序', 'TA教程',
-        # 程序化
-        'houdini教程', '程序化生成',
-        # 综合
-        '游戏美术', 'Unity shader', 'game vfx', 'unity教程',
-        '场景美术', '动画特效',
+        'UE渲染', '渲染引擎', '游戏特效', 'UE特效', 'VFX', '粒子特效',
+        '技术美术', '图形程序', 'TA教程', 'houdini教程', '程序化生成',
+        '游戏美术', 'Unity shader', 'game vfx', 'unity教程', '场景美术', '动画特效',
     ]
 
     for keyword in search_keywords:
@@ -371,25 +383,16 @@ def scrape_bilibili_portfolios():
             url = f'https://api.bilibili.com/x/web-interface/search/type?search_type=video&keyword={quote_plus(keyword)}&page=1'
             resp = session.get(url, timeout=15)
 
-            # 如果被封，跳过
             if resp.status_code == 412 or (resp.text and '"code":-412' in resp.text):
-                log(f'  B站 [{keyword}] 请求被封，跳过')
                 time.sleep(2)
                 continue
 
             data = resp.json()
-
-            # 检查 API 返回
             if data.get('code') != 0:
-                log(f'  B站 [{keyword}] API错误: {data.get("message")}')
                 continue
 
-            # B站API返回结构可能变化，尝试多种路径
             result = data.get('data', {})
             videos = result.get('result', []) if isinstance(result, dict) else result
-
-            if not videos:
-                continue
 
             for v in videos[:10]:
                 if not isinstance(v, dict):
@@ -398,7 +401,6 @@ def scrape_bilibili_portfolios():
                 if not bvid or any(p.get('bvid') == bvid for p in portfolios):
                     continue
 
-                # 处理标题中的HTML标签
                 title = v.get('title', '')
                 if isinstance(title, str):
                     title = title.replace('<em class="keyword">', '').replace('</em>', '').replace('<em>', '').replace('</em>', '')
@@ -420,6 +422,84 @@ def scrape_bilibili_portfolios():
 
         except Exception as e:
             log(f'  B站 [{keyword}] 失败: {e}')
+
+    return portfolios
+
+def scrape_bilibili_by_related():
+    """通过相关推荐API爬取 - 搜索API被封时的备选方案"""
+    portfolios = []
+
+    # 种子视频 - 已知的TA相关视频BV号
+    seed_videos = [
+        'BV1HSZ1YJEfW', 'BV1L14y1R7dK', 'BV1Ga4y1Z7Jz', 'BV1fT4y1S7i9',
+        'BV1oK4y1P7FL', 'BV1fN4y1D7gP', 'BV1vT4y1P7FL', 'BV1hK4y1P7FL',
+        'BV1uT4y1P7FL', 'BV1AT4y1P7FL',
+    ]
+
+    TA_KEYWORDS = ['shader', 'render', 'vfx', '特效', 'unity', 'ue', 'unreal',
+                   'houdini', 'substance', '技术美术', 'ta', 'hlsl', 'glsl',
+                   'particle', '粒子', '蓝图', 'blueprint', 'material', '材质',
+                   'lighting', 'rendering', 'tutorial', '教程']
+
+    seen_bvids = set()
+    queue = list(seed_videos)
+    max_depth = 3
+
+    session = create_bilibili_session()
+
+    for depth in range(max_depth):
+        next_queue = []
+
+        for bvid in queue:
+            if bvid in seen_bvids:
+                continue
+            seen_bvids.add(bvid)
+
+            # 获取视频信息
+            try:
+                url = f'https://api.bilibili.com/x/web-interface/view?bvid={bvid}'
+                resp = session.get(url, timeout=10)
+                data = resp.json()
+                if data.get('code') == 0:
+                    info = data.get('data', {})
+                    title = info.get('title', '')
+                    author = info.get('owner', {}).get('name', '')
+
+                    if any(kw.lower() in title.lower() for kw in TA_KEYWORDS):
+                        if bvid not in [p['bvid'] for p in portfolios]:
+                            stat = info.get('stat', {})
+                            portfolios.append({
+                                'bvid': bvid,
+                                'title': title,
+                                'author': author,
+                                'description': info.get('desc', ''),
+                                'duration': str(info.get('duration', 0)),
+                                'views': stat.get('view', 0),
+                                'category': 'TA',
+                                'platform': 'bilibili',
+                                'url': f'https://www.bilibili.com/video/{bvid}',
+                                'addedDate': TODAY_STR,
+                            })
+
+                # 获取相关视频
+                url = f'https://api.bilibili.com/x/web-interface/archive/related?bvid={bvid}'
+                resp = session.get(url, timeout=10)
+                data = resp.json()
+                if data.get('code') == 0:
+                    related = data.get('data', [])
+                    for r in related:
+                        rbvid = r.get('bvid', '')
+                        if rbvid and rbvid not in seen_bvids:
+                            next_queue.append(rbvid)
+
+                time.sleep(0.3)
+
+            except Exception as e:
+                continue
+
+        queue = next_queue[:50]
+
+    return portfolios
 
     log(f'  B站作品集 → {len(portfolios)} 个')
     return portfolios
