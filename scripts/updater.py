@@ -44,8 +44,8 @@ def save_json(path, data):
 def create_session():
     """创建带重试机制的 requests session"""
     session = requests.Session()
-    retry = Retry(total=3, backoff_factor=1, status_forcelist=[500, 502, 503, 504])
-    adapter = HTTPAdapter(max_retries=retry)
+    retry = Retry(total=3, backoff_factor=2, status_forcelist=[500, 502, 503, 504])
+    adapter = HTTPAdapter(max_retries=retry, pool_maxsize=10)
     session.mount('http://', adapter)
     session.mount('https://', adapter)
     session.headers.update({
@@ -214,14 +214,14 @@ def scrape_51job():
         return jobs
 
     session = create_session()
-    keywords = ['技术美术TA', 'TA 技术美术']
+    keywords = ['技术美术 TA', 'TA 技术美术']
     cities = ['深圳', '上海', '北京', '广州', '杭州']
 
     for keyword in keywords:
         for city in cities[:2]:
             for page in range(1, 3):  # 每城市爬2页
                 try:
-                    # 使用 51job 的 API 端点，绕过直接访问
+                    # 使用 51job 的移动端 API，避免被拦截
                     params = {
                         'jobArea': city,
                         'keyword': keyword,
@@ -230,7 +230,8 @@ def scrape_51job():
                         'compact': 'true',
                     }
                     url = 'https://we.51job.com/api/job/search-pc'
-                    resp = session.get(url, params=params, timeout=20)
+                    resp = session.get(url, params=params, timeout=30)
+                    resp.raise_for_status()
                     data = resp.json()
 
                     job_list = data.get('resultbody', {}).get('job', [])
@@ -253,7 +254,13 @@ def scrape_51job():
                         if job:
                             jobs.append(job)
 
-                    time.sleep(random.uniform(1, 2))
+                    time.sleep(random.uniform(2, 4))
+                except requests.exceptions.Timeout:
+                    log(f'  51job {city} 第{page}页 超时，跳过')
+                    time.sleep(3)
+                except requests.exceptions.ConnectionError as e:
+                    log(f'  51job {city} 第{page}页 连接失败: {e}')
+                    time.sleep(5)
                 except Exception as e:
                     log(f'  51job {city} 第{page}页 失败: {e}')
                     time.sleep(2)
@@ -270,11 +277,11 @@ def scrape_game_companies():
     session = create_session()
 
     companies = [
-        # 使用 HTTP 的公司（修复 SSL 问题）
-        {'name': '盛趣游戏', 'url': 'http://www.sqgame.com/about/join', 'city': '上海', 'source': '盛趣游戏'},
-        {'name': '朝夕光年', 'url': 'http://careers.bytedance.com/chinese', 'city': '北京', 'source': '朝夕光年'},
-        {'name': '吉比特', 'url': 'http://www.lilith.com/careers/', 'city': '深圳', 'source': '吉比特'},
-        # 使用正确 HTTPS 的公司
+        # 使用 HTTPS 的公司
+        {'name': '盛趣游戏', 'url': 'https://www.shengqugames.com/', 'city': '上海', 'source': '盛趣游戏'},
+        {'name': '朝夕光年', 'url': 'https://careers.bytedance.com/', 'city': '北京', 'source': '朝夕光年'},
+        {'name': '吉比特', 'url': 'https://www.lilith.com/careers/', 'city': '深圳', 'source': '吉比特'},
+        # 正确的招聘页面
         {'name': '腾讯游戏', 'url': 'https://careers.tencent.com/search.html?query=TA', 'city': '深圳', 'source': '腾讯招聘'},
         {'name': '网易游戏', 'url': 'https://game.163.com/hr/positions', 'city': '杭州', 'source': '网易游戏'},
         {'name': '米哈游', 'url': 'https://jobs.mihoyo.com', 'city': '上海', 'source': '米哈游'},
@@ -293,12 +300,17 @@ def scrape_game_companies():
     for company in companies:
         try:
             resp = session.get(company['url'], timeout=15)
+            resp.raise_for_status()
+            text = resp.text.strip()
+
             # 检测内容类型，选择合适的解析器
             content_type = resp.headers.get('Content-Type', '')
-            if 'xml' in content_type or resp.text.strip().startswith('<?xml'):
-                soup = BeautifulSoup(resp.text, 'xml')
+            if 'xml' in content_type or text.startswith('<?xml') or text.startswith('<?XML'):
+                soup = BeautifulSoup(text, 'xml')
+            elif 'json' in content_type:
+                continue  # 跳过 JSON 响应
             else:
-                soup = BeautifulSoup(resp.text, 'lxml')
+                soup = BeautifulSoup(text, 'lxml')
 
             for link in soup.find_all('a', href=True)[:60]:
                 try:
@@ -334,8 +346,18 @@ def scrape_game_companies():
                     continue
 
             time.sleep(random.uniform(1.5, 3))
+        except requests.exceptions.SSLError as e:
+            log(f'  {company["name"]} SSL错误: {e}')
+            continue
+        except requests.exceptions.Timeout:
+            log(f'  {company["name"]} 超时')
+            continue
+        except requests.exceptions.ConnectionError as e:
+            log(f'  {company["name"]} 连接错误: {e}')
+            continue
         except Exception as e:
             log(f'  {company["name"]} 失败: {e}')
+            continue
 
     log(f'  游戏公司 → {len(jobs)} 个岗位')
     return jobs
