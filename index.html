@@ -582,7 +582,7 @@ function renderResumeGrid() {
       '<div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:14px;">' + skillHtml + '</div>' +
       '<div style="border-top:1px solid var(--border);padding-top:10px;display:flex;justify-content:space-between;align-items:center;">' +
         '<span style="font-size:0.68rem;color:var(--text-muted);">抓取于 ' + (r.scraped_date || '') + '</span>' +
-        '<a href="' + (r.profile_url || '#') + '" target="_blank" style="font-size:0.72rem;font-weight:600;color:var(--primary);padding:4px 10px;border-radius:20px;border:1px solid var(--primary);transition:all 0.15s;">查看主页 →</a>' +
+        '<a href="' + (r.profile_url || '#') + '" target="_blank" style="font-size:0.72rem;font-weight:600;color:var(--primary);padding:4px 10px;border-radius:20px;border:1px solid var(--primary);transition:all 0.15s;">LinkedIn搜索 →</a>' +
       '</div>' +
     '</div>';
   }).join('');
@@ -611,7 +611,11 @@ function switchPage(page) {
   if (isJobPage) {
     panel.innerHTML = '<div id="map"></div>';
     map = L.map('map', {zoomControl:true, scrollWheelZoom:true}).setView([31.2304, 121.4737], 4);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {attribution:'&copy; OSM', maxZoom:19}).addTo(map);
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+      attribution: '&copy; OpenStreetMap contributors, &copy; CartoDB',
+      maxZoom: 19,
+      subdomains: 'abcd',
+    }).addTo(map);
 
     if (page === 'overseas') {
       map.setView([39.0, -98.0], 4);
