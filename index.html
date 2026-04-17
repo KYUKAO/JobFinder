@@ -303,14 +303,6 @@
       🌎 海外岗位
       <span class="tab-count" id="count-overseas">—</span>
     </button>
-    <button class="nav-tab" data-page="portfolios">
-      🎬 作品集
-      <span class="tab-count" id="count-portfolios">—</span>
-    </button>
-    <button class="nav-tab" data-page="tutorials">
-      📚 优质教程
-      <span class="tab-count" id="count-tutorials">—</span>
-    </button>
   </div>
 </nav>
 
@@ -345,7 +337,6 @@ var currentFilter = 'all';
 var domesticJobs = [];
 var overseasJobs = [];
 var portfolios = [];
-var tutorials = [];
 var resumes = [];
 
 var today = new Date();
@@ -645,8 +636,6 @@ function switchPage(page) {
     renderMarkers(jobs);
   } else if (page === 'portfolios') {
     renderPortfolioGrid(portfolios, 'portfolios');
-  } else if (page === 'tutorials') {
-    renderPortfolioGrid(tutorials, 'tutorials');
   }
 }
 
@@ -684,15 +673,12 @@ Promise.all([
   domesticJobs = (dom.domesticJobs||[]).filter(function(j){ return !j.excluded; });
   overseasJobs = (over.overseasJobs||[]).filter(function(j){ return !j.excluded; });
   portfolios = ports.portfolios||[];
-  tutorials = ports.tutorials||[];
   resumes = res.resumes||[];
 
   // Update nav counts
   document.getElementById('count-domestic').textContent = domesticJobs.length;
   document.getElementById('count-overseas').textContent = overseasJobs.length;
   document.getElementById('count-portfolios').textContent = portfolios.length;
-  document.getElementById('count-tutorials').textContent = tutorials.length;
-  document.getElementById('count-resumes').textContent = resumes.length;
 
   // Render default page (domestic)
   var filtered = getFiltered();

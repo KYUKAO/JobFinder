@@ -358,25 +358,13 @@ def scrape_game_companies():
     return jobs
 
 # ================================================================
-# B站作品集与教程
+# B站作品集
 # ================================================================
 def scrape_bilibili_portfolios():
-    log('爬取 B站 TA 作品集与教程...')
+    log('爬取 B站 TA 作品集...')
     if not HAS_DEPS:
-        return [], []
-
-    portfolio_results = []
-    tutorial_results = []
-
-    # 1. 爬取真正的作品集（求职向）
-    portfolio_results = scrape_bilibili_portfolios_real()
-
-    # 2. 爬取教程
-    tutorial_results = scrape_bilibili_tutorials()
-
-    log(f'  B站作品集 → {len(portfolio_results)} 个')
-    log(f'  B站教程 → {len(tutorial_results)} 个')
-    return portfolio_results, tutorial_results
+        return []
+    return scrape_bilibili_portfolios_real()
 
 
 def scrape_bilibili_portfolios_real():
@@ -456,73 +444,6 @@ def scrape_bilibili_portfolios_real():
     return portfolios
 
 
-def scrape_bilibili_tutorials():
-    """爬取TA教程视频"""
-    tutorials = []
-    session = create_bilibili_session()
-
-    # 教程关键字
-    tutorial_keywords = [
-        'UE渲染', '渲染引擎', '游戏特效', 'UE特效', 'VFX', '粒子特效',
-        '技术美术', '图形程序', 'houdini教程', '程序化生成',
-        '游戏美术', 'Unity shader', 'game vfx', 'unity教程', '场景美术', '动画特效',
-        'HLSL入门', 'Shader教程', 'Unity教程', 'UE5教程', 'Houdini入门',
-        'Shader Graph', '材质教程', '渲染管线', 'PBR材质', '光照教程',
-        'Niagara教程', '特效教程', '地编教程', '蓝图教程',
-    ]
-
-    for keyword in tutorial_keywords:
-        try:
-            url = f'https://api.bilibili.com/x/web-interface/search/type?search_type=video&keyword={quote_plus(keyword)}&page=1'
-            resp = session.get(url, timeout=15)
-
-            if resp.status_code == 412 or (resp.text and '"code":-412' in resp.text):
-                time.sleep(2)
-                continue
-
-            data = resp.json()
-            if data.get('code') != 0:
-                continue
-
-            result = data.get('data', {})
-            videos = result.get('result', []) if isinstance(result, dict) else result
-
-            for v in videos[:8]:
-                if not isinstance(v, dict):
-                    continue
-                bvid = v.get('bvid', '')
-                if not bvid or any(t.get('bvid') == bvid for t in tutorials):
-                    continue
-
-                title = v.get('title', '')
-                if isinstance(title, str):
-                    title = title.replace('<em class="keyword">', '').replace('</em>', '').replace('<em>', '').replace('</em>', '')
-
-                # 过滤掉非教程类视频（作品集向）
-                portfolio_indicators = ['作品集', 'demo reel', 'showreel']
-                if any(indicator in title.lower() for indicator in portfolio_indicators):
-                    continue
-
-                tutorials.append({
-                    'bvid': bvid,
-                    'title': title,
-                    'author': v.get('author', ''),
-                    'description': v.get('description', ''),
-                    'duration': v.get('duration', ''),
-                    'views': v.get('play', 0),
-                    'category': 'TA',
-                    'platform': 'bilibili',
-                    'url': f'https://www.bilibili.com/video/{bvid}',
-                    'addedDate': TODAY_STR,
-                })
-
-            time.sleep(random.uniform(1, 2))
-
-        except Exception as e:
-            log(f'  B站教程 [{keyword}] 失败: {e}')
-
-    return tutorials
-
 # ================================================================
 # LinkedIn 爬虫
 # ================================================================
@@ -534,8 +455,8 @@ def scrape_linkedin():
 
     session = create_session()
 
-    locations = ['Shanghai', 'Beijing', 'Shenzhen', 'Hangzhou', 'Singapore', 'Los Angeles']
-    terms = ['technical artist', 'shader', 'rendering engineer']
+    locations = ['Los Angeles', 'Seattle', 'San Francisco', 'Austin', 'New York', 'Boston']
+    terms = ['technical artist', 'ta artist']
 
     for loc in locations:
         for term in terms:
@@ -551,6 +472,12 @@ def scrape_linkedin():
                         if not link:
                             continue
                         title = link.get_text(strip=True)
+
+                        # 必须包含 TA 关键词
+                        ta_keywords = ['technical artist', 'ta artist', 'shader', 'rendering', 'vfx artist', 'technical director']
+                        if not any(k in title.lower() for k in ta_keywords):
+                            continue
+
                         detail_url = link.get('href', '').split('?')[0]
 
                         company = card.select_one('.company-name, .base-search-card__subtitle')
@@ -590,16 +517,13 @@ def scrape_linkedin_profiles():
     session = create_session()
 
     search_queries = [
-        ('Technical Artist', 'China'),
-        ('Technical Artist', 'Shanghai'),
-        ('Technical Artist', 'Beijing'),
-        ('Technical Artist', 'Shenzhen'),
-        ('Technical Artist intern', 'China'),
-        ('TA Artist', 'China'),
         ('Technical Artist', 'United States'),
         ('Technical Artist', 'Los Angeles'),
         ('Technical Artist', 'San Francisco'),
+        ('Technical Artist', 'Seattle'),
+        ('Technical Artist', 'New York'),
         ('Technical Artist intern', 'United States'),
+        ('TA Artist', 'United States'),
     ]
 
     seen_profiles = set()
@@ -741,9 +665,21 @@ def scrape_indeed():
 
     session = create_session()
 
-    locations = ['Shanghai,Shanghai (CHN)', 'Beijing (CHN)', 'Singapore',
-                 'Los Angeles, CA', 'Seattle, WA', 'San Francisco, CA']
-    terms = ['technical artist', 'shader developer', 'rendering engineer']
+    locations = ['Los Angeles, CA', 'Seattle, WA', 'San Francisco, CA', 'Austin, TX', 'New York, NY', 'Boston, MA']
+    terms = ['technical artist', 'ta artist']
+
+    # TA关键词过滤
+    ta_keywords = ['technical artist', 'ta artist', 'shader', 'rendering', 'vfx artist', 'technical director']
+
+    # 美国城市坐标
+    us_coords = {
+        'Los Angeles, CA': [34.0522, -118.2437],
+        'Seattle, WA': [47.6062, -122.3321],
+        'San Francisco, CA': [37.7749, -122.4194],
+        'Austin, TX': [30.2672, -97.7431],
+        'New York, NY': [40.7128, -74.0060],
+        'Boston, MA': [42.3601, -71.0589],
+    }
 
     for loc_name in locations:
         for term in terms:
@@ -765,6 +701,11 @@ def scrape_indeed():
                         if not link:
                             continue
                         title = link.get_text(strip=True)
+
+                        # 必须包含 TA 关键词
+                        if not any(k in title.lower() for k in ta_keywords):
+                            continue
+
                         detail_url = 'https://www.indeed.com' + link.get('href', '')
 
                         company = card.select_one('.company-name')
@@ -773,13 +714,13 @@ def scrape_indeed():
                         salary_el = card.select_one('.salary-snippet')
                         salary = salary_el.get_text(strip=True) if salary_el else '面议'
 
-                        lat, lng = 31.2304, 121.4737  # 默认上海
+                        coord = us_coords.get(loc_name, [39.0, -98.0])
+                        lat, lng = coord[0] + random.uniform(-0.2, 0.2), coord[1] + random.uniform(-0.2, 0.2)
 
                         job = build_job(title, company_name, detail_url, 'overseas', loc_name,
                                     source='Indeed', priority=rate_priority(title, company_name),
                                     salary=salary,
-                                    lat=lat + random.uniform(-0.2, 0.2),
-                                    lng=lng + random.uniform(-0.2, 0.2))
+                                    lat=lat, lng=lng)
                         if job:
                             jobs.append(job)
                     except Exception:
@@ -1104,15 +1045,13 @@ def main():
     port_data = load_json(f'{DATA_DIR}/portfolios.json') or {}
     if isinstance(port_data, list):
         existing_portfolios = port_data
-        existing_tutorials = []
     else:
         existing_portfolios = port_data.get('portfolios', [])
-        existing_tutorials = port_data.get('tutorials', [])
 
     res_data = load_json(f'{DATA_DIR}/resumes.json') or {}
     existing_resumes = res_data.get('resumes', []) if isinstance(res_data, dict) else []
 
-    all_domestic, all_overseas, all_portfolios, all_tutorials, all_resumes = [], [], [], [], []
+    all_domestic, all_overseas, all_portfolios, all_resumes = [], [], [], []
 
     if target in ('all', 'domestic'):
         domestic_new = dedup(scrape_51job() + scrape_game_companies())
@@ -1124,30 +1063,30 @@ def main():
         overseas_new = dedup(
             scrape_linkedin() + scrape_indeed() + scrape_gaming_studios() + scrape_overseas_intern()
         )
+        # 对旧数据做 TA 关键词过滤
+        TA_KEYWORDS = ['technical artist', 'ta artist', 'shader', 'rendering', 'vfx artist',
+                       'technical director', 'pipeline td', 'ta lead']
+        def is_ta_job(j):
+            text = (j.get('name', '') + ' ' + j.get('company', '')).lower()
+            return any(k in text for k in TA_KEYWORDS)
+        existing_overseas = [j for j in existing_overseas if is_ta_job(j)]
         all_overseas = merge_with_existing(overseas_new, existing_overseas, max_total=400)
         save_json(f'{DATA_DIR}/jobs-overseas.json', {'updated': TODAY_STR, 'overseasJobs': all_overseas})
         log(f'海外岗位已保存: {len(all_overseas)} 个')
 
     if target in ('all', 'portfolios'):
-        portfolios_new, tutorials_new = scrape_bilibili_portfolios()
+        portfolios_new = scrape_bilibili_portfolios()
 
         # 合并作品集
         existing_map = {p.get('bvid', p.get('id', '')): p for p in existing_portfolios}
         existing_map.update({p.get('bvid', p.get('id', '')): p for p in portfolios_new})
         all_portfolios = list(existing_map.values())[:200]
 
-        # 合并教程
-        tut_map = {t.get('bvid', t.get('id', '')): t for t in existing_tutorials}
-        tut_map.update({t.get('bvid', t.get('id', '')): t for t in tutorials_new})
-        all_tutorials = list(tut_map.values())[:300]
-
         save_json(f'{DATA_DIR}/portfolios.json', {
             'updated': TODAY_STR,
             'portfolios': all_portfolios,
-            'tutorials': all_tutorials,
         })
         log(f'作品集已保存: {len(all_portfolios)} 个')
-        log(f'教程已保存: {len(all_tutorials)} 个')
 
     if target in ('all', 'resumes'):
         resumes_new = scrape_linkedin_profiles()
@@ -1170,14 +1109,13 @@ def main():
         'domesticJobs': all_domestic,
         'overseasJobs': all_overseas,
         'portfolios': all_portfolios,
-        'tutorials': all_tutorials,
         'resumes': all_resumes,
         'summary': summary,
     }
     save_json(f'{DATA_DIR}/github_contents.json', combined)
 
     log('===== 数据更新完成 =====')
-    log(f'国内 {len(all_domestic)} | 海外 {len(all_overseas)} | 作品集 {len(all_portfolios)} | 教程 {len(all_tutorials)} | 简历 {len(all_resumes)}')
+    log(f'国内 {len(all_domestic)} | 海外 {len(all_overseas)} | 作品集 {len(all_portfolios)} | 简历 {len(all_resumes)}')
     log(f'热门方向: {summary["hotTestCategory"]["label"]} ({summary["hotTestCategory"]["count"]} 个岗位)')
     for c in summary['topCompanies']:
         log(f'  {c["name"]}: {c["count"]} 个岗位')
