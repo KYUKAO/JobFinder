@@ -1,6 +1,6 @@
 # TA Job Finder
 
-技术美术（Technical Artist）岗位聚合与竞争分析系统。自动爬取国内外 TA 岗位、TA 作品集（B站），并提供可视化浏览、数据分析和投递建议。
+技术美术（Technical Artist）岗位聚合与竞争分析系统。自动爬取国内外 TA 岗位、LinkedIn 公开简历、TA 作品集（B站），并提供可视化浏览、数据分析和投递建议。
 
 ## 目录结构
 
@@ -17,7 +17,8 @@ JobFinder/
 ├── data/              # 所有数据文件（由爬虫自动生成）
 │   ├── jobs-domestic.json   # 国内岗位原始数据
 │   ├── jobs-overseas.json   # 海外岗位原始数据
-│   ├── portfolios.json       # B站 TA 作品集
+│   ├── portfolios.json       # B站 TA 作品集 + 教程
+│   ├── resumes.json          # LinkedIn 公开简历数据
 │   ├── summary.json         # 市场分析摘要
 │   └── github_contents.json  # GitHub Pages 合并导出
 │
@@ -40,14 +41,15 @@ JobFinder/
 
 | 模块 | 文件 | 说明 |
 |------|------|------|
-| 首页入口 | `pages/index.html` | 概览统计、优先投递列表、岗位方向分布 |
-| 国内岗位 | `pages/boss.html` | 城市地图、经验筛选、JD 详情 |
-| 海外岗位 | `pages/overseas.html` | 北美地图、Entry/Mid/Senior 筛选 |
-| TA 作品集 | `pages/portfolios.html` | B站视频收录、UP主信息 |
-| 竞争力分析 | `pages/analysis.html` | 能力雷达图、投递建议 |
-| 简历库 | `pages/resumes.html` | 竞争者简历参考 |
+| 首页入口 | `index.html` | 顶部 Tab 导航，默认显示国内岗位 |
+| 国内岗位 | 国内岗位 Tab | 城市地图、经验筛选、JD 详情 |
+| 海外岗位 | 海外岗位 Tab | 北美地图、筛选、含美国Intern |
+| TA 作品集 | 作品集 Tab | B站求职向作品集 |
+| 优质教程 | 优质教程 Tab | B站 TA 相关教程 |
+| 简历参考 | 简历参考 Tab | LinkedIn 公开个人资料，技能基准 |
+| 竞争力分析 | `analysis.html` | 能力雷达图、投递建议 |
 
-## 岗位优先级
+## 数据源
 
 系统按以下优先级展示岗位：
 

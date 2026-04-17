@@ -1,0 +1,15 @@
+{
+  "updated": "2026-04-18",
+  "resumes": [
+    {
+      "profile_id": "placeholder",
+      "name": "请运行爬虫获取数据",
+      "title": "Technical Artist",
+      "location": "Shanghai / Los Angeles",
+      "profile_url": "https://www.linkedin.com",
+      "source": "LinkedIn",
+      "scraped_date": "2026-04-18",
+      "skills": []
+    }
+  ]
+}

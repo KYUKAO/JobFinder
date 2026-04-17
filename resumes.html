@@ -3,74 +3,163 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>竞争者简历 — TA Job Finder</title>
+  <title>简历参考 — TA Job Finder</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     :root {
-      --primary: #FF6B35; --purple: #AF52DE; --success: #34C759;
-      --bg: #F5F7FA; --card: #fff; --text: #1A1A2E;
-      --text-secondary: #666; --border: #E8ECF0;
+      --primary: #6366f1;
+      --purple: #AF52DE;
+      --success: #34C759;
+      --bg: #0a0a0f;
+      --card: #16161d;
+      --card-hover: #1e1e28;
+      --text: #f1f1f4;
+      --text-muted: #71717a;
+      --border: rgba(255,255,255,0.06);
     }
     body {
       font-family: 'PingFang SC', 'Microsoft YaHei', Arial, sans-serif;
-      background: var(--bg); color: var(--text); min-height: 100vh;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
     }
-    header {
-      background: linear-gradient(135deg, #5856D6, #AF52DE);
-      padding: 48px 40px 60px; text-align: center; position: relative;
+    a { color: inherit; text-decoration: none; }
+
+    .header {
+      background: var(--card);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
     }
-    header::after { content:''; position:absolute; bottom:-2px; left:0; right:0; height:44px; background:var(--bg); border-radius:50% 50% 0 0; }
-    .header-eyebrow { font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:0.15em; color:rgba(255,255,255,0.7); margin-bottom:10px; }
-    header h1 { font-size:2rem; font-weight:800; color:#fff; margin-bottom:10px; }
-    header p { font-size:0.9rem; color:rgba(255,255,255,0.85); }
-    .back-btn { position:absolute; top:20px; left:24px; background:rgba(255,255,255,0.2); color:#fff; text-decoration:none; font-size:0.82rem; font-weight:600; padding:6px 14px; border-radius:20px; }
+    .back-btn {
+      color: var(--text-muted);
+      font-size: 0.82rem;
+      font-weight: 600;
+      padding: 6px 12px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      transition: all 0.15s;
+    }
+    .back-btn:hover { border-color: var(--primary); color: var(--text); }
+    .header-info { flex: 1; }
+    .header-title { font-size: 1rem; font-weight: 700; }
+    .header-meta { font-size: 0.72rem; color: var(--text-muted); margin-top: 2px; }
 
-    .main { max-width:1100px; margin:0 auto; padding:40px 24px 60px; }
+    .main { max-width: 1100px; margin: 0 auto; padding: 24px 20px 60px; }
 
-    .count-bar { background:var(--card); border-radius:12px; padding:14px 20px; margin-bottom:24px; box-shadow:0 2px 8px rgba(0,0,0,0.04); font-size:0.85rem; color:var(--text-secondary); }
-    .count-bar strong { color:var(--purple); }
+    .intro-box {
+      background: rgba(99,102,241,0.08);
+      border: 1px solid rgba(99,102,241,0.2);
+      border-radius: 12px;
+      padding: 14px 18px;
+      margin-bottom: 24px;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+    .intro-box strong { color: var(--primary); }
 
-    .resume-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(300px, 1fr)); gap:16px; }
-    .resume-card { background:var(--card); border-radius:12px; padding:20px; box-shadow:0 2px 8px rgba(0,0,0,0.04); border-left:3px solid var(--purple); transition:all 0.15s; }
-    .resume-card:hover { box-shadow:0 4px 16px rgba(88,86,214,0.15); }
-    .resume-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
-    .resume-name { font-size:0.95rem; font-weight:700; color:var(--text); }
-    .resume-batch { font-size:0.72rem; font-weight:600; padding:3px 8px; border-radius:10px; background:rgba(88,86,214,0.1); color:var(--purple); }
-    .resume-skills { display:flex; flex-wrap:wrap; gap:4px; margin-bottom:10px; }
-    .skill-chip { font-size:0.7rem; padding:3px 8px; border-radius:10px; background:var(--bg); color:var(--text-secondary); }
-    .resume-stats { display:flex; gap:12px; font-size:0.72rem; color:var(--text-secondary); border-top:1px solid var(--border); padding-top:10px; }
-    .resume-stats span { display:flex; align-items:center; gap:4px; }
+    .count-bar {
+      background: var(--card);
+      border-radius: 12px;
+      padding: 12px 18px;
+      margin-bottom: 20px;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+    .count-bar strong { color: var(--purple); }
 
-    .empty-state { text-align:center; padding:60px 20px; color:var(--text-secondary); }
-    .empty-state .empty-icon { font-size:3rem; margin-bottom:16px; }
-    .empty-state .empty-title { font-size:1.1rem; font-weight:600; margin-bottom:8px; color:var(--text); }
-    .empty-state .empty-desc { font-size:0.9rem; }
+    .profile-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
 
-    @media (max-width:768px) {
-      header { padding:40px 20px 50px; }
-      header h1 { font-size:1.5rem; }
-      .resume-grid { grid-template-columns:1fr; }
+    .profile-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 18px;
+      border-left: 3px solid var(--purple);
+      transition: all 0.15s;
+    }
+    .profile-card:hover { border-color: var(--purple); background: var(--card-hover); }
+
+    .profile-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; gap: 8px; }
+    .profile-name { font-size: 0.95rem; font-weight: 700; color: var(--text); }
+    .profile-source-badge {
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 10px;
+      background: rgba(99,102,241,0.15);
+      color: var(--primary);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .profile-title { font-size: 0.82rem; color: var(--text-muted); margin-bottom: 4px; }
+    .profile-location { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 12px; display: flex; align-items: center; gap: 4px; }
+
+    .skills-row { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 14px; }
+    .skill-chip {
+      font-size: 0.68rem;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 10px;
+      background: var(--bg);
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+    }
+
+    .profile-footer { border-top: 1px solid var(--border); padding-top: 10px; display: flex; justify-content: space-between; align-items: center; }
+    .profile-date { font-size: 0.68rem; color: var(--text-muted); }
+    .profile-link {
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--primary);
+      padding: 4px 10px;
+      border-radius: 20px;
+      border: 1px solid var(--primary);
+      transition: all 0.15s;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .profile-link:hover { background: var(--primary); color: #fff; }
+
+    .empty-state { text-align: center; padding: 60px 20px; color: var(--text-muted); }
+    .empty-state .empty-icon { font-size: 3rem; margin-bottom: 16px; }
+    .empty-state .empty-title { font-size: 1.1rem; font-weight: 600; margin-bottom: 8px; }
+    .empty-state .empty-desc { font-size: 0.9rem; }
+
+    @media (max-width: 768px) {
+      .profile-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
 
-<header>
-  <a href="index.html" class="back-btn">← 返回主页</a>
-  <div class="header-eyebrow">Competitor Resumes</div>
-  <h1>竞争者简历参考</h1>
-  <p>浏览竞争者背景，快速了解行业基准水平</p>
+<header class="header">
+  <a href="index.html" class="back-btn">← 返回</a>
+  <div class="header-info">
+    <div class="header-title" id="header-title">简历参考</div>
+    <div class="header-meta" id="header-meta">了解行业从业者背景基准</div>
+  </div>
 </header>
 
 <main class="main">
+  <div class="intro-box">
+    <strong>数据来源：</strong>从 LinkedIn 公开搜索结果中爬取的 TA 从业者公开个人资料（姓名、职位、公司、技能）。数据仅供了解行业技能分布基准参考，请勿用于商业目的。
+  </div>
+
   <div class="count-bar" id="count-bar">
     正在加载简历数据...
   </div>
-  <div class="resume-grid" id="resume-grid">
+
+  <div class="profile-grid" id="profile-grid">
     <div class="empty-state">
-      <div class="empty-icon">📄</div>
-      <div class="empty-title">暂无简历数据</div>
-      <div class="empty-desc">请在 github_contents.json 中添加你的简历信息</div>
+      <div class="empty-icon">🔍</div>
+      <div class="empty-title">正在加载...</div>
+      <div class="empty-desc">请稍候，正在从 LinkedIn 获取公开简历数据</div>
     </div>
   </div>
 </main>
@@ -78,36 +167,46 @@
 <script>
 async function loadResumes() {
   try {
-    var resp = await fetch('data/github_contents.json');
+    var resp = await fetch('data/resumes.json');
     var data = await resp.json();
     var resumes = data.resumes || [];
 
-    document.getElementById('count-bar').innerHTML =
-      '共收录 <strong>' + resumes.length + '</strong> 份简历（示例数据，后续可扩展）';
+    document.getElementById('header-meta').textContent = '更新于 ' + (data.updated || '') + ' · 共 ' + resumes.length + ' 条公开资料';
+    document.title = '简历参考（' + resumes.length + '） — TA Job Finder';
 
-    if (resumes.length === 0) {
-      document.getElementById('resume-grid').innerHTML = '<div class="empty-state"><div class="empty-icon">📄</div><div class="empty-title">暂无简历数据</div><div class="empty-desc">请在 github_contents.json 中添加简历信息</div></div>';
+    document.getElementById('count-bar').innerHTML =
+      '共收录 <strong>' + resumes.length + '</strong> 条 LinkedIn 公开个人资料';
+
+    if (resumes.length === 0 || (resumes.length === 1 && resumes[0].profile_id === 'placeholder')) {
+      document.getElementById('profile-grid').innerHTML =
+        '<div class="empty-state"><div class="empty-icon">🔍</div><div class="empty-title">暂无简历数据</div><div class="empty-desc">运行 updater.py 爬取 LinkedIn 公开简历数据</div></div>';
       return;
     }
 
-    document.getElementById('resume-grid').innerHTML = resumes.map(function(r) {
+    document.getElementById('profile-grid').innerHTML = resumes.map(function(r) {
       var skills = r.skills || [];
-      return '<div class="resume-card">' +
-        '<div class="resume-header">' +
-          '<span class="resume-name">' + (r.name || '匿名 TA') + '</span>' +
-          '<span class="resume-batch">' + (r.batch || '27/28届') + '</span>' +
+      var skillHtml = skills.length > 0
+        ? skills.map(function(s){ return '<span class="skill-chip">' + s + '</span>'; }).join('')
+        : '<span class="skill-chip" style="color:var(--text-muted);">—</span>';
+
+      return '<div class="profile-card">' +
+        '<div class="profile-header">' +
+          '<span class="profile-name">' + (r.name || '匿名') + '</span>' +
+          '<span class="profile-source-badge">LinkedIn</span>' +
         '</div>' +
-        '<div class="resume-skills">' +
-          skills.map(function(s){ return '<span class="skill-chip">' + s + '</span>'; }).join('') +
-        '</div>' +
-        '<div class="resume-stats">' +
-          '<span>🎓 ' + (r.education || '—') + '</span>' +
-          '<span>💼 ' + (r.experience || '—') + '</span>' +
+        '<div class="profile-title">' + (r.title || '—') + '</div>' +
+        '<div class="profile-location">📍 ' + (r.location || '—') + '</div>' +
+        '<div class="skills-row">' + skillHtml + '</div>' +
+        '<div class="profile-footer">' +
+          '<span class="profile-date">抓取于 ' + (r.scraped_date || '') + '</span>' +
+          '<a href="' + (r.profile_url || '#') + '" target="_blank" class="profile-link">查看主页 →</a>' +
         '</div>' +
       '</div>';
     }).join('');
+
   } catch(e) {
-    document.getElementById('resume-grid').innerHTML = '<div class="empty-state"><div class="empty-icon">⚠️</div><div class="empty-title">加载失败</div><div class="empty-desc">请检查 github_contents.json 是否存在</div></div>';
+    document.getElementById('profile-grid').innerHTML =
+      '<div class="empty-state"><div class="empty-icon">⚠️</div><div class="empty-title">加载失败</div><div class="empty-desc">请确保 resumes.json 存在</div></div>';
   }
 }
 

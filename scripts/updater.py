@@ -358,44 +358,48 @@ def scrape_game_companies():
     return jobs
 
 # ================================================================
-# B站作品集
+# B站作品集与教程
 # ================================================================
 def scrape_bilibili_portfolios():
-    log('爬取 B站 TA 作品集...')
-    portfolios = []
+    log('爬取 B站 TA 作品集与教程...')
     if not HAS_DEPS:
-        return portfolios
+        return [], []
 
-    # 方法1: 尝试搜索API
-    portfolios = scrape_bilibili_by_search()
+    portfolio_results = []
+    tutorial_results = []
 
-    # 方法2: 如果搜索API全部被封，使用相关推荐
-    if len(portfolios) < 10:
-        log('  搜索API效果不佳，尝试使用相关推荐...')
-        related_portfolios = scrape_bilibili_by_related()
-        if related_portfolios:
-            seen = {p['bvid'] for p in portfolios}
-            for p in related_portfolios:
-                if p['bvid'] not in seen:
-                    portfolios.append(p)
-                    seen.add(p['bvid'])
+    # 1. 爬取真正的作品集（求职向）
+    portfolio_results = scrape_bilibili_portfolios_real()
 
-    log(f'  B站作品集 → {len(portfolios)} 个')
-    return portfolios
+    # 2. 爬取教程
+    tutorial_results = scrape_bilibili_tutorials()
 
-def scrape_bilibili_by_search():
-    """使用搜索API爬取"""
+    log(f'  B站作品集 → {len(portfolio_results)} 个')
+    log(f'  B站教程 → {len(tutorial_results)} 个')
+    return portfolio_results, tutorial_results
+
+
+def scrape_bilibili_portfolios_real():
+    """爬取真正的TA作品集（求职向视频）"""
     portfolios = []
     session = create_bilibili_session()
 
-    # B站 TA 相关标签视频 - 经过测试的可用的关键字
-    search_keywords = [
-        'UE渲染', '渲染引擎', '游戏特效', 'UE特效', 'VFX', '粒子特效',
-        '技术美术', '图形程序', 'TA教程', 'houdini教程', '程序化生成',
-        '游戏美术', 'Unity shader', 'game vfx', 'unity教程', '场景美术', '动画特效',
+    # 作品集关键字：专门针对"XX届技术美术作品集"类型的视频
+    portfolio_keywords = [
+        '技术美术作品集', 'TA作品集', '游戏TA作品集', 'Technical Artist portfolio',
+        '技术TA作品集', '3D TA作品集', '2D TA作品集',
+        '技术美术 作品集', 'TA 作品集', '求职 作品集',
+        '游戏美术作品集', 'VFX作品集', '特效作品集',
+        '地编作品集', 'TA demo', '技术美术demo', '作品集 求职',
     ]
 
-    for keyword in search_keywords:
+    # 也搜索一些 XX届 的格式
+    year_keywords = [f'{year}届 技术美术作品集' for year in range(25, 30)]
+    portfolio_keywords.extend(year_keywords)
+    year_keywords2 = [f'{year}届 TA作品集' for year in range(25, 30)]
+    portfolio_keywords.extend(year_keywords2)
+
+    for keyword in portfolio_keywords:
         try:
             url = f'https://api.bilibili.com/x/web-interface/search/type?search_type=video&keyword={quote_plus(keyword)}&page=1'
             resp = session.get(url, timeout=15)
@@ -411,7 +415,7 @@ def scrape_bilibili_by_search():
             result = data.get('data', {})
             videos = result.get('result', []) if isinstance(result, dict) else result
 
-            for v in videos[:10]:
+            for v in videos[:15]:
                 if not isinstance(v, dict):
                     continue
                 bvid = v.get('bvid', '')
@@ -422,7 +426,84 @@ def scrape_bilibili_by_search():
                 if isinstance(title, str):
                     title = title.replace('<em class="keyword">', '').replace('</em>', '').replace('<em>', '').replace('</em>', '')
 
+                # 过滤掉教程类视频
+                tutorial_indicators = ['教程', '入门', '教学', '课程', '系列', '合集']
+                if any(indicator in title for indicator in tutorial_indicators):
+                    continue
+
+                author = v.get('author', '')
+                if author and '官方' in author:
+                    continue
+
                 portfolios.append({
+                    'bvid': bvid,
+                    'title': title,
+                    'author': author,
+                    'description': v.get('description', ''),
+                    'duration': v.get('duration', ''),
+                    'views': v.get('play', 0),
+                    'category': 'TA',
+                    'platform': 'bilibili',
+                    'url': f'https://www.bilibili.com/video/{bvid}',
+                    'addedDate': TODAY_STR,
+                })
+
+            time.sleep(random.uniform(1.5, 3))
+
+        except Exception as e:
+            log(f'  B站作品集 [{keyword}] 失败: {e}')
+
+    return portfolios
+
+
+def scrape_bilibili_tutorials():
+    """爬取TA教程视频"""
+    tutorials = []
+    session = create_bilibili_session()
+
+    # 教程关键字
+    tutorial_keywords = [
+        'UE渲染', '渲染引擎', '游戏特效', 'UE特效', 'VFX', '粒子特效',
+        '技术美术', '图形程序', 'houdini教程', '程序化生成',
+        '游戏美术', 'Unity shader', 'game vfx', 'unity教程', '场景美术', '动画特效',
+        'HLSL入门', 'Shader教程', 'Unity教程', 'UE5教程', 'Houdini入门',
+        'Shader Graph', '材质教程', '渲染管线', 'PBR材质', '光照教程',
+        'Niagara教程', '特效教程', '地编教程', '蓝图教程',
+    ]
+
+    for keyword in tutorial_keywords:
+        try:
+            url = f'https://api.bilibili.com/x/web-interface/search/type?search_type=video&keyword={quote_plus(keyword)}&page=1'
+            resp = session.get(url, timeout=15)
+
+            if resp.status_code == 412 or (resp.text and '"code":-412' in resp.text):
+                time.sleep(2)
+                continue
+
+            data = resp.json()
+            if data.get('code') != 0:
+                continue
+
+            result = data.get('data', {})
+            videos = result.get('result', []) if isinstance(result, dict) else result
+
+            for v in videos[:8]:
+                if not isinstance(v, dict):
+                    continue
+                bvid = v.get('bvid', '')
+                if not bvid or any(t.get('bvid') == bvid for t in tutorials):
+                    continue
+
+                title = v.get('title', '')
+                if isinstance(title, str):
+                    title = title.replace('<em class="keyword">', '').replace('</em>', '').replace('<em>', '').replace('</em>', '')
+
+                # 过滤掉非教程类视频（作品集向）
+                portfolio_indicators = ['作品集', 'demo reel', 'showreel']
+                if any(indicator in title.lower() for indicator in portfolio_indicators):
+                    continue
+
+                tutorials.append({
                     'bvid': bvid,
                     'title': title,
                     'author': v.get('author', ''),
@@ -438,88 +519,9 @@ def scrape_bilibili_by_search():
             time.sleep(random.uniform(1, 2))
 
         except Exception as e:
-            log(f'  B站 [{keyword}] 失败: {e}')
+            log(f'  B站教程 [{keyword}] 失败: {e}')
 
-    return portfolios
-
-def scrape_bilibili_by_related():
-    """通过相关推荐API爬取 - 搜索API被封时的备选方案"""
-    portfolios = []
-
-    # 种子视频 - 已知的TA相关视频BV号
-    seed_videos = [
-        'BV1HSZ1YJEfW', 'BV1L14y1R7dK', 'BV1Ga4y1Z7Jz', 'BV1fT4y1S7i9',
-        'BV1oK4y1P7FL', 'BV1fN4y1D7gP', 'BV1vT4y1P7FL', 'BV1hK4y1P7FL',
-        'BV1uT4y1P7FL', 'BV1AT4y1P7FL',
-    ]
-
-    TA_KEYWORDS = ['shader', 'render', 'vfx', '特效', 'unity', 'ue', 'unreal',
-                   'houdini', 'substance', '技术美术', 'ta', 'hlsl', 'glsl',
-                   'particle', '粒子', '蓝图', 'blueprint', 'material', '材质',
-                   'lighting', 'rendering', 'tutorial', '教程']
-
-    seen_bvids = set()
-    queue = list(seed_videos)
-    max_depth = 3
-
-    session = create_bilibili_session()
-
-    for depth in range(max_depth):
-        next_queue = []
-
-        for bvid in queue:
-            if bvid in seen_bvids:
-                continue
-            seen_bvids.add(bvid)
-
-            # 获取视频信息
-            try:
-                url = f'https://api.bilibili.com/x/web-interface/view?bvid={bvid}'
-                resp = session.get(url, timeout=10)
-                data = resp.json()
-                if data.get('code') == 0:
-                    info = data.get('data', {})
-                    title = info.get('title', '')
-                    author = info.get('owner', {}).get('name', '')
-
-                    if any(kw.lower() in title.lower() for kw in TA_KEYWORDS):
-                        if bvid not in [p['bvid'] for p in portfolios]:
-                            stat = info.get('stat', {})
-                            portfolios.append({
-                                'bvid': bvid,
-                                'title': title,
-                                'author': author,
-                                'description': info.get('desc', ''),
-                                'duration': str(info.get('duration', 0)),
-                                'views': stat.get('view', 0),
-                                'category': 'TA',
-                                'platform': 'bilibili',
-                                'url': f'https://www.bilibili.com/video/{bvid}',
-                                'addedDate': TODAY_STR,
-                            })
-
-                # 获取相关视频
-                url = f'https://api.bilibili.com/x/web-interface/archive/related?bvid={bvid}'
-                resp = session.get(url, timeout=10)
-                data = resp.json()
-                if data.get('code') == 0:
-                    related = data.get('data', [])
-                    for r in related:
-                        rbvid = r.get('bvid', '')
-                        if rbvid and rbvid not in seen_bvids:
-                            next_queue.append(rbvid)
-
-                time.sleep(0.3)
-
-            except Exception as e:
-                continue
-
-        queue = next_queue[:50]
-
-    return portfolios
-
-    log(f'  B站作品集 → {len(portfolios)} 个')
-    return portfolios
+    return tutorials
 
 # ================================================================
 # LinkedIn 爬虫
@@ -571,6 +573,164 @@ def scrape_linkedin():
 
     log(f'  LinkedIn → {len(jobs)} 个岗位')
     return jobs
+
+# ================================================================
+# LinkedIn 简历（个人资料）爬虫
+# ================================================================
+def scrape_linkedin_profiles():
+    """
+    通过 LinkedIn 搜索爬取 TA 相关从业者的公开个人资料。
+    目标是了解行业中的技能分布、背景和经验，作为简历参考基准。
+    """
+    log('爬取 LinkedIn TA 个人资料...')
+    profiles = []
+    if not HAS_DEPS:
+        return profiles
+
+    session = create_session()
+
+    search_queries = [
+        # (关键字, 地区)
+        ('Technical Artist', 'China'),
+        ('Technical Artist', 'Shanghai'),
+        ('Technical Artist', 'Beijing'),
+        ('Technical Artist', 'Shenzhen'),
+        ('Technical Artist intern', 'China'),
+        ('TA Artist', 'China'),
+        ('Technical Artist', 'United States'),
+        ('Technical Artist', 'Los Angeles'),
+        ('Technical Artist', 'San Francisco'),
+        ('Technical Artist intern', 'United States'),
+        ('Technical Artist', 'Vancouver'),
+    ]
+
+    seen_profiles = set()
+
+    for keyword, location in search_queries:
+        try:
+            url = (
+                f'https://www.linkedin.com/search/results/people/'
+                f'?keywords={quote_plus(keyword)}&origin=GLOBAL_SEARCH_HEADER'
+                f'&page=1'
+            )
+            headers = {
+                'User-Agent': session.headers.get('User-Agent', ''),
+                'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+                'Accept-Language': 'en-US,en;q=0.9',
+                'Accept-Encoding': 'gzip, deflate',
+                'Connection': 'keep-alive',
+            }
+            resp = session.get(url, headers=headers, timeout=15)
+
+            if resp.status_code in (403, 429, 999):
+                log(f'  LinkedIn 个人资料 {keyword}@{location} 被限制，状态码: {resp.status_code}')
+                time.sleep(3)
+                continue
+
+            soup = BeautifulSoup(resp.text, 'lxml')
+
+            # LinkedIn 新版 DOM 结构：搜索结果卡片
+            cards = soup.select('.reusable-search__result-container') or \
+                    soup.select('.search-result__info') or \
+                    soup.select('.entity-result')
+
+            if not cards:
+                # 尝试其他常见结构
+                cards = soup.select('div[data-test-search-result]') or \
+                        soup.select('ul li')
+
+            for card in cards[:8]:
+                try:
+                    # 提取姓名
+                    name_el = card.select_one('.actor-name, .search-result__title a, '
+                                            '.entity-result__title-text a, span[dir="ltr"]:first-child, '
+                                            '.reusable-search-result__title')
+                    if not name_el:
+                        name_el = card.select_one('a[href*="/in/"]')
+
+                    name = name_el.get_text(strip=True) if name_el else ''
+                    if not name or len(name) < 3:
+                        continue
+
+                    # 提取职位
+                    title_el = card.select_one('.subline-level-1, .search-result__snippet, '
+                                              '.entity-result__primary-subtitle, '
+                                              '.reusable-search-result__snippet')
+                    title = title_el.get_text(strip=True) if title_el else ''
+
+                    # 提取公司/地区
+                    sub_el = card.select_one('.subline-level-2, .entity-result__secondary-subtitle')
+                    location_or_company = sub_el.get_text(strip=True) if sub_el else ''
+
+                    # 提取个人主页链接
+                    profile_link_el = card.select_one('a[href*="/in/"]')
+                    profile_url = ''
+                    if profile_link_el:
+                        href = profile_link_el.get('href', '')
+                        if '/in/' in href:
+                            profile_url = 'https://www.linkedin.com' + href.split('?')[0]
+                    if not profile_url:
+                        continue
+
+                    # 去重
+                    profile_id = profile_url.split('/in/')[-1].rstrip('/')
+                    if profile_id in seen_profiles:
+                        continue
+                    seen_profiles.add(profile_id)
+
+                    # 从职位描述中提取技能关键字
+                    skills = extract_skills_from_text(title + ' ' + location_or_company)
+
+                    profiles.append({
+                        'profile_id': profile_id,
+                        'name': name,
+                        'title': title,
+                        'location': location_or_company,
+                        'profile_url': profile_url,
+                        'source': 'LinkedIn',
+                        'scraped_date': TODAY_STR,
+                        'skills': skills,
+                    })
+                except Exception:
+                    continue
+
+            time.sleep(random.uniform(2, 4))
+
+        except requests.exceptions.Timeout:
+            log(f'  LinkedIn 个人资料 {keyword}@{location} 超时')
+        except requests.exceptions.ConnectionError as e:
+            log(f'  LinkedIn 个人资料 {keyword}@{location} 连接失败: {e}')
+        except Exception as e:
+            log(f'  LinkedIn 个人资料 {keyword}@{location} 失败: {e}')
+
+    log(f'  LinkedIn 个人资料 → {len(profiles)} 个')
+    return profiles
+
+
+def extract_skills_from_text(text):
+    """从文本中提取 TA 相关技能关键字"""
+    text_lower = text.lower()
+    skill_map = {
+        'Unity': 'Unity', 'Unreal': 'Unreal', 'UE': 'Unreal',
+        'HLSL': 'HLSL', 'GLSL': 'GLSL', 'Shader': 'Shader',
+        'Maya': 'Maya', 'Blender': 'Blender', '3ds Max': '3ds Max',
+        'Python': 'Python', 'C++': 'C++', 'C#': 'C#',
+        'Substance': 'Substance', 'Photoshop': 'Photoshop',
+        'ZBrush': 'ZBrush', 'Marmoset': 'Marmoset',
+        'VFX': 'VFX', 'Houdini': 'Houdini', 'Nuke': 'Nuke',
+        'Rigging': 'Rigging', 'Animation': 'Animation',
+        'Lighting': 'Lighting', 'Rendering': 'Rendering',
+        'PBR': 'PBR', 'Ray tracing': 'Ray tracing',
+        'VR': 'VR/AR', 'AR': 'VR/AR',
+        'USD': 'USD', 'Maya': 'Maya',
+        'Substance Designer': 'Substance Designer',
+        'Substance Painter': 'Substance Painter',
+    }
+    found = []
+    for key, skill in skill_map.items():
+        if key.lower() in text_lower and skill not in found:
+            found.append(skill)
+    return found[:10]
 
 # ================================================================
 # Indeed 爬虫
@@ -693,6 +853,129 @@ def scrape_gaming_studios():
             log(f'  {studio["name"]} 失败: {e}')
 
     log(f'  游戏工作室 → {len(jobs)} 个岗位')
+    return jobs
+
+# ================================================================
+# 海外实习岗位爬虫（针对美国/加拿大）
+# ================================================================
+def scrape_overseas_intern():
+    """专门爬取美国/加拿大地区的 TA 实习岗位"""
+    log('爬取海外实习岗位（美国/加拿大）...')
+    jobs = []
+    if not HAS_DEPS:
+        return jobs
+
+    session = create_session()
+
+    # 美国主要城市
+    us_cities = [
+        {'name': 'Los Angeles, CA', 'lat': 34.0522, 'lng': -118.2437},
+        {'name': 'San Francisco, CA', 'lat': 37.7749, 'lng': -122.4194},
+        {'name': 'Seattle, WA', 'lat': 47.6062, 'lng': -122.3321},
+        {'name': 'Austin, TX', 'lat': 30.2672, 'lng': -97.7431},
+        {'name': 'Boston, MA', 'lat': 42.3601, 'lng': -71.0589},
+        {'name': 'Chicago, IL', 'lat': 41.8781, 'lng': -87.6298},
+        {'name': 'New York, NY', 'lat': 40.7128, 'lng': -74.0060},
+        {'name': 'Denver, CO', 'lat': 39.7392, 'lng': -104.9903},
+        {'name': 'Vancouver, BC', 'lat': 49.2827, 'lng': -123.1207},
+        {'name': 'Toronto, ON', 'lat': 43.6532, 'lng': -79.3832},
+    ]
+
+    # 实习关键字（英文）
+    intern_keywords = [
+        'technical artist intern', 'ta intern', 'shader intern',
+        'technical artist summer', 'ta summer intern',
+        'technical artist entry', 'technical artist junior',
+    ]
+
+    # 通过 Indeed 搜索实习岗位
+    for city in us_cities:
+        for keyword in intern_keywords:
+            try:
+                params = {
+                    'q': keyword,
+                    'l': city['name'],
+                    'sort': 'date',
+                    'limit': 10,
+                }
+                url = 'https://www.indeed.com/jobs'
+                resp = session.get(url, params=params, timeout=15)
+
+                soup = BeautifulSoup(resp.text, 'lxml')
+
+                for card in soup.select('.job_seen_beacon')[:5]:
+                    try:
+                        link = card.select_one('a.jcs-JobTitle')
+                        if not link:
+                            continue
+                        title = link.get_text(strip=True)
+                        detail_url = 'https://www.indeed.com' + link.get('href', '')
+
+                        company = card.select_one('.company-name')
+                        company_name = company.get_text(strip=True) if company else ''
+
+                        salary_el = card.select_one('.salary-snippet')
+                        salary = salary_el.get_text(strip=True) if salary_el else '面议'
+
+                        job = build_job(
+                            title, company_name, detail_url, 'overseas', city['name'],
+                            source='Indeed',
+                            job_type='Intern',
+                            priority=rate_priority(title, company_name),
+                            salary=salary,
+                            lat=city['lat'] + random.uniform(-0.1, 0.1),
+                            lng=city['lng'] + random.uniform(-0.1, 0.1)
+                        )
+                        if job:
+                            jobs.append(job)
+                    except Exception:
+                        continue
+
+                time.sleep(random.uniform(1.5, 3))
+            except Exception as e:
+                log(f'  Indeed Intern {city["name"][:15]} [{keyword[:20]}] 失败: {e}')
+
+    # 通过 LinkedIn 搜索实习岗位
+    for city in us_cities[:5]:
+        for keyword in intern_keywords:
+            try:
+                url = f'https://www.linkedin.com/jobs/search/?keywords={quote_plus(keyword)}&location={quote_plus(city["name"])}&f_TPR=r2592000'
+                resp = session.get(url, timeout=20)
+                soup = BeautifulSoup(resp.text, 'lxml')
+
+                for card in soup.select('.job-search-card')[:5]:
+                    try:
+                        link = card.select_one('a')
+                        if not link:
+                            continue
+                        title = link.get_text(strip=True)
+                        detail_url = link.get('href', '').split('?')[0]
+
+                        company = card.select_one('.company-name, .base-search-card__subtitle')
+                        company_name = company.get_text(strip=True) if company else ''
+
+                        meta = card.select_one('.job-search-card__metadata, .search-result-meta')
+                        location = meta.get_text(strip=True) if meta else city['name']
+
+                        if title and company_name:
+                            job = build_job(
+                                title, company_name, detail_url, 'overseas', location,
+                                source='LinkedIn',
+                                job_type='Intern',
+                                priority=rate_priority(title, company_name),
+                                lat=city['lat'] + random.uniform(-0.1, 0.1),
+                                lng=city['lng'] + random.uniform(-0.1, 0.1)
+                            )
+                            if job:
+                                jobs.append(job)
+                    except Exception:
+                        continue
+
+                time.sleep(random.uniform(2, 4))
+            except Exception as e:
+                log(f'  LinkedIn Intern {city["name"][:15]} 失败: {e}')
+
+    log(f'  海外实习 → {len(jobs)} 个岗位')
     return jobs
 
 # ================================================================
@@ -823,9 +1106,17 @@ def main():
     over_data = load_json(f'{DATA_DIR}/jobs-overseas.json') or {}
     existing_overseas = over_data.get('overseasJobs', over_data if isinstance(over_data, list) else [])
     port_data = load_json(f'{DATA_DIR}/portfolios.json') or {}
-    existing_portfolios = port_data if isinstance(port_data, list) else port_data.get('portfolios', [])
+    if isinstance(port_data, list):
+        existing_portfolios = port_data
+        existing_tutorials = []
+    else:
+        existing_portfolios = port_data.get('portfolios', [])
+        existing_tutorials = port_data.get('tutorials', [])
 
-    all_domestic, all_overseas, all_portfolios = [], [], []
+    res_data = load_json(f'{DATA_DIR}/resumes.json') or {}
+    existing_resumes = res_data.get('resumes', []) if isinstance(res_data, dict) else []
+
+    all_domestic, all_overseas, all_portfolios, all_tutorials, all_resumes = [], [], [], [], []
 
     if target in ('all', 'domestic'):
         domestic_new = dedup(scrape_51job() + scrape_game_companies())
@@ -834,20 +1125,44 @@ def main():
         log(f'国内岗位已保存: {len(all_domestic)} 个')
 
     if target in ('all', 'overseas'):
-        overseas_new = dedup(scrape_linkedin() + scrape_indeed() + scrape_gaming_studios())
+        overseas_new = dedup(
+            scrape_linkedin() + scrape_indeed() + scrape_gaming_studios() + scrape_overseas_intern()
+        )
         all_overseas = merge_with_existing(overseas_new, existing_overseas, max_total=400)
         save_json(f'{DATA_DIR}/jobs-overseas.json', {'updated': TODAY_STR, 'overseasJobs': all_overseas})
         log(f'海外岗位已保存: {len(all_overseas)} 个')
 
     if target in ('all', 'portfolios'):
-        portfolios_new = scrape_bilibili_portfolios()
-        existing_map = {}
-        if isinstance(existing_portfolios, list):
-            existing_map = {p.get('bvid', p.get('id', '')): p for p in existing_portfolios}
+        portfolios_new, tutorials_new = scrape_bilibili_portfolios()
+
+        # 合并作品集
+        existing_map = {p.get('bvid', p.get('id', '')): p for p in existing_portfolios}
         existing_map.update({p.get('bvid', p.get('id', '')): p for p in portfolios_new})
         all_portfolios = list(existing_map.values())[:200]
-        save_json(f'{DATA_DIR}/portfolios.json', {'updated': TODAY_STR, 'portfolios': all_portfolios})
+
+        # 合并教程
+        tut_map = {t.get('bvid', t.get('id', '')): t for t in existing_tutorials}
+        tut_map.update({t.get('bvid', t.get('id', '')): t for t in tutorials_new})
+        all_tutorials = list(tut_map.values())[:300]
+
+        save_json(f'{DATA_DIR}/portfolios.json', {
+            'updated': TODAY_STR,
+            'portfolios': all_portfolios,
+            'tutorials': all_tutorials,
+        })
         log(f'作品集已保存: {len(all_portfolios)} 个')
+        log(f'教程已保存: {len(all_tutorials)} 个')
+
+    if target in ('all', 'resumes'):
+        resumes_new = scrape_linkedin_profiles()
+        existing_map = {p.get('profile_id', ''): p for p in existing_resumes}
+        existing_map.update({p.get('profile_id', ''): p for p in resumes_new})
+        all_resumes = list(existing_map.values())[:300]
+        save_json(f'{DATA_DIR}/resumes.json', {
+            'updated': TODAY_STR,
+            'resumes': all_resumes,
+        })
+        log(f'简历参考已保存: {len(all_resumes)} 个')
 
     # 生成智能摘要
     summary = generate_summary(all_domestic, all_overseas)
@@ -859,12 +1174,14 @@ def main():
         'domesticJobs': all_domestic,
         'overseasJobs': all_overseas,
         'portfolios': all_portfolios,
+        'tutorials': all_tutorials,
+        'resumes': all_resumes,
         'summary': summary,
     }
     save_json(f'{DATA_DIR}/github_contents.json', combined)
 
     log('===== 数据更新完成 =====')
-    log(f'国内 {len(all_domestic)} | 海外 {len(all_overseas)} | 作品集 {len(all_portfolios)}')
+    log(f'国内 {len(all_domestic)} | 海外 {len(all_overseas)} | 作品集 {len(all_portfolios)} | 教程 {len(all_tutorials)} | 简历 {len(all_resumes)}')
     log(f'热门方向: {summary["hotTestCategory"]["label"]} ({summary["hotTestCategory"]["count"]} 个岗位)')
     for c in summary['topCompanies']:
         log(f'  {c["name"]}: {c["count"]} 个岗位')

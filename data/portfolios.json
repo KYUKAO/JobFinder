@@ -2,6 +2,56 @@
   "updated": "2026-04-18",
   "portfolios": [
     {
+      "bvid": "BV1Snh2zVEDN",
+      "title": "【TA】大一的技术美术作品集 | 28届实习",
+      "author": "云卷要努力变强",
+      "description": "这是一个求职向技术美术作品演示，技术尚且有限，希望继续进步",
+      "duration": "4:7",
+      "views": 89984,
+      "category": "TA",
+      "platform": "bilibili",
+      "url": "https://www.bilibili.com/video/BV1Snh2zVEDN",
+      "addedDate": "2026-04-18"
+    },
+    {
+      "bvid": "BV1iNQJBGExh",
+      "title": "28届| 技术美术作品集",
+      "author": "FA-4",
+      "description": "",
+      "duration": "2:22",
+      "views": 370,
+      "category": "TA",
+      "platform": "bilibili",
+      "url": "https://www.bilibili.com/video/BV1iNQJBGExh",
+      "addedDate": "2026-04-18"
+    },
+    {
+      "bvid": "BV1CidqBUEpp",
+      "title": "29届 技术美术作品集",
+      "author": "蚊子吃冬瓜",
+      "description": "-",
+      "duration": "2:19",
+      "views": 505,
+      "category": "TA",
+      "platform": "bilibili",
+      "url": "https://www.bilibili.com/video/BV1CidqBUEpp",
+      "addedDate": "2026-04-18"
+    },
+    {
+      "bvid": "BV1WY411U7z5",
+      "title": "[MAD/VFX] Son1x 作品集",
+      "author": "chibarie",
+      "description": "https://www.youtube.com/@Son1xEdits/videos\nbilibili本人@Son1x_ \n第1次更新 2023-01-18 (更新P17)\n第2次更新 2023-06-27 (更新P18) \n第3次更新 2023-12-28 (更新P18)",
+      "duration": "7:13",
+      "views": 41314,
+      "category": "TA",
+      "platform": "bilibili",
+      "url": "https://www.bilibili.com/video/BV1WY411U7z5",
+      "addedDate": "2026-04-18"
+    }
+  ],
+  "tutorials": [
+    {
       "bvid": "BV1HSZ1YJEfW",
       "title": "Unreal5 HLSL 教程2025",
       "author": "IamCG",
@@ -86,18 +136,6 @@
       "addedDate": "2026-04-18"
     },
     {
-      "bvid": "BV11wUCBDED9",
-      "title": "【中配】【HLSL】15-HLSL结合Niagara和HLSL",
-      "author": "西技大神",
-      "description": "",
-      "duration": "2926",
-      "views": 1012,
-      "category": "TA",
-      "platform": "bilibili",
-      "url": "https://www.bilibili.com/video/BV11wUCBDED9",
-      "addedDate": "2026-04-13"
-    },
-    {
       "bvid": "BV1Q54y1G7v3",
       "title": "【教程】技术美术入门：渲染管线概述",
       "author": "Kerry佬",
@@ -119,18 +157,6 @@
       "category": "TA",
       "platform": "bilibili",
       "url": "https://www.bilibili.com/video/BV1sE411g7N9",
-      "addedDate": "2026-04-13"
-    },
-    {
-      "bvid": "BV188411V7g3",
-      "title": "UE5纯代码手撸Shader（原创）",
-      "author": "自嗨小猪",
-      "description": "通过纯代码手撸Shader练习深入理解图形学",
-      "duration": "239",
-      "views": 11382,
-      "category": "TA",
-      "platform": "bilibili",
-      "url": "https://www.bilibili.com/video/BV188411V7g3",
       "addedDate": "2026-04-13"
     },
     {
@@ -182,18 +208,6 @@
       "addedDate": "2026-04-13"
     },
     {
-      "bvid": "BV1B2421L7wt",
-      "title": "Think Tank Training Center",
-      "author": "北美R叔",
-      "description": "今天来聊一下：Think Tank Training Center",
-      "duration": "398",
-      "views": 3417,
-      "category": "TA",
-      "platform": "bilibili",
-      "url": "https://www.bilibili.com/video/BV1B2421L7wt",
-      "addedDate": "2026-04-13"
-    },
-    {
       "bvid": "BV19z4y147bW",
       "title": "【中字】Ben Cloward 虚幻引擎大师级材质系列课程",
       "author": "王也道长OS",
@@ -203,18 +217,6 @@
       "category": "TA",
       "platform": "bilibili",
       "url": "https://www.bilibili.com/video/BV19z4y147bW",
-      "addedDate": "2026-04-13"
-    },
-    {
-      "bvid": "BV1Vt4y1w7DH",
-      "title": "【Ue5 魔改虚幻引擎】#2 Shader篇 自定义着色器的实现",
-      "author": "这是一根毛",
-      "description": "基于Ue5.0.3\n代码：https://www.bilibili.com/read/cv18792540\n喜欢的兄弟们可以点个三连，点个关注。\n投币过100，马上安排 角色actor描边组件，兄弟们冲冲冲！！！\n每一个关注和三连都是对Up的催更，感谢大家的三连和关注。",
-      "duration": "1353",
-      "views": 16672,
-      "category": "TA",
-      "platform": "bilibili",
-      "url": "https://www.bilibili.com/video/BV1Vt4y1w7DH",
       "addedDate": "2026-04-13"
     },
     {
@@ -338,18 +340,6 @@
       "addedDate": "2026-04-13"
     },
     {
-      "bvid": "BV1pMPTexEBD",
-      "title": "技术美术必备技能-copy",
-      "author": "名侦探柯南lp",
-      "description": "",
-      "duration": "753",
-      "views": 29961,
-      "category": "TA",
-      "platform": "bilibili",
-      "url": "https://www.bilibili.com/video/BV1pMPTexEBD",
-      "addedDate": "2026-04-13"
-    },
-    {
       "bvid": "BV1btqpYCEKU",
       "title": "【虚幻引擎5！】 助你学习HLSL的小知识！",
       "author": "远离UE4",
@@ -383,18 +373,6 @@
       "category": "TA",
       "platform": "bilibili",
       "url": "https://www.bilibili.com/video/BV17LRBYUEdW",
-      "addedDate": "2026-04-13"
-    },
-    {
-      "bvid": "BV1XeW3zwEkb",
-      "title": "【UE5 Niagara 示例详解】GPU 粒子 与 HLSL 表达式",
-      "author": "ZzxxH",
-      "description": "HLSL 的参考文档在这里：https://learn.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl-cos\n大家的支持对我真的很重要！",
-      "duration": "455",
-      "views": 1194,
-      "category": "TA",
-      "platform": "bilibili",
-      "url": "https://www.bilibili.com/video/BV1XeW3zwEkb",
       "addedDate": "2026-04-13"
     },
     {
@@ -470,18 +448,6 @@
       "addedDate": "2026-04-13"
     },
     {
-      "bvid": "BV1r1421t7Fz",
-      "title": "一口气梳理UE5底层渲染流程-快速了解渲染整体流程",
-      "author": "人宅",
-      "description": "",
-      "duration": "1517",
-      "views": 12186,
-      "category": "TA",
-      "platform": "bilibili",
-      "url": "https://www.bilibili.com/video/BV1r1421t7Fz",
-      "addedDate": "2026-04-13"
-    },
-    {
       "bvid": "BV1BZ4y1i7yF",
       "title": "Unity就业课-Shader从入门到精通",
       "author": "麦扣长官",
@@ -527,18 +493,6 @@
       "category": "TA",
       "platform": "bilibili",
       "url": "https://www.bilibili.com/video/BV1i3E4zvE96",
-      "addedDate": "2026-04-13"
-    },
-    {
-      "bvid": "BV12u4y1W7aG",
-      "title": "Unreal Engine 5.3 HLSL 中的形状和图案生成",
-      "author": "查拉图斯特拉又说",
-      "description": "ttps://patreon.com/renderBucket",
-      "duration": "1167",
-      "views": 4107,
-      "category": "TA",
-      "platform": "bilibili",
-      "url": "https://www.bilibili.com/video/BV12u4y1W7aG",
       "addedDate": "2026-04-13"
     },
     {
@@ -611,18 +565,6 @@
       "category": "TA",
       "platform": "bilibili",
       "url": "https://www.bilibili.com/video/BV15pxre8Ei6",
-      "addedDate": "2026-04-13"
-    },
-    {
-      "bvid": "BV19a4y17721",
-      "title": "Shader编程 - 如何渲染一个黑洞？",
-      "author": "Ross-Ning",
-      "description": "项目源码: https://github.com/rossning92/Blackhole",
-      "duration": "631",
-      "views": 33054,
-      "category": "TA",
-      "platform": "bilibili",
-      "url": "https://www.bilibili.com/video/BV19a4y17721",
       "addedDate": "2026-04-13"
     },
     {
@@ -818,18 +760,6 @@
       "addedDate": "2026-04-18"
     },
     {
-      "bvid": "BV1w9w8z1Eat",
-      "title": "2026第十二届世界渲染大赛丨TOP100",
-      "author": "世界渲染大赛",
-      "description": "赛事网址：https://createwithclint.com/community-challenges/12",
-      "duration": "7:36",
-      "views": 195013,
-      "category": "TA",
-      "platform": "bilibili",
-      "url": "https://www.bilibili.com/video/BV1w9w8z1Eat",
-      "addedDate": "2026-04-18"
-    },
-    {
       "bvid": "BV12M411f7Fz",
       "title": "UE5渲染教程：三种渲染方式以及视频格式选择（序列渲染/多通道渲染/分层渲染）",
       "author": "李哥讲UE",
@@ -854,42 +784,6 @@
       "addedDate": "2026-04-18"
     },
     {
-      "bvid": "BV15S14YWEMC",
-      "title": "技术美术干嘛的？薪资高嘛？如何成为技术美术？",
-      "author": "亚食人",
-      "description": "先有技术美术的工作，还是先有技术美术的工作经验？\n答：一转职业是这样的，先有工作经验。",
-      "duration": "7:59",
-      "views": 131887,
-      "category": "TA",
-      "platform": "bilibili",
-      "url": "https://www.bilibili.com/video/BV15S14YWEMC",
-      "addedDate": "2026-04-18"
-    },
-    {
-      "bvid": "BV1Snh2zVEDN",
-      "title": "【TA】大一的技术美术作品集 | 28届实习",
-      "author": "云卷要努力变强",
-      "description": "这是一个求职向技术美术作品演示，技术尚且有限，希望继续进步",
-      "duration": "4:7",
-      "views": 89984,
-      "category": "TA",
-      "platform": "bilibili",
-      "url": "https://www.bilibili.com/video/BV1Snh2zVEDN",
-      "addedDate": "2026-04-18"
-    },
-    {
-      "bvid": "BV1iNQJBGExh",
-      "title": "28届| 技术美术作品集",
-      "author": "FA-4",
-      "description": "",
-      "duration": "2:22",
-      "views": 370,
-      "category": "TA",
-      "platform": "bilibili",
-      "url": "https://www.bilibili.com/video/BV1iNQJBGExh",
-      "addedDate": "2026-04-18"
-    },
-    {
       "bvid": "BV1sDdNYzEQw",
       "title": "公开课：如何成为游戏TA（技术美术）？",
       "author": "无界游戏学社",
@@ -899,18 +793,6 @@
       "category": "TA",
       "platform": "bilibili",
       "url": "https://www.bilibili.com/video/BV1sDdNYzEQw",
-      "addedDate": "2026-04-18"
-    },
-    {
-      "bvid": "BV1CidqBUEpp",
-      "title": "29届 技术美术作品集",
-      "author": "蚊子吃冬瓜",
-      "description": "-",
-      "duration": "2:19",
-      "views": 505,
-      "category": "TA",
-      "platform": "bilibili",
-      "url": "https://www.bilibili.com/video/BV1CidqBUEpp",
       "addedDate": "2026-04-18"
     },
     {
@@ -1142,18 +1024,6 @@
       "addedDate": "2026-04-18"
     },
     {
-      "bvid": "BV1y7rfBgEpM",
-      "title": "程序化生成的两难困境与Oskar Stålberg的天才解法",
-      "author": "blueblur青速",
-      "description": "频道知识库：dh7ytdd10q.feishu.cn/wiki/U9k9wwh6AiIfT0ky29pcvIJTnUh\n\nhttps://www.youtube.com/watch?v=Y19Mw5YsgjI",
-      "duration": "12:8",
-      "views": 12950,
-      "category": "TA",
-      "platform": "bilibili",
-      "url": "https://www.bilibili.com/video/BV1y7rfBgEpM",
-      "addedDate": "2026-04-18"
-    },
-    {
       "bvid": "BV15z9jBuESv",
       "title": "No.1, PCG让道路的生成简单到难以置信, UE5.7 PCG程序化生成内容教程系列，中英双语，中文配音。",
       "author": "四石谷之王",
@@ -1175,6 +1045,258 @@
       "category": "TA",
       "platform": "bilibili",
       "url": "https://www.bilibili.com/video/BV1QBdiBtEjQ",
+      "addedDate": "2026-04-18"
+    },
+    {
+      "bvid": "BV1FKKtzyESL",
+      "title": "Unity6Shader零基础小白入门教程-渲染理论基础-着色器基础-ShaderGraph-手写Shader入门",
+      "author": "Unity-siki学院",
+      "description": "课程资料、源码下载地址：https://www.sikiedu.com/course/2123?ff=b_siki\n本课程涵盖Shader基础、渲染管线、材质贴图应用，带你进行Unity Shader的入门学习。\n本课程分为三个部分：\n第一个部分讲解Unity内置Shader的使用\n第二个部分讲解Unity中Shader是怎么运行的，以及Shader在渲染流程中承担的作用\n第三个部分讲解如何创建自己的Shader（通过手写和ShaderGraph两种方式创建Shader）",
+      "duration": "279:7",
+      "views": 38569,
+      "category": "TA",
+      "platform": "bilibili",
+      "url": "https://www.bilibili.com/video/BV1FKKtzyESL",
+      "addedDate": "2026-04-18"
+    },
+    {
+      "bvid": "BV1SfmNYREWU",
+      "title": "【VRC改模】①VCC和unity工程开启！宝宝向教程",
+      "author": "咸鱼子Luna",
+      "description": "一、VCC安装\nhttps://vrchat.com/download/vcc\n\n\n二、unity hub安装（第一个是网页，第二是下载链接）\nhttps://unity.com/download\nhttps://public-cdn.cloud.unity3d.com/hub/prod/UnityHubSetup.exe\n\n\n三、2022.3.22f1unity安装（第一个是网页，第二是下载链接）\nhttps://unity.com/releases/editor/whats-new/2022.3.22",
+      "duration": "15:30",
+      "views": 89095,
+      "category": "TA",
+      "platform": "bilibili",
+      "url": "https://www.bilibili.com/video/BV1SfmNYREWU",
+      "addedDate": "2026-04-18"
+    },
+    {
+      "bvid": "BV1dD4y1w7dw",
+      "title": "Unity新手入门  下载unity，安装Unity（入门第1步）",
+      "author": "上月球去写甲骨文",
+      "description": "简简单单讲一讲unity中 下载unity，安装Unity（入门第1步）",
+      "duration": "7:6",
+      "views": 266115,
+      "category": "TA",
+      "platform": "bilibili",
+      "url": "https://www.bilibili.com/video/BV1dD4y1w7dw",
+      "addedDate": "2026-04-18"
+    },
+    {
+      "bvid": "BV16osSz9EGV",
+      "title": "【Unity】Unity Shader Graph基础",
+      "author": "胧雨夜",
+      "description": "https://www.youtube.com/watch?v=2KSLO9JnxHA&amp;list=PLsaDw3p1XpJiGHPnA8gZH6gO2gQYz3JH1",
+      "duration": "126:11",
+      "views": 16943,
+      "category": "TA",
+      "platform": "bilibili",
+      "url": "https://www.bilibili.com/video/BV16osSz9EGV",
+      "addedDate": "2026-04-18"
+    },
+    {
+      "bvid": "BV12U4y1L78f",
+      "title": "全网最简单易懂的Unity Shader着色器入门教程 (求三连，建议收藏，慢慢学习)",
+      "author": "Unity飞哥独立游戏",
+      "description": "+unity技术美术q群1093452896，看群公告 或 群文件，获取课程资料\n想学习shader，技术美术Ta课程，想进入技术美术行业，可以找群主咨询了解！\n\n课程整理不易，求三连，建议收藏,慢慢学习\n对unity shader感兴趣的同学，可以看看这套shader入门基础视频。大致了解下shader的写法。",
+      "duration": "432:57",
+      "views": 98695,
+      "category": "TA",
+      "platform": "bilibili",
+      "url": "https://www.bilibili.com/video/BV12U4y1L78f",
+      "addedDate": "2026-04-18"
+    },
+    {
+      "bvid": "BV1gw411k7Gh",
+      "title": "今天我们来聊一下：什么是VFX ？&quot; Visual Effects &quot;",
+      "author": "北美R叔",
+      "description": "今天我们来聊一下：什么是VFX ？&quot; Visual Effects &quot;\n更多知识点后面会持续分享，喜欢的朋友点个关注，一键三连。\n学习交流找我看主页！",
+      "duration": "3:1",
+      "views": 28470,
+      "category": "TA",
+      "platform": "bilibili",
+      "url": "https://www.bilibili.com/video/BV1gw411k7Gh",
+      "addedDate": "2026-04-18"
+    },
+    {
+      "bvid": "BV1Bb4y147Rj",
+      "title": "【VFX】巨人完整作品",
+      "author": "MoXiess",
+      "description": "-",
+      "duration": "0:40",
+      "views": 540970,
+      "category": "TA",
+      "platform": "bilibili",
+      "url": "https://www.bilibili.com/video/BV1Bb4y147Rj",
+      "addedDate": "2026-04-18"
+    },
+    {
+      "bvid": "BV1qF411M7Nc",
+      "title": "【合集】Unity VFX及Shader特效教程—Gabriel Aguiar Prod.",
+      "author": "50兔",
+      "description": "https://www.youtube.com/playlist?list=PLpPd_BKEUoYhN8CiOoNLTSVh-7U5yjg3n\nb站现有搬运都是散的，搬个合集方便学习用。\r\n这位作者还有一个播放列表专门叫shader，和这里面有的是重合的。",
+      "duration": "566:35",
+      "views": 41050,
+      "category": "TA",
+      "platform": "bilibili",
+      "url": "https://www.bilibili.com/video/BV1qF411M7Nc",
+      "addedDate": "2026-04-18"
+    },
+    {
+      "bvid": "BV17u4y1a7Do",
+      "title": "西方美术史概览｜27分钟全面梳理西方艺术史，从中世纪到现代，主流画派和代表艺术家一网打尽",
+      "author": "小白豆干看世界",
+      "description": "// 12月5日更新：增加了字幕// \n\n每个人都喜欢艺术，可是，并不是每个人都懂艺术。\n\n你有没有遇到这样一个时刻：\n当你进入一间美术馆，面对众多的艺术品，尤其是满目的画作，他们看起来很漂亮，可是你却不知道他们好在哪里，画中的人物，场景，故事，因为文化差异，你也不是很理解他们为什么会出现在画面中，以及他们是想要在表达什么。\n所以，你不知道该看什么，不知道该怎么看。\n\n如果你曾有过这样的经历，那么就请你跟我一起，来快速的了解一下西方艺术史的时间轴。\n当我们梳理完这些主要艺术流派及其代表艺术家，你就会发现，",
+      "duration": "26:39",
+      "views": 362200,
+      "category": "TA",
+      "platform": "bilibili",
+      "url": "https://www.bilibili.com/video/BV17u4y1a7Do",
+      "addedDate": "2026-04-18"
+    },
+    {
+      "bvid": "BV11wUCBDED9",
+      "title": "【中配】【HLSL】15-HLSL结合Niagara和HLSL",
+      "author": "西技大神",
+      "description": "",
+      "duration": "2926",
+      "views": 1012,
+      "category": "TA",
+      "platform": "bilibili",
+      "url": "https://www.bilibili.com/video/BV11wUCBDED9",
+      "addedDate": "2026-04-13"
+    },
+    {
+      "bvid": "BV188411V7g3",
+      "title": "UE5纯代码手撸Shader（原创）",
+      "author": "自嗨小猪",
+      "description": "通过纯代码手撸Shader练习深入理解图形学",
+      "duration": "239",
+      "views": 11382,
+      "category": "TA",
+      "platform": "bilibili",
+      "url": "https://www.bilibili.com/video/BV188411V7g3",
+      "addedDate": "2026-04-13"
+    },
+    {
+      "bvid": "BV1B2421L7wt",
+      "title": "Think Tank Training Center",
+      "author": "北美R叔",
+      "description": "今天来聊一下：Think Tank Training Center",
+      "duration": "398",
+      "views": 3417,
+      "category": "TA",
+      "platform": "bilibili",
+      "url": "https://www.bilibili.com/video/BV1B2421L7wt",
+      "addedDate": "2026-04-13"
+    },
+    {
+      "bvid": "BV1Vt4y1w7DH",
+      "title": "【Ue5 魔改虚幻引擎】#2 Shader篇 自定义着色器的实现",
+      "author": "这是一根毛",
+      "description": "基于Ue5.0.3\n代码：https://www.bilibili.com/read/cv18792540\n喜欢的兄弟们可以点个三连，点个关注。\n投币过100，马上安排 角色actor描边组件，兄弟们冲冲冲！！！\n每一个关注和三连都是对Up的催更，感谢大家的三连和关注。",
+      "duration": "1353",
+      "views": 16672,
+      "category": "TA",
+      "platform": "bilibili",
+      "url": "https://www.bilibili.com/video/BV1Vt4y1w7DH",
+      "addedDate": "2026-04-13"
+    },
+    {
+      "bvid": "BV1pMPTexEBD",
+      "title": "技术美术必备技能-copy",
+      "author": "名侦探柯南lp",
+      "description": "",
+      "duration": "753",
+      "views": 29961,
+      "category": "TA",
+      "platform": "bilibili",
+      "url": "https://www.bilibili.com/video/BV1pMPTexEBD",
+      "addedDate": "2026-04-13"
+    },
+    {
+      "bvid": "BV1XeW3zwEkb",
+      "title": "【UE5 Niagara 示例详解】GPU 粒子 与 HLSL 表达式",
+      "author": "ZzxxH",
+      "description": "HLSL 的参考文档在这里：https://learn.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl-cos\n大家的支持对我真的很重要！",
+      "duration": "455",
+      "views": 1194,
+      "category": "TA",
+      "platform": "bilibili",
+      "url": "https://www.bilibili.com/video/BV1XeW3zwEkb",
+      "addedDate": "2026-04-13"
+    },
+    {
+      "bvid": "BV1r1421t7Fz",
+      "title": "一口气梳理UE5底层渲染流程-快速了解渲染整体流程",
+      "author": "人宅",
+      "description": "",
+      "duration": "1517",
+      "views": 12186,
+      "category": "TA",
+      "platform": "bilibili",
+      "url": "https://www.bilibili.com/video/BV1r1421t7Fz",
+      "addedDate": "2026-04-13"
+    },
+    {
+      "bvid": "BV12u4y1W7aG",
+      "title": "Unreal Engine 5.3 HLSL 中的形状和图案生成",
+      "author": "查拉图斯特拉又说",
+      "description": "ttps://patreon.com/renderBucket",
+      "duration": "1167",
+      "views": 4107,
+      "category": "TA",
+      "platform": "bilibili",
+      "url": "https://www.bilibili.com/video/BV12u4y1W7aG",
+      "addedDate": "2026-04-13"
+    },
+    {
+      "bvid": "BV19a4y17721",
+      "title": "Shader编程 - 如何渲染一个黑洞？",
+      "author": "Ross-Ning",
+      "description": "项目源码: https://github.com/rossning92/Blackhole",
+      "duration": "631",
+      "views": 33054,
+      "category": "TA",
+      "platform": "bilibili",
+      "url": "https://www.bilibili.com/video/BV19a4y17721",
+      "addedDate": "2026-04-13"
+    },
+    {
+      "bvid": "BV1w9w8z1Eat",
+      "title": "2026第十二届世界渲染大赛丨TOP100",
+      "author": "世界渲染大赛",
+      "description": "赛事网址：https://createwithclint.com/community-challenges/12",
+      "duration": "7:36",
+      "views": 195013,
+      "category": "TA",
+      "platform": "bilibili",
+      "url": "https://www.bilibili.com/video/BV1w9w8z1Eat",
+      "addedDate": "2026-04-18"
+    },
+    {
+      "bvid": "BV15S14YWEMC",
+      "title": "技术美术干嘛的？薪资高嘛？如何成为技术美术？",
+      "author": "亚食人",
+      "description": "先有技术美术的工作，还是先有技术美术的工作经验？\n答：一转职业是这样的，先有工作经验。",
+      "duration": "7:59",
+      "views": 131887,
+      "category": "TA",
+      "platform": "bilibili",
+      "url": "https://www.bilibili.com/video/BV15S14YWEMC",
+      "addedDate": "2026-04-18"
+    },
+    {
+      "bvid": "BV1y7rfBgEpM",
+      "title": "程序化生成的两难困境与Oskar Stålberg的天才解法",
+      "author": "blueblur青速",
+      "description": "频道知识库：dh7ytdd10q.feishu.cn/wiki/U9k9wwh6AiIfT0ky29pcvIJTnUh\n\nhttps://www.youtube.com/watch?v=Y19Mw5YsgjI",
+      "duration": "12:8",
+      "views": 12950,
+      "category": "TA",
+      "platform": "bilibili",
+      "url": "https://www.bilibili.com/video/BV1y7rfBgEpM",
       "addedDate": "2026-04-18"
     },
     {
@@ -1310,54 +1432,6 @@
       "addedDate": "2026-04-18"
     },
     {
-      "bvid": "BV1FKKtzyESL",
-      "title": "Unity6Shader零基础小白入门教程-渲染理论基础-着色器基础-ShaderGraph-手写Shader入门",
-      "author": "Unity-siki学院",
-      "description": "课程资料、源码下载地址：https://www.sikiedu.com/course/2123?ff=b_siki\n本课程涵盖Shader基础、渲染管线、材质贴图应用，带你进行Unity Shader的入门学习。\n本课程分为三个部分：\n第一个部分讲解Unity内置Shader的使用\n第二个部分讲解Unity中Shader是怎么运行的，以及Shader在渲染流程中承担的作用\n第三个部分讲解如何创建自己的Shader（通过手写和ShaderGraph两种方式创建Shader）",
-      "duration": "279:7",
-      "views": 38569,
-      "category": "TA",
-      "platform": "bilibili",
-      "url": "https://www.bilibili.com/video/BV1FKKtzyESL",
-      "addedDate": "2026-04-18"
-    },
-    {
-      "bvid": "BV1SfmNYREWU",
-      "title": "【VRC改模】①VCC和unity工程开启！宝宝向教程",
-      "author": "咸鱼子Luna",
-      "description": "一、VCC安装\nhttps://vrchat.com/download/vcc\n\n\n二、unity hub安装（第一个是网页，第二是下载链接）\nhttps://unity.com/download\nhttps://public-cdn.cloud.unity3d.com/hub/prod/UnityHubSetup.exe\n\n\n三、2022.3.22f1unity安装（第一个是网页，第二是下载链接）\nhttps://unity.com/releases/editor/whats-new/2022.3.22",
-      "duration": "15:30",
-      "views": 89095,
-      "category": "TA",
-      "platform": "bilibili",
-      "url": "https://www.bilibili.com/video/BV1SfmNYREWU",
-      "addedDate": "2026-04-18"
-    },
-    {
-      "bvid": "BV1dD4y1w7dw",
-      "title": "Unity新手入门  下载unity，安装Unity（入门第1步）",
-      "author": "上月球去写甲骨文",
-      "description": "简简单单讲一讲unity中 下载unity，安装Unity（入门第1步）",
-      "duration": "7:6",
-      "views": 266115,
-      "category": "TA",
-      "platform": "bilibili",
-      "url": "https://www.bilibili.com/video/BV1dD4y1w7dw",
-      "addedDate": "2026-04-18"
-    },
-    {
-      "bvid": "BV16osSz9EGV",
-      "title": "【Unity】Unity Shader Graph基础",
-      "author": "胧雨夜",
-      "description": "https://www.youtube.com/watch?v=2KSLO9JnxHA&amp;list=PLsaDw3p1XpJiGHPnA8gZH6gO2gQYz3JH1",
-      "duration": "126:11",
-      "views": 16943,
-      "category": "TA",
-      "platform": "bilibili",
-      "url": "https://www.bilibili.com/video/BV16osSz9EGV",
-      "addedDate": "2026-04-18"
-    },
-    {
       "bvid": "BV13P4y1y7kp",
       "title": "【最用心 の Unity百宝箱】3. 用Timeline制作过场动画",
       "author": "打工人小棋",
@@ -1367,18 +1441,6 @@
       "category": "TA",
       "platform": "bilibili",
       "url": "https://www.bilibili.com/video/BV13P4y1y7kp",
-      "addedDate": "2026-04-18"
-    },
-    {
-      "bvid": "BV12U4y1L78f",
-      "title": "全网最简单易懂的Unity Shader着色器入门教程 (求三连，建议收藏，慢慢学习)",
-      "author": "Unity飞哥独立游戏",
-      "description": "+unity技术美术q群1093452896，看群公告 或 群文件，获取课程资料\n想学习shader，技术美术Ta课程，想进入技术美术行业，可以找群主咨询了解！\n\n课程整理不易，求三连，建议收藏,慢慢学习\n对unity shader感兴趣的同学，可以看看这套shader入门基础视频。大致了解下shader的写法。",
-      "duration": "432:57",
-      "views": 98695,
-      "category": "TA",
-      "platform": "bilibili",
-      "url": "https://www.bilibili.com/video/BV12U4y1L78f",
       "addedDate": "2026-04-18"
     },
     {
@@ -1418,30 +1480,6 @@
       "addedDate": "2026-04-18"
     },
     {
-      "bvid": "BV1gw411k7Gh",
-      "title": "今天我们来聊一下：什么是VFX ？&quot; Visual Effects &quot;",
-      "author": "北美R叔",
-      "description": "今天我们来聊一下：什么是VFX ？&quot; Visual Effects &quot;\n更多知识点后面会持续分享，喜欢的朋友点个关注，一键三连。\n学习交流找我看主页！",
-      "duration": "3:1",
-      "views": 28470,
-      "category": "TA",
-      "platform": "bilibili",
-      "url": "https://www.bilibili.com/video/BV1gw411k7Gh",
-      "addedDate": "2026-04-18"
-    },
-    {
-      "bvid": "BV1Bb4y147Rj",
-      "title": "【VFX】巨人完整作品",
-      "author": "MoXiess",
-      "description": "-",
-      "duration": "0:40",
-      "views": 540970,
-      "category": "TA",
-      "platform": "bilibili",
-      "url": "https://www.bilibili.com/video/BV1Bb4y147Rj",
-      "addedDate": "2026-04-18"
-    },
-    {
       "bvid": "BV16qXjB2ET2",
       "title": "大家马上就能玩到了！败犬女主免费同人galgame内容更新，游戏功能展示~",
       "author": "青梅社-海獭",
@@ -1451,18 +1489,6 @@
       "category": "TA",
       "platform": "bilibili",
       "url": "https://www.bilibili.com/video/BV16qXjB2ET2",
-      "addedDate": "2026-04-18"
-    },
-    {
-      "bvid": "BV1qF411M7Nc",
-      "title": "【合集】Unity VFX及Shader特效教程—Gabriel Aguiar Prod.",
-      "author": "50兔",
-      "description": "https://www.youtube.com/playlist?list=PLpPd_BKEUoYhN8CiOoNLTSVh-7U5yjg3n\nb站现有搬运都是散的，搬个合集方便学习用。\r\n这位作者还有一个播放列表专门叫shader，和这里面有的是重合的。",
-      "duration": "566:35",
-      "views": 41050,
-      "category": "TA",
-      "platform": "bilibili",
-      "url": "https://www.bilibili.com/video/BV1qF411M7Nc",
       "addedDate": "2026-04-18"
     },
     {
@@ -1487,18 +1513,6 @@
       "category": "TA",
       "platform": "bilibili",
       "url": "https://www.bilibili.com/video/BV19g411F7qU",
-      "addedDate": "2026-04-18"
-    },
-    {
-      "bvid": "BV1WY411U7z5",
-      "title": "[MAD/VFX] Son1x 作品集",
-      "author": "chibarie",
-      "description": "https://www.youtube.com/@Son1xEdits/videos\nbilibili本人@Son1x_ \n第1次更新 2023-01-18 (更新P17)\n第2次更新 2023-06-27 (更新P18) \n第3次更新 2023-12-28 (更新P18)",
-      "duration": "7:13",
-      "views": 41314,
-      "category": "TA",
-      "platform": "bilibili",
-      "url": "https://www.bilibili.com/video/BV1WY411U7z5",
       "addedDate": "2026-04-18"
     },
     {
@@ -1547,18 +1561,6 @@
       "category": "TA",
       "platform": "bilibili",
       "url": "https://www.bilibili.com/video/BV1Phd5B9EL3",
-      "addedDate": "2026-04-18"
-    },
-    {
-      "bvid": "BV17u4y1a7Do",
-      "title": "西方美术史概览｜27分钟全面梳理西方艺术史，从中世纪到现代，主流画派和代表艺术家一网打尽",
-      "author": "小白豆干看世界",
-      "description": "// 12月5日更新：增加了字幕// \n\n每个人都喜欢艺术，可是，并不是每个人都懂艺术。\n\n你有没有遇到这样一个时刻：\n当你进入一间美术馆，面对众多的艺术品，尤其是满目的画作，他们看起来很漂亮，可是你却不知道他们好在哪里，画中的人物，场景，故事，因为文化差异，你也不是很理解他们为什么会出现在画面中，以及他们是想要在表达什么。\n所以，你不知道该看什么，不知道该怎么看。\n\n如果你曾有过这样的经历，那么就请你跟我一起，来快速的了解一下西方艺术史的时间轴。\n当我们梳理完这些主要艺术流派及其代表艺术家，你就会发现，",
-      "duration": "26:39",
-      "views": 362200,
-      "category": "TA",
-      "platform": "bilibili",
-      "url": "https://www.bilibili.com/video/BV17u4y1a7Do",
       "addedDate": "2026-04-18"
     },
     {
