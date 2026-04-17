@@ -1,7 +1,0 @@
-feat: 添加 GitHub Actions 定时爬虫系统
-
-- 新增 .github/workflows/scheduled-scrape.yml：每天北京时间 8:00 自动触发
-- 新增 scripts/updater.py：主更新脚本，集成 LinkedIn / Boss 直聘 / B 站爬虫
-- 新增 scripts/requirements.txt：Python 依赖
-- 新增 scripts/README.md：使用说明
-- 支持手动触发（workflow_dispatch）和按目标选择（all/overseas/domestic/portfolios）

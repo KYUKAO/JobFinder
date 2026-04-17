@@ -25,7 +25,7 @@ except ImportError:
 TODAY = date.today()
 TODAY_STR = TODAY.isoformat()
 REPO_ROOT = os.path.dirname(os.path.abspath(__file__)) + '/..'
-DATA_DIR = REPO_ROOT
+DATA_DIR = os.path.join(REPO_ROOT, 'data')
 
 def log(msg):
     print(f'[updater] {msg}')

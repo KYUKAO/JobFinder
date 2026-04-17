@@ -352,7 +352,7 @@ document.querySelectorAll('.tab-btn').forEach(function(btn){
 
 async function loadData() {
   try {
-    var resp = await fetch('jobs-overseas.json');
+    var resp = await fetch('data/jobs-overseas.json');
     var data = await resp.json();
     allJobs = (data.overseasJobs||data||[]).filter(function(j){ return !j.excluded; });
     document.getElementById('header-title').textContent = '海外 TA 岗位';

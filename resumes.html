@@ -78,7 +78,7 @@
 <script>
 async function loadResumes() {
   try {
-    var resp = await fetch('github_contents.json');
+    var resp = await fetch('data/github_contents.json');
     var data = await resp.json();
     var resumes = data.resumes || [];
 

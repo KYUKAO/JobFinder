@@ -271,10 +271,10 @@ var catLabels = {
 async function loadAnalysis() {
   try {
     var [domResp, overResp, summaryResp, profileResp] = await Promise.all([
-      fetch('jobs-domestic.json').then(function(r){ return r.json().catch(function(){ return {}; }); }),
-      fetch('jobs-overseas.json').then(function(r){ return r.json().catch(function(){ return {}; }); }),
-      fetch('summary.json').then(function(r){ return r.json().catch(function(){ return {}; }); }),
-      fetch('github_contents.json').then(function(r){ return r.json().catch(function(){ return {}; }); }),
+      fetch('data/jobs-domestic.json').then(function(r){ return r.json().catch(function(){ return {}; }); }),
+      fetch('data/jobs-overseas.json').then(function(r){ return r.json().catch(function(){ return {}; }); }),
+      fetch('data/summary.json').then(function(r){ return r.json().catch(function(){ return {}; }); }),
+      fetch('data/github_contents.json').then(function(r){ return r.json().catch(function(){ return {}; }); }),
     ]);
 
     var domJobs = domResp.domesticJobs || [];

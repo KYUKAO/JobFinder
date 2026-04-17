@@ -1,40 +1,64 @@
-# TA Job Finder — 自动爬虫系统
+# scripts/ 爬虫脚本说明
 
-## 定时任务
+## 目录结构
 
-GitHub Actions 每天 **北京时间 8:00**（UTC 0:00）自动运行。
+```
+scripts/
+├── updater.py          # 主爬虫脚本（唯一活跃脚本）
+├── requirements.txt     # Python 依赖
+├── README.md           # 本文档
+└── archive/            # 历史脚本归档
+    ├── test_*.py      # 各 API 测试脚本
+    ├── scrape_*.py    # 阶段性爬虫脚本
+    ├── run_*.py       # 定向运行脚本
+    ├── find_working_keywords.py  # 关键词探索
+    └── save_portfolios.py       # 作品集保存
+```
 
-## 本地测试
+## updater.py — 主爬虫
+
+唯一的活跃爬虫脚本，调用链如下：
+
+```
+main()
+├── scrape_51job()              # 51job 国内岗位
+│   └── _scrape_51job_page()   # 单页解析
+├── scrape_game_companies()      # 游戏公司官网
+├── scrape_bilibili_portfolios() # B站 TA 作品集
+│   ├── scrape_bilibili_by_search()    # 搜索 API（优先）
+│   └── scrape_bilibili_by_related()   # 相关推荐（备选）
+├── merge_with_existing()       # 合并新旧数据
+└── generate_summary()          # 生成市场摘要
+```
+
+### 核心函数
+
+| 函数 | 说明 | 返回 |
+|------|------|------|
+| `scrape_51job()` | 爬取 51job 国内 TA 岗位 | `List[Job]` |
+| `scrape_game_companies()` | 爬取游戏公司官网招聘页 | `List[Job]` |
+| `scrape_bilibili_portfolios()` | 爬取 B站 TA 作品集 | `List[Portfolio]` |
+| `merge_with_existing(new, existing)` | 合并新旧数据，按优先级排序 | `List` |
+| `generate_summary(dom, over)` | 生成市场分析摘要 | `Summary` |
+
+### 优先级排序
+
+```python
+LEVEL_ORDER = {'intern': 0, 'entry': 1, 'mid': 2, 'senior': 3, 'lead': 4}
+# 同级别按 daysLeft 升序（deadline 近的排前面）
+```
+
+## 依赖安装
 
 ```bash
-cd scripts
 pip install -r requirements.txt
-python updater.py
 ```
 
-## 工作流程
+## 常见问题排查
 
-```
-.github/workflows/scheduled-scrape.yml
-    ↓ 每天 8:00 UTC 触发
-scripts/updater.py
-    ↓
-┌─────────────────────────────────┐
-│  1. scrape_linkedin()          │  爬取 LinkedIn 海外岗位
-│  2. scrape_boss()              │  爬取 Boss 直聘国内岗位
-│  3. scrape_bilibili()          │  爬取 B 站 TA 作品集
-└─────────────────────────────────┘
-    ↓ 更新 HTML 数据
-overseas.html  →  更新 overseasJobs
-boss.html       →  更新 domesticJobs
-portfolios.html →  更新 portfolios
-index.html     →  更新 allJobs
-    ↓
-git commit + push
-```
-
-## 注意
-
-- LinkedIn 和 Boss 直聘有反爬机制，实测可能需要 Cookies 或 Playwright 渲染模式
-- B 站 API 相对稳定，可以直接使用
-- 手动触发：在 GitHub Actions 页面 → "Daily Scrape" → Run workflow
+| 问题 | 原因 | 解决 |
+|------|------|------|
+| 51job 返回空 JSON | API 被反爬 | 更换 User-Agent，延长 timeout |
+| 游戏公司 404 | 招聘页 URL 变更 | 更新 companies 列表中的 URL |
+| B站 412 | 请求频率过高 | 增加 sleep 间隔，更换 User-Agent |
+| 合并后数据丢失 | 加载时格式不统一 | 使用 `data.get('domesticJobs', data if isinstance(data, list) else [])` |

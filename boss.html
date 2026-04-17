@@ -432,7 +432,7 @@ document.querySelectorAll('.tab-btn').forEach(function(btn){
 // Load data
 async function loadData() {
   try {
-    var resp = await fetch('jobs-domestic.json');
+    var resp = await fetch('data/jobs-domestic.json');
     var data = await resp.json();
     allJobs = (data.domesticJobs||data||[]).filter(function(j){ return !j.excluded; });
 

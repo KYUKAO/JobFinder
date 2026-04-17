@@ -141,7 +141,7 @@ function renderPortfolios(platform) {
 
 async function loadPortfolios() {
   try {
-    var resp = await fetch('portfolios.json');
+    var resp = await fetch('data/portfolios.json');
     var data = await resp.json();
     allPortfolios = data.portfolios || [];
 
