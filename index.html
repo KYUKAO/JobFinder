@@ -510,9 +510,10 @@ function focusJob(id) {
 function renderPortfolioGrid(items, type) {
   var panel = document.getElementById('right-panel');
   var list = document.getElementById('job-list');
+  var typeLabel = type === 'portfolios' ? '作品集' : type === 'tutorials' ? '教程' : '项目';
   panel.innerHTML = '<div class="portfolio-grid" id="portfolio-grid"></div>';
   list.innerHTML = '';
-  document.getElementById('sidebar-header').innerHTML = '共 <strong>' + items.length + '</strong> 个' + (type === 'portfolios' ? '作品集' : '教程');
+  document.getElementById('sidebar-header').innerHTML = '共 <strong>' + items.length + '</strong> 个' + typeLabel;
 
   var grid = document.getElementById('portfolio-grid');
   if (items.length === 0) {
