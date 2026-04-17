@@ -345,7 +345,11 @@ var todayStr = today.getFullYear() + '-' + String(today.getMonth()+1).padStart(2
 
 // ===== Map =====
 var map = L.map('map', {zoomControl:true, scrollWheelZoom:true}).setView([31.2304, 121.4737], 4);
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {attribution:'&copy; OSM', maxZoom:19}).addTo(map);
+L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+  attribution: '&copy; OpenStreetMap contributors, &copy; CartoDB',
+  maxZoom: 19,
+  subdomains: 'abcd',
+}).addTo(map);
 var markerMap = {};
 
 var levelColor = {'intern':'#22c55e','entry':'#06b6d4','mid':'#f59e0b','senior':'#a855f7','lead':'#ef4444'};
@@ -556,9 +560,9 @@ function renderResumeGrid() {
   document.getElementById('sidebar-header').innerHTML = '共 <strong>' + resumes.length + '</strong> 条 LinkedIn 公开简历';
 
   var grid = document.getElementById('resume-grid');
-  if (resumes.length === 0 || (resumes.length === 1 && resumes[0].profile_id === 'placeholder')) {
+  if (resumes.length === 0) {
     grid.style.gridTemplateColumns = '1fr';
-    grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--text-muted);font-size:0.9rem;">暂无简历数据 · 运行 updater.py 爬取 LinkedIn 数据</div>';
+    grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--text-muted);font-size:0.9rem;">暂无简历数据</div>';
     return;
   }
 
@@ -574,7 +578,7 @@ function renderResumeGrid() {
         '<span style="font-size:0.65rem;font-weight:700;padding:3px 8px;border-radius:10px;background:rgba(99,102,241,0.15);color:var(--primary);white-space:nowrap;">LinkedIn</span>' +
       '</div>' +
       '<div style="font-size:0.82rem;color:var(--text-muted);margin-bottom:4px;">' + (r.title || '—') + '</div>' +
-      '<div style="font-size:0.75rem;color:var(--text-muted);margin-bottom:12px;display:flex;align-items:center;gap:4px;">📍 ' + (r.location || '—') + '</div>' +
+      '<div style="font-size:0.75rem;color:var(--text-muted);margin-bottom:12px;display:flex;align-items:center;gap:8px;">📍 ' + (r.location || '—') + ' &nbsp;| &nbsp;🎓 ' + (r.education || '—') + ' &nbsp;| &nbsp;💼 ' + (r.experience || '—') + '</div>' +
       '<div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:14px;">' + skillHtml + '</div>' +
       '<div style="border-top:1px solid var(--border);padding-top:10px;display:flex;justify-content:space-between;align-items:center;">' +
         '<span style="font-size:0.68rem;color:var(--text-muted);">抓取于 ' + (r.scraped_date || '') + '</span>' +

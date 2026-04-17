@@ -590,7 +590,6 @@ def scrape_linkedin_profiles():
     session = create_session()
 
     search_queries = [
-        # (关键字, 地区)
         ('Technical Artist', 'China'),
         ('Technical Artist', 'Shanghai'),
         ('Technical Artist', 'Beijing'),
@@ -601,7 +600,6 @@ def scrape_linkedin_profiles():
         ('Technical Artist', 'Los Angeles'),
         ('Technical Artist', 'San Francisco'),
         ('Technical Artist intern', 'United States'),
-        ('Technical Artist', 'Vancouver'),
     ]
 
     seen_profiles = set()
@@ -877,8 +875,6 @@ def scrape_overseas_intern():
         {'name': 'Chicago, IL', 'lat': 41.8781, 'lng': -87.6298},
         {'name': 'New York, NY', 'lat': 40.7128, 'lng': -74.0060},
         {'name': 'Denver, CO', 'lat': 39.7392, 'lng': -104.9903},
-        {'name': 'Vancouver, BC', 'lat': 49.2827, 'lng': -123.1207},
-        {'name': 'Toronto, ON', 'lat': 43.6532, 'lng': -79.3832},
     ]
 
     # 实习关键字（英文）

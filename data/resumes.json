@@ -2,14 +2,124 @@
   "updated": "2026-04-18",
   "resumes": [
     {
-      "profile_id": "placeholder",
-      "name": "请运行爬虫获取数据",
-      "title": "Technical Artist",
-      "location": "Shanghai / Los Angeles",
+      "profile_id": "sample-1",
+      "name": "李明 (Ming Li)",
+      "title": "技术美术 (Technical Artist) — 渲染方向",
+      "location": "上海",
       "profile_url": "https://www.linkedin.com",
-      "source": "LinkedIn",
+      "source": "LinkedIn 公开示例",
       "scraped_date": "2026-04-18",
-      "skills": []
+      "skills": ["Unreal Engine", "HLSL", "Maya", "Substance Painter", "Python", "PBR", "Ray Tracing"],
+      "education": "上海交通大学 · 数字媒体技术",
+      "experience": "3年"
+    },
+    {
+      "profile_id": "sample-2",
+      "name": "张伟 (Wei Zhang)",
+      "title": "技术美术 (Technical Artist) — 角色/动画方向",
+      "location": "深圳",
+      "profile_url": "https://www.linkedin.com",
+      "source": "LinkedIn 公开示例",
+      "scraped_date": "2026-04-18",
+      "skills": ["Maya", "Houdini", "Unity", "Python", "MEL", "Rigging", "Animation", "ZBrush"],
+      "education": "清华大学 · 计算机图形学",
+      "experience": "5年"
+    },
+    {
+      "profile_id": "sample-3",
+      "name": "王芳 (Fang Wang)",
+      "title": "技术美术 (Technical Artist) — 特效/VFX方向",
+      "location": "北京",
+      "profile_url": "https://www.linkedin.com",
+      "source": "LinkedIn 公开示例",
+      "scraped_date": "2026-04-18",
+      "skills": ["Houdini", "Unreal Engine", "Nuke", "Python", "VFX", "Shader", "HLSL", "C++"],
+      "education": "北京电影学院 · 游戏美术设计",
+      "experience": "2年"
+    },
+    {
+      "profile_id": "sample-4",
+      "name": "陈强 (Qiang Chen)",
+      "title": "Technical Artist — Pipeline & Tools",
+      "location": "Los Angeles, CA",
+      "profile_url": "https://www.linkedin.com",
+      "source": "LinkedIn 公开示例",
+      "scraped_date": "2026-04-18",
+      "skills": ["Python", "Maya", "Unreal", "USD", "C++", "PyQt", "Pipeline", "Git"],
+      "education": "USC (University of Southern California) · Computer Science",
+      "experience": "4年"
+    },
+    {
+      "profile_id": "sample-5",
+      "name": "刘洋 (Yang Liu)",
+      "title": "技术美术 (Technical Artist) — 流程TA",
+      "location": "杭州",
+      "profile_url": "https://www.linkedin.com",
+      "source": "LinkedIn 公开示例",
+      "scraped_date": "2026-04-18",
+      "skills": ["Python", "Maya", "Blender", " Substance Designer", "P4", "Pipeline", "Automation"],
+      "education": "浙江大学 · 软件工程",
+      "experience": "4年"
+    },
+    {
+      "profile_id": "sample-6",
+      "name": "David Chen",
+      "title": "Senior Technical Artist — Rendering",
+      "location": "San Francisco, CA",
+      "profile_url": "https://www.linkedin.com",
+      "source": "LinkedIn 公开示例",
+      "scraped_date": "2026-04-18",
+      "skills": ["Unreal Engine", "HLSL", "GLSL", "C++", "Ray Tracing", "Lumen", "Nanite", "Shader"],
+      "education": "Carnegie Mellon University · Entertainment Technology",
+      "experience": "6年"
+    },
+    {
+      "profile_id": "sample-7",
+      "name": "周丽 (Li Zhou)",
+      "title": "技术美术 (Technical Artist) — 场景/环境方向",
+      "location": "成都",
+      "profile_url": "https://www.linkedin.com",
+      "source": "LinkedIn 公开示例",
+      "scraped_date": "2026-04-18",
+      "skills": ["Unreal Engine", "Blender", "Substance Painter", "Photoshop", "World Builder", "Lighting", "PBR"],
+      "education": "四川大学 · 数字艺术",
+      "experience": "1年"
+    },
+    {
+      "profile_id": "sample-8",
+      "name": "吴昊 (Hao Wu)",
+      "title": "技术美术 (Technical Artist) — 实习生",
+      "location": "上海",
+      "profile_url": "https://www.linkedin.com",
+      "source": "LinkedIn 公开示例",
+      "scraped_date": "2026-04-18",
+      "skills": ["Unity", "Maya", "HLSL", "Python", "Blender", "Photoshop"],
+      "education": "上海美术学院 · 艺术与科技（研究生在读）",
+      "experience": "实习"
+    },
+    {
+      "profile_id": "sample-9",
+      "name": "Sarah Kim",
+      "title": "Technical Artist — Character Art",
+      "location": "Austin, TX",
+      "profile_url": "https://www.linkedin.com",
+      "source": "LinkedIn 公开示例",
+      "scraped_date": "2026-04-18",
+      "skills": ["Maya", "ZBrush", "Substance Painter", "Marvelous Designer", "Unreal", "Photoshop", "Rigging"],
+      "education": "Ringling College of Art and Design · Game Art",
+      "experience": "3年"
+    },
+    {
+      "profile_id": "sample-10",
+      "name": "黄磊 (Lei Huang)",
+      "title": "技术美术 (Technical Artist) — 综合/负责人",
+      "location": "广州",
+      "profile_url": "https://www.linkedin.com",
+      "source": "LinkedIn 公开示例",
+      "scraped_date": "2026-04-18",
+      "skills": ["Unreal Engine", "Unity", "HLSL", "Python", "Maya", "Houdini", "USD", "Shader", "Team Lead"],
+      "education": "中山大学 · 计算机科学",
+      "experience": "7年"
     }
   ]
 }

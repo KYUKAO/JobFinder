@@ -177,9 +177,9 @@ async function loadResumes() {
     document.getElementById('count-bar').innerHTML =
       '共收录 <strong>' + resumes.length + '</strong> 条 LinkedIn 公开个人资料';
 
-    if (resumes.length === 0 || (resumes.length === 1 && resumes[0].profile_id === 'placeholder')) {
+    if (resumes.length === 0) {
       document.getElementById('profile-grid').innerHTML =
-        '<div class="empty-state"><div class="empty-icon">🔍</div><div class="empty-title">暂无简历数据</div><div class="empty-desc">运行 updater.py 爬取 LinkedIn 公开简历数据</div></div>';
+        '<div class="empty-state"><div class="empty-icon">🔍</div><div class="empty-title">暂无简历数据</div><div class="empty-desc">请手动添加简历数据到 resumes.json</div></div>';
       return;
     }
 
@@ -196,6 +196,7 @@ async function loadResumes() {
         '</div>' +
         '<div class="profile-title">' + (r.title || '—') + '</div>' +
         '<div class="profile-location">📍 ' + (r.location || '—') + '</div>' +
+        '<div style="font-size:0.72rem;color:var(--text-muted);margin-bottom:12px;">🎓 ' + (r.education || '—') + ' &nbsp;|&nbsp; 💼 ' + (r.experience || '—') + '</div>' +
         '<div class="skills-row">' + skillHtml + '</div>' +
         '<div class="profile-footer">' +
           '<span class="profile-date">抓取于 ' + (r.scraped_date || '') + '</span>' +
