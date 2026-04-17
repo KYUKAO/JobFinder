@@ -307,8 +307,9 @@ var map = L.map('map', {zoomControl:true, scrollWheelZoom:true}).setView([39.0, 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {attribution:'&copy; OSM', maxZoom:19}).addTo(map);
 var markerMap = {};
 
-function mkIcon(color, sz) {
-  return L.divIcon({className:'', html:'<div style="width:'+sz+'px;height:'+sz+'px;background:'+color+';border:2px solid rgba(255,255,255,0.8);border-radius:50%;box-shadow:0 2px 8px rgba(0,0,0,0.3);"></div>', iconSize:[sz,sz], iconAnchor:[sz/2,sz/2]});
+function mkIcon(color, sz, isNew) {
+  var glow = isNew ? 'box-shadow:0 0 12px ' + color + ', 0 0 24px ' + color + '40;' : 'box-shadow:0 3px 12px rgba(0,0,0,0.35);';
+  return L.divIcon({className:'', html:'<div style="width:'+sz+'px;height:'+sz+'px;background:'+color+';border:2.5px solid rgba(255,255,255,0.9);border-radius:50%;'+glow+'"></div>', iconSize:[sz,sz], iconAnchor:[sz/2,sz/2]});
 }
 
 function buildPopup(j) {
@@ -323,8 +324,9 @@ function renderMarkers(jobs) {
   markerMap = {};
   jobs.forEach(function(j) {
     if (!j.lat || !j.lng) return;
-    var sz = j.level === 'intern' ? 8 : j.level === 'senior' || j.level === 'lead' ? 14 : 11;
-    var m = L.marker([j.lat, j.lng], {icon: mkIcon(levelColor[j.level]||'#6366f1', sz)}).addTo(map);
+    var sz = j.level === 'intern' ? 16 : j.level === 'senior' || j.level === 'lead' ? 20 : 14;
+    var isNew = j.postedDate === todayStr;
+    var m = L.marker([j.lat, j.lng], {icon: mkIcon(levelColor[j.level]||'#6366f1', sz, isNew)}).addTo(map);
     m.bindPopup(buildPopup(j));
     m.on('click', function(){ focusJob(j.id); });
     markerMap[j.id] = m;
