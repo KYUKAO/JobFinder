@@ -10,21 +10,22 @@
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     :root {
-      --primary: #FF6B35;
-      --primary-dark: #E55A1F;
-      --accent: #FF9500;
-      --success: #34C759;
-      --danger: #FF3B30;
-      --purple: #AF52DE;
-      --bg: #F5F7FA;
-      --card: #fff;
-      --text: #1A1A2E;
-      --text-secondary: #666;
-      --border: #E8ECF0;
+      --bg: #0a0a0f;
+      --card: #16161d;
+      --card-hover: #1e1e28;
+      --primary: #6366f1;
+      --text: #f1f1f4;
+      --text-muted: #71717a;
+      --border: rgba(255,255,255,0.06);
+      --intern: #22c55e;
+      --entry: #06b6d4;
+      --mid: #f59e0b;
+      --senior: #a855f7;
+      --lead: #ef4444;
     }
 
     body {
-      font-family: 'PingFang SC', 'Microsoft YaHei', 'Helvetica Neue', Arial, sans-serif;
+      font-family: 'PingFang SC', 'Microsoft YaHei', -apple-system, sans-serif;
       background: var(--bg);
       color: var(--text);
       height: 100vh;
@@ -33,107 +34,83 @@
       overflow: hidden;
     }
 
-    header {
-      background: linear-gradient(135deg, #FF6B35, #FF9500);
-      flex-shrink: 0;
-      box-shadow: 0 2px 12px rgba(255,107,53,0.3);
-      z-index: 10;
-    }
-    .header-inner {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 12px 20px;
-      gap: 12px;
-    }
-    .header-left { display: flex; align-items: center; gap: 10px; }
-    .header-back {
-      background: rgba(255,255,255,0.2);
-      color: #fff;
-      text-decoration: none;
-      font-size: 0.82rem;
-      font-weight: 600;
-      padding: 5px 12px;
-      border-radius: 20px;
-    }
-    .header-back:hover { background: rgba(255,255,255,0.3); }
-    .header-title { font-size: 1.05rem; font-weight: 700; color: #fff; }
-    .header-meta { font-size: 0.72rem; color: rgba(255,255,255,0.8); margin-top: 1px; }
+    a { color: inherit; text-decoration: none; }
 
-    /* 多行筛选栏 */
-    .filter-panel {
+    /* Header */
+    .header {
       background: var(--card);
-      padding: 8px 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
       border-bottom: 1px solid var(--border);
-      flex-shrink: 0;
-    }
-    .filter-row {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      flex-wrap: wrap;
-    }
-    .filter-label {
-      font-size: 0.72rem;
-      font-weight: 700;
-      color: var(--text-secondary);
-      min-width: 60px;
-      flex-shrink: 0;
-    }
-    .filter-btn {
-      padding: 4px 12px;
-      border-radius: 16px;
-      font-size: 0.75rem;
-      font-weight: 500;
-      cursor: pointer;
-      border: 1.5px solid transparent;
-      background: var(--bg);
-      color: var(--text-secondary);
-      transition: all 0.15s;
-      white-space: nowrap;
-    }
-    .filter-btn:hover { border-color: var(--primary); color: var(--primary); }
-    .filter-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
-
-    /* 经验等级 badge 颜色 */
-    .filter-btn.level-intern.active { background: #34C759; border-color: #34C759; }
-    .filter-btn.level-entry.active { background: #5AC8FA; border-color: #5AC8FA; }
-    .filter-btn.level-mid.active { background: var(--primary); border-color: var(--primary); }
-    .filter-btn.level-senior.active { background: #AF52DE; border-color: #AF52DE; }
-    .filter-btn.level-lead.active { background: #FF3B30; border-color: #FF3B30; }
-
-    /* 细分 TA badge */
-    .filter-btn.ta-general.active { background: var(--primary); border-color: var(--primary); }
-    .filter-btn.ta-rendering.active { background: #FF9500; border-color: #FF9500; }
-    .filter-btn.ta-character.active { background: #5856D6; border-color: #5856D6; }
-    .filter-btn.ta-pipeline.active { background: #34C759; border-color: #34C759; }
-    .filter-btn.ta-environment.active { background: #00B4D8; border-color: #00B4D8; }
-    .filter-btn.ta-ui.active { background: #FF2D55; border-color: #FF2D55; }
-
-    .stats-bar {
-      background: rgba(255,107,53,0.06);
-      padding: 6px 20px;
+      padding: 14px 20px;
       display: flex;
       align-items: center;
       gap: 16px;
-      font-size: 0.78rem;
-      color: var(--text-secondary);
       flex-shrink: 0;
-      border-bottom: 1px solid var(--border);
+      z-index: 10;
     }
-    .stats-bar strong { color: var(--primary); }
+    .back-btn {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      color: var(--text-muted);
+      font-size: 0.82rem;
+      font-weight: 600;
+      padding: 6px 12px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      transition: all 0.15s;
+      flex-shrink: 0;
+    }
+    .back-btn:hover { border-color: var(--primary); color: var(--text); }
 
-    .container {
+    .header-info { flex: 1; min-width: 0; }
+    .header-title { font-size: 1rem; font-weight: 700; }
+    .header-meta { font-size: 0.72rem; color: var(--text-muted); margin-top: 2px; }
+    .header-stats { display: flex; gap: 8px; flex-shrink: 0; }
+    .header-stat {
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.72rem;
+      font-weight: 700;
+    }
+    .header-stat.intern { background: rgba(34,197,94,0.15); color: var(--intern); }
+    .header-stat.entry { background: rgba(6,182,212,0.15); color: var(--entry); }
+    .header-stat.mid { background: rgba(245,158,11,0.15); color: var(--mid); }
+
+    /* Filter tabs */
+    .filter-tabs {
+      background: var(--card);
+      border-bottom: 1px solid var(--border);
+      padding: 0 20px;
+      display: flex;
+      gap: 4px;
+      flex-shrink: 0;
+      overflow-x: auto;
+    }
+    .filter-tabs::-webkit-scrollbar { display: none; }
+    .tab-btn {
+      padding: 10px 14px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      border: none;
+      background: none;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      white-space: nowrap;
+      transition: all 0.15s;
+    }
+    .tab-btn:hover { color: var(--text); }
+    .tab-btn.active { color: var(--primary); border-bottom-color: var(--primary); }
+
+    /* Layout */
+    .main {
       display: grid;
-      grid-template-columns: 380px 1fr;
+      grid-template-columns: 360px 1fr;
       flex: 1;
       overflow: hidden;
     }
 
-    /* 侧边栏 */
+    /* Sidebar job list */
     .sidebar {
       background: var(--card);
       border-right: 1px solid var(--border);
@@ -144,212 +121,147 @@
     .sidebar-header {
       padding: 10px 16px;
       border-bottom: 1px solid var(--border);
-      font-size: 0.78rem;
-      color: var(--text-secondary);
+      font-size: 0.72rem;
+      color: var(--text-muted);
       flex-shrink: 0;
     }
-    .sidebar-header strong { color: var(--primary); font-size: 0.85rem; }
     .job-list {
       flex: 1;
       overflow-y: auto;
       padding: 8px;
     }
+    .job-list::-webkit-scrollbar { width: 4px; }
+    .job-list::-webkit-scrollbar-track { background: transparent; }
+    .job-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
 
     .job-card {
       background: var(--bg);
-      border-radius: 10px;
-      padding: 12px 14px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px;
       margin-bottom: 8px;
       cursor: pointer;
-      border: 2px solid transparent;
       transition: all 0.15s;
-      position: relative;
     }
-    .job-card:hover { border-color: var(--primary); background: #fff; }
-    .job-card.focused { border-color: var(--primary); background: #fff; box-shadow: 0 2px 12px rgba(255,107,53,0.15); }
+    .job-card:hover { border-color: var(--primary); background: var(--card-hover); }
+    .job-card.focused { border-color: var(--primary); background: var(--card-hover); }
 
-    .job-new-tag {
+    .job-new {
       display: inline-block;
       background: var(--primary);
       color: #fff;
-      font-size: 0.68rem;
+      font-size: 0.65rem;
       font-weight: 700;
-      padding: 2px 7px;
-      border-radius: 8px;
-      margin-bottom: 4px;
+      padding: 2px 6px;
+      border-radius: 6px;
+      margin-bottom: 6px;
     }
     .job-company {
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: var(--text);
-      margin-bottom: 3px;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-bottom: 4px;
     }
     .job-title {
       font-size: 0.9rem;
       font-weight: 700;
-      color: var(--text);
-      margin-bottom: 6px;
+      margin-bottom: 8px;
       line-height: 1.4;
     }
-    .job-badges {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 4px;
-      margin-bottom: 6px;
-    }
+    .job-badges { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 8px; }
     .badge {
-      font-size: 0.68rem;
-      font-weight: 600;
+      font-size: 0.65rem;
+      font-weight: 700;
       padding: 2px 8px;
-      border-radius: 10px;
+      border-radius: 20px;
     }
-    .badge-level-intern { background: rgba(52,199,89,0.15); color: #34C759; }
-    .badge-level-entry { background: rgba(90,200,250,0.15); color: #5AC8FA; }
-    .badge-level-mid { background: rgba(255,107,53,0.15); color: #E55A1F; }
-    .badge-level-senior { background: rgba(175,82,222,0.15); color: #AF52DE; }
-    .badge-level-lead { background: rgba(255,59,48,0.15); color: #FF3B30; }
-    .badge-salary { background: rgba(255,149,0,0.15); color: #CC7700; }
-    .badge-source { background: var(--border); color: var(--text-secondary); }
-    .badge-ta { background: rgba(88,86,214,0.12); color: #5856D6; }
+    .badge-intern { background: rgba(34,197,94,0.15); color: var(--intern); }
+    .badge-entry { background: rgba(6,182,212,0.15); color: var(--entry); }
+    .badge-mid { background: rgba(245,158,11,0.15); color: var(--mid); }
+    .badge-senior { background: rgba(168,85,247,0.15); color: var(--senior); }
+    .badge-salary { background: rgba(99,102,241,0.12); color: #818cf8; }
 
-    .job-meta-row {
+    .job-footer {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-size: 0.72rem;
-      color: var(--text-secondary);
+      font-size: 0.7rem;
+      color: var(--text-muted);
     }
-    .job-deadline {
-      display: flex;
-      align-items: center;
-      gap: 3px;
-      font-weight: 600;
-    }
-    .job-deadline.soon { color: var(--danger); }
-    .job-deadline.normal { color: var(--success); }
-    .job-deadline.urgent { color: var(--danger); animation: blink 1s infinite; }
+    .job-deadline { font-weight: 600; }
+    .job-deadline.ok { color: var(--intern); }
+    .job-deadline.warn { color: var(--mid); }
+    .job-deadline.urgent { color: var(--lead); animation: blink 1s infinite; }
     @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.5} }
 
-    /* JD 详情 */
-    .jd-section {
-      display: none;
-      margin-top: 10px;
-      padding-top: 10px;
-      border-top: 1px solid var(--border);
-      font-size: 0.82rem;
-      line-height: 1.7;
-      color: var(--text-secondary);
+    .job-source {
+      background: var(--border);
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-size: 0.65rem;
     }
+
+    /* JD detail */
+    .jd-section { display: none; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); }
     .jd-section.open { display: block; }
-    .jd-label {
-      font-size: 0.72rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--primary);
-      margin-bottom: 6px;
-    }
-    .jd-content {
-      max-height: 180px;
-      overflow-y: auto;
-      padding-right: 4px;
-      margin-bottom: 8px;
-    }
-    .jd-apply-btn {
+    .jd-label { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--primary); margin-bottom: 6px; }
+    .jd-content { font-size: 0.78rem; line-height: 1.7; color: var(--text-muted); max-height: 160px; overflow-y: auto; margin-bottom: 10px; }
+    .jd-content::-webkit-scrollbar { width: 3px; }
+    .jd-content::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+    .apply-btn {
       display: inline-block;
       background: var(--primary);
       color: #fff;
-      text-decoration: none;
-      font-size: 0.8rem;
+      font-size: 0.75rem;
       font-weight: 700;
-      padding: 6px 16px;
+      padding: 6px 14px;
       border-radius: 20px;
       transition: background 0.15s;
     }
-    .jd-apply-btn:hover { background: var(--primary-dark); }
+    .apply-btn:hover { background: #4f46e5; }
 
-    /* 地图 */
-    #map {
-      flex: 1;
-      min-height: 0;
-    }
+    /* Map */
+    #map { flex: 1; min-height: 0; }
+    .leaflet-popup-content-wrapper { border-radius: 12px; background: var(--card); color: var(--text); box-shadow: 0 8px 32px rgba(0,0,0,0.4); border: 1px solid var(--border); }
+    .leaflet-popup-tip { background: var(--card); }
+    .leaflet-popup-content { margin: 12px 16px; font-family: inherit; }
+    .popup-title { font-size: 0.9rem; font-weight: 700; margin-bottom: 4px; }
+    .popup-company { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 6px; }
+    .popup-meta { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 8px; }
+    .popup-link { color: var(--primary); font-size: 0.8rem; font-weight: 600; }
 
-    .leaflet-popup-content-wrapper {
-      border-radius: 12px;
-      font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
-    }
-    .popup-company { font-size: 0.9rem; font-weight: 700; }
-    .popup-title { font-size: 0.85rem; margin: 4px 0; }
-    .popup-meta { font-size: 0.78rem; color: #666; }
-    .popup-link { color: #007AFF; font-size: 0.82rem; font-weight: 600; text-decoration: none; }
-    .popup-link:hover { text-decoration: underline; }
-    .popup-new {
-      display: inline-block;
-      background: #FF6B35;
-      color: #fff;
-      font-size: 0.7rem;
-      font-weight: 700;
-      padding: 2px 8px;
-      border-radius: 8px;
-      margin-bottom: 6px;
-    }
-    .popup-deadline { font-size: 0.78rem; color: #FF3B30; font-weight: 600; margin: 4px 0; }
-
-    /* 移动端 */
+    /* Mobile */
     @media (max-width: 768px) {
       body { height: auto; overflow: auto; }
-      .container { grid-template-columns: 1fr; }
-      #map { height: 300px; order: -1; }
+      .main { grid-template-columns: 1fr; }
+      #map { height: 280px; order: -1; }
       .sidebar { height: auto; max-height: 60vh; }
       .job-list { max-height: 50vh; }
-      .header-inner { padding: 10px 12px; }
-      .header-title { font-size: 0.95rem; }
-      .filter-panel { padding: 8px 12px; }
+      .header { padding: 10px 12px; gap: 10px; }
+      .header-stats { gap: 4px; }
+      .header-stat { padding: 3px 8px; font-size: 0.65rem; }
     }
   </style>
 </head>
 <body>
 
-<header>
-  <div class="header-inner">
-    <div class="header-left">
-      <a href="index.html" class="header-back">← 返回</a>
-      <div>
-        <div class="header-title">国内 TA 岗位</div>
-        <div class="header-meta" id="header-meta">加载中...</div>
-      </div>
-    </div>
+<header class="header">
+  <a href="index.html" class="back-btn">← 返回</a>
+  <div class="header-info">
+    <div class="header-title" id="header-title">国内 TA 岗位</div>
+    <div class="header-meta" id="header-meta">加载中...</div>
   </div>
+  <div class="header-stats" id="header-stats"></div>
 </header>
 
-<div class="filter-panel">
-  <!-- 经验等级 -->
-  <div class="filter-row">
-    <span class="filter-label">经验</span>
-    <button class="filter-btn level-all active" data-filter="level" data-value="all">全部</button>
-    <button class="filter-btn level-intern" data-filter="level" data-value="intern">实习</button>
-    <button class="filter-btn level-entry" data-filter="level" data-value="entry">1年以下</button>
-    <button class="filter-btn level-mid" data-filter="level" data-value="mid">1-3年</button>
-    <button class="filter-btn level-senior" data-filter="level" data-value="senior">3-5年</button>
-  </div>
-  <!-- TA 细分 -->
-  <div class="filter-row">
-    <span class="filter-label">方向</span>
-    <button class="filter-btn ta-all active" data-filter="ta" data-value="all">全部</button>
-    <button class="filter-btn ta-rendering" data-filter="ta" data-value="rendering">渲染 TA</button>
-    <button class="filter-btn ta-character" data-filter="ta" data-value="character">角色 TA</button>
-    <button class="filter-btn ta-pipeline" data-filter="ta" data-value="pipeline">流程 TA</button>
-    <button class="filter-btn ta-environment" data-filter="ta" data-value="environment">环境 TA</button>
-    <button class="filter-btn ta-ui" data-filter="ta" data-value="ui">UI TA</button>
-    <button class="filter-btn ta-general" data-filter="ta" data-value="general">综合 TA</button>
-  </div>
+<div class="filter-tabs">
+  <button class="tab-btn active" data-filter="all">全部</button>
+  <button class="tab-btn" data-filter="intern">实习</button>
+  <button class="tab-btn" data-filter="entry">1年以下</button>
+  <button class="tab-btn" data-filter="mid">1-3年</button>
+  <button class="tab-btn" data-filter="senior">3-5年</button>
 </div>
 
-<div class="stats-bar" id="stats-bar">
-  加载中...
-</div>
-
-<div class="container">
+<div class="main">
   <div class="sidebar">
     <div class="sidebar-header" id="sidebar-header">加载中...</div>
     <div class="job-list" id="job-list"></div>
@@ -358,266 +270,185 @@
 </div>
 
 <script>
-var domesticJobs = [];
-var currentLevel = 'all';
-var currentTa = 'all';
-var currentSearch = '';
-var focusedId = null;
+var allJobs = [];
+var currentFilter = 'all';
 
 var today = new Date();
 var todayStr = today.getFullYear() + '-' + String(today.getMonth()+1).padStart(2,'0') + '-' + String(today.getDate()).padStart(2,'0');
 
-function isToday(d) { return d === todayStr; }
-
-function getDeadlineClass(daysLeft) {
-  if (daysLeft <= 3) return 'urgent';
-  if (daysLeft <= 7) return 'soon';
-  return 'normal';
-}
-
-function getDeadlineText(daysLeft) {
-  if (daysLeft <= 0) return '已截止';
-  if (daysLeft === 1) return '明天截止';
-  if (daysLeft <= 7) return daysLeft + '天后截止';
-  return daysLeft + '天';
-}
-
-function getDeadlineColor(daysLeft) {
-  if (daysLeft <= 3) return '#FF3B30';
-  if (daysLeft <= 7) return '#FF9500';
-  return '#34C759';
-}
-
-// 城市坐标
 var cityCoords = {
-  '深圳': [22.5431, 114.0579],
-  '广州': [23.1291, 113.2644],
-  '上海': [31.2304, 121.4737],
-  '北京': [39.9042, 116.4074],
-  '杭州': [30.2741, 120.1536],
-  '成都': [30.5728, 104.0668],
-  '武汉': [30.5928, 114.3055],
-  '苏州': [31.2989, 120.5853],
-  '珠海': [22.2710, 113.5767],
-  '福州': [26.0745, 119.2965],
-  '南京': [32.0603, 118.7969],
-  '西安': [34.3416, 108.9398],
-  '其他': [31.2304, 121.4737],
+  '深圳': [22.5431, 114.0579], '广州': [23.1291, 113.2644], '上海': [31.2304, 121.4737],
+  '北京': [39.9042, 116.4074], '杭州': [30.2741, 120.1536], '成都': [30.5728, 104.0668],
+  '武汉': [30.5928, 114.3055], '苏州': [31.2989, 120.5853], '珠海': [22.2710, 113.5767],
+  '福州': [26.0745, 119.2965], '南京': [32.0603, 118.7969], '西安': [34.3416, 108.9398],
 };
 
-function getLatLng(city) {
-  var c = cityCoords[city] || cityCoords['其他'];
-  return [c[0] + (Math.random()-0.5)*0.05, c[1] + (Math.random()-0.5)*0.05];
+function getCoords(city) {
+  var c = cityCoords[city] || [31.2304, 121.4737];
+  return [c[0] + (Math.random()-0.5)*0.04, c[1] + (Math.random()-0.5)*0.04];
 }
 
-// 筛选
 function getFiltered() {
-  return domesticJobs.filter(function(j) {
-    if (j.excluded) return false;
-    if (currentLevel !== 'all' && j.level !== currentLevel) return false;
-    if (currentTa !== 'all' && j.taSubCategory !== currentTa) return false;
-    if (currentSearch) {
-      var s = currentSearch.toLowerCase();
-      if (!j.name.toLowerCase().includes(s) && !j.company.toLowerCase().includes(s) && !(j.city||'').includes(s)) return false;
-    }
-    return true;
-  });
+  if (currentFilter === 'all') return allJobs;
+  return allJobs.filter(function(j){ return j.level === currentFilter; });
 }
 
-// 侧边栏渲染
-function renderSidebar(jobs) {
-  var listEl = document.getElementById('job-list');
-  var total = domesticJobs.filter(function(j){ return !j.excluded; }).length;
+function getDeadlineClass(days) {
+  if (days <= 3) return 'urgent';
+  if (days <= 7) return 'warn';
+  return 'ok';
+}
+
+function getDeadlineText(days) {
+  if (days <= 0) return '已截止';
+  if (days === 1) return '明天截止';
+  if (days <= 7) return '剩' + days + '天';
+  return days + '天';
+}
+
+function getLevelBadge(level) {
+  var map = {intern:'实习', entry:'1年以下', mid:'1-3年', senior:'3-5年', lead:'5年+'};
+  var cls = {intern:'badge-intern', entry:'badge-entry', mid:'badge-mid', senior:'badge-senior', lead:'badge-lead'};
+  return '<span class="badge ' + (cls[level]||'') + '">' + (map[level]||level) + '</span>';
+}
+
+// 渲染侧边栏
+function renderList(jobs) {
+  var total = allJobs.length;
+  var filtered = jobs.length;
   document.getElementById('sidebar-header').innerHTML =
-    '<strong>' + jobs.length + '</strong> / ' + total + ' 个岗位';
-  listEl.innerHTML = '';
+    '显示 <strong>' + filtered + '</strong> / ' + total + ' 个岗位';
+  var list = document.getElementById('job-list');
+  list.innerHTML = '';
 
   if (jobs.length === 0) {
-    listEl.innerHTML = '<div style="text-align:center;padding:40px 20px;color:#666;">没有找到符合条件的岗位</div>';
+    list.innerHTML = '<div style="text-align:center;padding:40px 20px;color:var(--text-muted);font-size:0.85rem;">没有符合条件的岗位</div>';
     return;
   }
 
-  jobs.forEach(function(j) {
-    var isNew = isToday(j.postedDate);
+  // 默认按 intern > entry > mid > senior 排序
+  var sorted = jobs.slice().sort(function(a,b){
+    var order = {intern:0, entry:1, mid:2, senior:3, lead:4};
+    return (order[a.level]||5) - (order[b.level]||5);
+  });
+
+  sorted.forEach(function(j) {
+    var isNew = j.postedDate === todayStr;
     var dlClass = getDeadlineClass(j.daysLeft);
     var dlText = getDeadlineText(j.daysLeft);
-    var dlColor = getDeadlineColor(j.daysLeft);
+    var hasJd = j.jd && j.jd.length > 10;
 
     var el = document.createElement('div');
     el.className = 'job-card';
     el.id = 'card-' + j.id;
-
-    var hasJd = j.jd && j.jd.length > 10;
-
     el.innerHTML =
-      (isNew ? '<span class="job-new-tag">🆕 今日新</span>' : '') +
+      (isNew ? '<span class="job-new">NEW</span>' : '') +
       '<div class="job-company">' + j.company + ' · ' + j.city + '</div>' +
       '<div class="job-title">' + j.name + '</div>' +
       '<div class="job-badges">' +
-        '<span class="badge badge-level-' + j.level + '">' + j.levelLabel + '</span>' +
-        '<span class="badge badge-ta">' + j.taSubLabel + '</span>' +
-        (j.salary !== '—' ? '<span class="badge badge-salary">' + j.salary + '</span>' : '') +
-        '<span class="badge badge-source">' + j.source + '</span>' +
+        getLevelBadge(j.level) +
+        '<span class="badge badge-salary">' + (j.taSubLabel||'') + '</span>' +
       '</div>' +
-      '<div class="job-meta-row">' +
-        '<span style="color:' + dlColor + ';font-weight:600;font-size:0.72rem;">⏰ ' + dlText + '</span>' +
-        '<span style="font-size:0.7rem;color:#999;">' + j.postedDate + '</span>' +
+      '<div class="job-footer">' +
+        '<span class="job-deadline ' + dlClass + '">⏰ ' + dlText + '</span>' +
+        '<span class="job-source">' + j.source + '</span>' +
       '</div>' +
       (hasJd ? '<div class="jd-section" id="jd-' + j.id + '">' +
         '<div class="jd-label">岗位职责 & 要求</div>' +
         '<div class="jd-content">' + j.jd.replace(/\n/g, '<br>') + '</div>' +
-        '<a href="' + j.url + '" target="_blank" class="jd-apply-btn">申请岗位 →</a>' +
-       '</div>' : '<a href="' + j.url + '" target="_blank" class="jd-apply-btn" style="margin-top:8px;">申请岗位 →</a>');
+        '<a href="' + j.url + '" target="_blank" class="apply-btn">申请岗位 →</a>' +
+       '</div>' : '<a href="' + j.url + '" target="_blank" class="apply-btn" style="display:inline-block;margin-top:8px;">申请岗位 →</a>');
 
     el.addEventListener('click', function(e) {
       if (hasJd) {
         var jdEl = document.getElementById('jd-' + j.id);
-        if (jdEl) {
-          jdEl.classList.toggle('open');
-          e.stopPropagation();
-        }
+        if (jdEl) { jdEl.classList.toggle('open'); e.stopPropagation(); }
       }
       focusJob(j.id);
     });
+    list.appendChild(el);
+  });
+}
 
-    listEl.appendChild(el);
+// 地图
+var map = L.map('map', {zoomControl:true, scrollWheelZoom:true}).setView([31.2304, 121.4737], 4);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {attribution:'&copy; OSM', maxZoom:19}).addTo(map);
+var markerMap = {};
+
+var levelColor = {'intern':'#22c55e','entry':'#06b6d4','mid':'#f59e0b','senior':'#a855f7','lead':'#ef4444'};
+
+function mkIcon(color, sz) {
+  return L.divIcon({className:'', html:'<div style="width:'+sz+'px;height:'+sz+'px;background:'+color+';border:2px solid rgba(255,255,255,0.8);border-radius:50%;box-shadow:0 2px 8px rgba(0,0,0,0.3);"></div>', iconSize:[sz,sz], iconAnchor:[sz/2,sz/2]});
+}
+
+function buildPopup(j) {
+  return '<div class="popup-title">' + j.name + '</div>' +
+    '<div class="popup-company">' + j.company + ' · ' + j.city + '</div>' +
+    '<div class="popup-meta">' + getLevelBadge(j.level) + ' ' + (j.salary!=='—'?'<span style="color:#818cf8;">'+j.salary+'</span> ':'') + '</div>' +
+    '<a href="' + j.url + '" target="_blank" class="popup-link">查看岗位 →</a>';
+}
+
+function renderMarkers(jobs) {
+  Object.values(markerMap).forEach(function(m){ map.removeLayer(m); });
+  markerMap = {};
+  jobs.forEach(function(j) {
+    var sz = j.level === 'intern' ? 8 : j.level === 'senior' || j.level === 'lead' ? 14 : 11;
+    var m = L.marker(getCoords(j.city), {icon: mkIcon(levelColor[j.level]||'#6366f1', sz)}).addTo(map);
+    m.bindPopup(buildPopup(j));
+    m.on('click', function(){ focusJob(j.id); });
+    markerMap[j.id] = m;
   });
 }
 
 function focusJob(id) {
   document.querySelectorAll('.job-card').forEach(function(c){ c.classList.remove('focused'); });
   var card = document.getElementById('card-' + id);
-  if (card) {
-    card.classList.add('focused');
-    card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-  }
-  focusedId = id;
-  var marker = markerMap[id];
-  if (marker) {
-    marker.openPopup();
-    map.setView(marker.getLatLng(), 13);
-  }
+  if(card) { card.classList.add('focused'); card.scrollIntoView({behavior:'smooth', block:'nearest'}); }
+  var m = markerMap[id];
+  if(m) { m.openPopup(); map.setView(m.getLatLng(), 10); }
 }
 
-// 地图
-var map = L.map('map', { zoomControl:true, scrollWheelZoom:true }).setView([31.2304, 121.4737], 4);
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-  attribution: '&copy; OSM', maxZoom: 19
-}).addTo(map);
-
-var markerMap = {};
-
-function getLevelColor(level) {
-  var colors = {
-    'intern': '#34C759', 'entry': '#5AC8FA', 'mid': '#FF6B35',
-    'senior': '#AF52DE', 'lead': '#FF3B30'
-  };
-  return colors[level] || '#FF6B35';
+function renderStats() {
+  var counts = {intern:0, entry:0, mid:0, senior:0, lead:0};
+  allJobs.forEach(function(j){ if(counts.hasOwnProperty(j.level)!==undefined) counts[j.level]++; });
+  document.getElementById('header-stats').innerHTML =
+    '<span class="header-stat intern">' + counts.intern + ' 实习</span>' +
+    '<span class="header-stat entry">' + counts.entry + ' 1年以下</span>' +
+    '<span class="header-stat mid">' + counts.mid + ' 1-3年</span>';
 }
 
-function mkIcon(color, sz) {
-  sz = sz || 12;
-  return L.divIcon({
-    className: '',
-    html: '<div style="width:'+sz+'px;height:'+sz+'px;background:'+color+';border:2.5px solid #fff;border-radius:50%;box-shadow:0 2px 6px rgba(0,0,0,0.3);"></div>',
-    iconSize:[sz,sz], iconAnchor:[sz/2,sz/2]
+// Filter tabs
+document.querySelectorAll('.tab-btn').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    document.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.remove('active'); });
+    btn.classList.add('active');
+    currentFilter = btn.dataset.filter;
+    var filtered = getFiltered();
+    renderList(filtered);
+    renderMarkers(filtered);
   });
-}
+});
 
-function buildPopup(j) {
-  var isNew = isToday(j.postedDate);
-  var dlClass = getDeadlineClass(j.daysLeft);
-  var dlText = getDeadlineText(j.daysLeft);
-  var dlColor = getDeadlineColor(j.daysLeft);
-  var newTag = isNew ? '<span class="popup-new">🆕 今日新</span><br>' : '';
-  return '<b style="color:#FF6B35;font-size:0.9rem;">' + j.company + '</b><br>' +
-    '<b style="font-size:0.85rem;">' + j.name + '</b><br>' +
-    newTag +
-    '<span class="popup-meta">' + j.city + ' · ' + j.levelLabel + ' · ' + j.taSubLabel + '</span><br>' +
-    (j.salary !== '—' ? '<b style="font-size:0.82rem;color:#CC7700;">' + j.salary + '</b><br>' : '') +
-    '<span style="color:' + dlColor + ';font-size:0.78rem;font-weight:600;">⏰ ' + dlText + '</span><br><br>' +
-    '<a href="' + j.url + '" target="_blank" class="popup-link">查看岗位详情 →</a>';
-}
-
-function renderMarkers(visibleJobs) {
-  Object.values(markerMap).forEach(function(m){ map.removeLayer(m); });
-  markerMap = {};
-  visibleJobs.forEach(function(j) {
-    var coords = getLatLng(j.city);
-    var color = getLevelColor(j.level);
-    var sz = j.level === 'intern' ? 10 : j.level === 'senior' || j.level === 'lead' ? 14 : 12;
-    var m = L.marker(coords, {icon: mkIcon(color, sz)}).addTo(map);
-    m.bindPopup(buildPopup(j));
-    m.on('click', function() { focusJob(j.id); });
-    markerMap[j.id] = m;
-  });
-}
-
-function renderStats(jobs) {
-  var total = domesticJobs.filter(function(j){ return !j.excluded; });
-  var levelCounts = {intern:0, entry:0, mid:0, senior:0, lead:0};
-  var taCounts = {};
-  var urgent = jobs.filter(function(j){ return j.daysLeft <= 7; }).length;
-  var deadlineSoon = total.filter(function(j){ return j.daysLeft <= 7; }).length;
-
-  total.forEach(function(j) {
-    if (levelCounts.hasOwnProperty(j.level)) levelCounts[j.level]++;
-    taCounts[j.taSubCategory] = (taCounts[j.taSubCategory]||0) + 1;
-  });
-
-  var maxTa = Object.keys(taCounts).sort(function(a,b){ return taCounts[b]-taCounts[a]; })[0] || 'general';
-  var taLabels = {character:'角色 TA', environment:'环境 TA', rendering:'渲染 TA',
-                  pipeline:'流程 TA', ui:'UI TA', general:'综合 TA'};
-
-  document.getElementById('stats-bar').innerHTML =
-    '共 <strong>' + total.length + '</strong> 个岗位 | ' +
-    '本次筛选 <strong>' + jobs.length + '</strong> 个 | ' +
-    '<span style="color:#FF3B30;font-weight:600;">⚠ ' + deadlineSoon + ' 个即将截止</span> | ' +
-    '热门方向：<strong>' + (taLabels[maxTa]||'综合 TA') + '</strong>（' + taCounts[maxTa] + '）';
-}
-
-function initFilters() {
-  document.querySelectorAll('.filter-btn[data-filter]').forEach(function(btn) {
-    btn.addEventListener('click', function() {
-      var filterType = btn.dataset.filter;
-      var value = btn.dataset.value;
-
-      document.querySelectorAll('.filter-btn[data-filter="'+filterType+'"]').forEach(function(b){ b.classList.remove('active'); });
-      btn.classList.add('active');
-
-      if (filterType === 'level') currentLevel = value;
-      if (filterType === 'ta') currentTa = value;
-
-      applyFilters();
-    });
-  });
-}
-
-function applyFilters() {
-  var filtered = getFiltered();
-  renderSidebar(filtered);
-  renderMarkers(filtered);
-  renderStats(filtered);
-}
-
-// 加载数据
+// Load data
 async function loadData() {
   try {
     var resp = await fetch('jobs-domestic.json');
     var data = await resp.json();
-    domesticJobs = data.domesticJobs || data || [];
+    allJobs = (data.domesticJobs||data||[]).filter(function(j){ return !j.excluded; });
 
-    var total = domesticJobs.filter(function(j){ return !j.excluded; }).length;
-    document.getElementById('header-meta').textContent = '共 ' + total + ' 个岗位 · 更新于 ' + (data.updated || todayStr);
+    var total = allJobs.length;
+    document.getElementById('header-title').textContent = '国内 TA 岗位';
+    document.getElementById('header-meta').textContent = '更新于 ' + (data.updated||todayStr) + ' · 共 ' + total + ' 个';
     document.title = '国内 TA 岗位（' + total + '） — TA Job Finder';
 
-    applyFilters();
+    renderStats();
+    renderList(getFiltered());
+    renderMarkers(getFiltered());
   } catch(e) {
-    document.getElementById('job-list').innerHTML = '<div style="padding:20px;text-align:center;color:#999;">数据加载失败</div>';
+    document.getElementById('job-list').innerHTML = '<div style="padding:20px;text-align:center;color:var(--text-muted);">数据加载失败</div>';
   }
 }
 
-initFilters();
 loadData();
 </script>
 </body>

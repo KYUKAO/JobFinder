@@ -277,22 +277,17 @@ def scrape_game_companies():
     session = create_session()
 
     companies = [
-        # 使用 HTTPS 的公司
+        # 使用正确 HTTPS 的公司
         {'name': '盛趣游戏', 'url': 'https://www.shengqugames.com/', 'city': '上海', 'source': '盛趣游戏'},
-        {'name': '朝夕光年', 'url': 'https://careers.bytedance.com/', 'city': '北京', 'source': '朝夕光年'},
-        {'name': '吉比特', 'url': 'https://www.lilith.com/careers/', 'city': '深圳', 'source': '吉比特'},
-        # 正确的招聘页面
-        {'name': '腾讯游戏', 'url': 'https://careers.tencent.com/search.html?query=TA', 'city': '深圳', 'source': '腾讯招聘'},
-        {'name': '网易游戏', 'url': 'https://game.163.com/hr/positions', 'city': '杭州', 'source': '网易游戏'},
-        {'name': '米哈游', 'url': 'https://jobs.mihoyo.com', 'city': '上海', 'source': '米哈游'},
-        {'name': '字节跳动游戏', 'url': 'https://job.bytedance.com/technology', 'city': '上海', 'source': '字节跳动'},
+        {'name': '朝夕光年', 'url': 'https://www.bytedance.com/zh/careers', 'city': '北京', 'source': '朝夕光年'},
         {'name': '莉莉丝游戏', 'url': 'https://www.lilith.com/careers/', 'city': '上海', 'source': '莉莉丝'},
-        {'name': '鹰角网络', 'url': 'https://www.yostar.com/careers/', 'city': '上海', 'source': '鹰角网络'},
-        {'name': '完美世界', 'url': 'https://www.wanmei.com/hr/', 'city': '北京', 'source': '完美世界'},
-        {'name': '37互娱', 'url': 'https://www.37.com/hr/', 'city': '广州', 'source': '37互娱'},
+        # 招聘平台
+        {'name': '腾讯游戏', 'url': 'https://careers.tencent.com/search.html?query=TA', 'city': '深圳', 'source': '腾讯招聘'},
+        {'name': '米哈游', 'url': 'https://jobs.mihoyo.com/#/positions?keyword=TA', 'city': '上海', 'source': '米哈游'},
+        {'name': '字节跳动游戏', 'url': 'https://job.bytedance.com/technology', 'city': '上海', 'source': '字节跳动'},
         {'name': 'FunPlus', 'url': 'https://www.funplus.com/careers/', 'city': '北京', 'source': 'FunPlus'},
-        {'name': '叠纸游戏', 'url': 'https://www.papergames.cn/careers', 'city': '苏州', 'source': '叠纸'},
-        {'name': 'IGG', 'url': 'https://www.igg.com/jobs', 'city': '福州', 'source': 'IGG'},
+        {'name': '叠纸游戏', 'url': 'https://www.papergames.cn/site/join', 'city': '苏州', 'source': '叠纸'},
+        {'name': '鹰角网络', 'url': 'https://www.arknights.global/careers', 'city': '上海', 'source': '鹰角网络'},
     ]
 
     ta_terms = ['技术美术', 'TA', 'TA工程师', '美术程序', '图形', 'shader', 'rendering', 'technical artist']
@@ -809,7 +804,12 @@ def merge_with_existing(new_jobs, existing_jobs, max_total=400):
     existing_map = {j.get('url', j.get('id', '')): j for j in existing_jobs}
     existing_map.update({j.get('url', j.get('id', '')): j for j in new_jobs})
     merged = list(existing_map.values())
-    merged.sort(key=lambda x: (-x.get('priority', 3), x.get('postedDate', '')))
+    # 优先级排序：intern > entry > mid > senior > lead（同级别按 deadline 排序）
+    LEVEL_ORDER = {'intern': 0, 'entry': 1, 'mid': 2, 'senior': 3, 'lead': 4}
+    merged.sort(key=lambda x: (
+        LEVEL_ORDER.get(x.get('level', 'mid'), 5),
+        x.get('daysLeft', 999)
+    ))
     return merged[:max_total]
 
 def main():
@@ -817,31 +817,36 @@ def main():
 
     target = os.environ.get('SCRAPE_TARGET', 'all')
 
-    # 加载现有数据
-    existing_domestic = load_json(f'{DATA_DIR}/jobs-domestic.json') or []
-    existing_overseas = load_json(f'{DATA_DIR}/jobs-overseas.json') or []
-    existing_portfolios = load_json(f'{DATA_DIR}/portfolios.json') or []
+    # 加载现有数据（兼容两种格式：数组 或 {domesticJobs:[...]})
+    dom_data = load_json(f'{DATA_DIR}/jobs-domestic.json') or {}
+    existing_domestic = dom_data.get('domesticJobs', dom_data if isinstance(dom_data, list) else [])
+    over_data = load_json(f'{DATA_DIR}/jobs-overseas.json') or {}
+    existing_overseas = over_data.get('overseasJobs', over_data if isinstance(over_data, list) else [])
+    port_data = load_json(f'{DATA_DIR}/portfolios.json') or {}
+    existing_portfolios = port_data if isinstance(port_data, list) else port_data.get('portfolios', [])
 
     all_domestic, all_overseas, all_portfolios = [], [], []
 
     if target in ('all', 'domestic'):
         domestic_new = dedup(scrape_51job() + scrape_game_companies())
         all_domestic = merge_with_existing(domestic_new, existing_domestic, max_total=400)
-        save_json(f'{DATA_DIR}/jobs-domestic.json', all_domestic)
+        save_json(f'{DATA_DIR}/jobs-domestic.json', {'updated': TODAY_STR, 'domesticJobs': all_domestic})
         log(f'国内岗位已保存: {len(all_domestic)} 个')
 
     if target in ('all', 'overseas'):
         overseas_new = dedup(scrape_linkedin() + scrape_indeed() + scrape_gaming_studios())
         all_overseas = merge_with_existing(overseas_new, existing_overseas, max_total=400)
-        save_json(f'{DATA_DIR}/jobs-overseas.json', all_overseas)
+        save_json(f'{DATA_DIR}/jobs-overseas.json', {'updated': TODAY_STR, 'overseasJobs': all_overseas})
         log(f'海外岗位已保存: {len(all_overseas)} 个')
 
     if target in ('all', 'portfolios'):
         portfolios_new = scrape_bilibili_portfolios()
-        existing_map = {p.get('bvid', p.get('id', '')): p for p in existing_portfolios}
+        existing_map = {}
+        if isinstance(existing_portfolios, list):
+            existing_map = {p.get('bvid', p.get('id', '')): p for p in existing_portfolios}
         existing_map.update({p.get('bvid', p.get('id', '')): p for p in portfolios_new})
         all_portfolios = list(existing_map.values())[:200]
-        save_json(f'{DATA_DIR}/portfolios.json', all_portfolios)
+        save_json(f'{DATA_DIR}/portfolios.json', {'updated': TODAY_STR, 'portfolios': all_portfolios})
         log(f'作品集已保存: {len(all_portfolios)} 个')
 
     # 生成智能摘要

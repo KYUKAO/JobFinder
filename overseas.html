@@ -10,22 +10,22 @@
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     :root {
-      --primary: #FF6B35;
-      --primary-dark: #E55A1F;
-      --accent: #FF9500;
-      --success: #34C759;
-      --danger: #FF3B30;
-      --purple: #AF52DE;
-      --blue: #007AFF;
-      --bg: #F5F7FA;
-      --card: #fff;
-      --text: #1A1A2E;
-      --text-secondary: #666;
-      --border: #E8ECF0;
+      --bg: #0a0a0f;
+      --card: #16161d;
+      --card-hover: #1e1e28;
+      --primary: #6366f1;
+      --text: #f1f1f4;
+      --text-muted: #71717a;
+      --border: rgba(255,255,255,0.06);
+      --intern: #22c55e;
+      --entry: #06b6d4;
+      --mid: #f59e0b;
+      --senior: #a855f7;
+      --lead: #ef4444;
     }
 
     body {
-      font-family: 'PingFang SC', 'Microsoft YaHei', 'Helvetica Neue', Arial, sans-serif;
+      font-family: 'PingFang SC', 'Microsoft YaHei', -apple-system, sans-serif;
       background: var(--bg);
       color: var(--text);
       height: 100vh;
@@ -34,99 +34,60 @@
       overflow: hidden;
     }
 
-    header {
-      background: linear-gradient(135deg, #5856D6, #AF52DE);
-      flex-shrink: 0;
-      box-shadow: 0 2px 12px rgba(88,86,214,0.3);
-      z-index: 10;
-    }
-    .header-inner {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 12px 20px;
-      gap: 12px;
-    }
-    .header-left { display: flex; align-items: center; gap: 10px; }
-    .header-back {
-      background: rgba(255,255,255,0.2);
-      color: #fff;
-      text-decoration: none;
-      font-size: 0.82rem;
-      font-weight: 600;
-      padding: 5px 12px;
-      border-radius: 20px;
-    }
-    .header-back:hover { background: rgba(255,255,255,0.3); }
-    .header-title { font-size: 1.05rem; font-weight: 700; color: #fff; }
-    .header-meta { font-size: 0.72rem; color: rgba(255,255,255,0.8); margin-top: 1px; }
+    a { color: inherit; text-decoration: none; }
 
-    .filter-panel {
+    .header {
       background: var(--card);
-      padding: 8px 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
       border-bottom: 1px solid var(--border);
-      flex-shrink: 0;
-    }
-    .filter-row {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      flex-wrap: wrap;
-    }
-    .filter-label {
-      font-size: 0.72rem;
-      font-weight: 700;
-      color: var(--text-secondary);
-      min-width: 60px;
-      flex-shrink: 0;
-    }
-    .filter-btn {
-      padding: 4px 12px;
-      border-radius: 16px;
-      font-size: 0.75rem;
-      font-weight: 500;
-      cursor: pointer;
-      border: 1.5px solid transparent;
-      background: var(--bg);
-      color: var(--text-secondary);
-      transition: all 0.15s;
-      white-space: nowrap;
-    }
-    .filter-btn:hover { border-color: var(--purple); color: var(--purple); }
-    .filter-btn.active { background: var(--purple); color: #fff; border-color: var(--purple); }
-
-    .filter-btn.level-intern.active { background: #34C759; border-color: #34C759; }
-    .filter-btn.level-entry.active { background: #5AC8FA; border-color: #5AC8FA; }
-    .filter-btn.level-mid.active { background: var(--purple); border-color: var(--purple); }
-    .filter-btn.level-senior.active { background: #AF52DE; border-color: #AF52DE; }
-    .filter-btn.level-lead.active { background: #FF3B30; border-color: #FF3B30; }
-
-    .filter-btn.ta-rendering.active { background: #FF9500; border-color: #FF9500; }
-    .filter-btn.ta-character.active { background: #5856D6; border-color: #5856D6; }
-    .filter-btn.ta-pipeline.active { background: #34C759; border-color: #34C759; }
-    .filter-btn.ta-environment.active { background: #00B4D8; border-color: #00B4D8; }
-    .filter-btn.ta-ui.active { background: #FF2D55; border-color: #FF2D55; }
-    .filter-btn.ta-general.active { background: var(--purple); border-color: var(--purple); }
-
-    .stats-bar {
-      background: rgba(88,86,214,0.06);
-      padding: 6px 20px;
+      padding: 14px 20px;
       display: flex;
       align-items: center;
       gap: 16px;
-      font-size: 0.78rem;
-      color: var(--text-secondary);
       flex-shrink: 0;
-      border-bottom: 1px solid var(--border);
     }
-    .stats-bar strong { color: var(--purple); }
+    .back-btn {
+      color: var(--text-muted);
+      font-size: 0.82rem;
+      font-weight: 600;
+      padding: 6px 12px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      transition: all 0.15s;
+      flex-shrink: 0;
+    }
+    .back-btn:hover { border-color: var(--primary); color: var(--text); }
+    .header-info { flex: 1; }
+    .header-title { font-size: 1rem; font-weight: 700; }
+    .header-meta { font-size: 0.72rem; color: var(--text-muted); margin-top: 2px; }
 
-    .container {
+    .filter-tabs {
+      background: var(--card);
+      border-bottom: 1px solid var(--border);
+      padding: 0 20px;
+      display: flex;
+      gap: 4px;
+      flex-shrink: 0;
+      overflow-x: auto;
+    }
+    .filter-tabs::-webkit-scrollbar { display: none; }
+    .tab-btn {
+      padding: 10px 14px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      border: none;
+      background: none;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      white-space: nowrap;
+      transition: all 0.15s;
+    }
+    .tab-btn:hover { color: var(--text); }
+    .tab-btn.active { color: var(--primary); border-bottom-color: var(--primary); }
+
+    .main {
       display: grid;
-      grid-template-columns: 380px 1fr;
+      grid-template-columns: 360px 1fr;
       flex: 1;
       overflow: hidden;
     }
@@ -141,133 +102,122 @@
     .sidebar-header {
       padding: 10px 16px;
       border-bottom: 1px solid var(--border);
-      font-size: 0.78rem;
-      color: var(--text-secondary);
+      font-size: 0.72rem;
+      color: var(--text-muted);
       flex-shrink: 0;
     }
-    .sidebar-header strong { color: var(--purple); font-size: 0.85rem; }
-    .job-list { flex: 1; overflow-y: auto; padding: 8px; }
+    .job-list {
+      flex: 1;
+      overflow-y: auto;
+      padding: 8px;
+    }
+    .job-list::-webkit-scrollbar { width: 4px; }
+    .job-list::-webkit-scrollbar-track { background: transparent; }
+    .job-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
 
     .job-card {
       background: var(--bg);
-      border-radius: 10px;
-      padding: 12px 14px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px;
       margin-bottom: 8px;
       cursor: pointer;
-      border: 2px solid transparent;
       transition: all 0.15s;
     }
-    .job-card:hover { border-color: var(--purple); background: #fff; }
-    .job-card.focused { border-color: var(--purple); background: #fff; box-shadow: 0 2px 12px rgba(88,86,214,0.15); }
+    .job-card:hover { border-color: var(--primary); background: var(--card-hover); }
+    .job-card.focused { border-color: var(--primary); background: var(--card-hover); }
 
-    .job-new-tag {
+    .job-new {
       display: inline-block;
-      background: var(--purple);
+      background: var(--primary);
       color: #fff;
-      font-size: 0.68rem;
+      font-size: 0.65rem;
       font-weight: 700;
-      padding: 2px 7px;
-      border-radius: 8px;
-      margin-bottom: 4px;
+      padding: 2px 6px;
+      border-radius: 6px;
+      margin-bottom: 6px;
     }
-    .job-company { font-size: 0.85rem; font-weight: 600; color: var(--text); margin-bottom: 3px; }
-    .job-title { font-size: 0.9rem; font-weight: 700; color: var(--text); margin-bottom: 6px; line-height: 1.4; }
-    .job-badges { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 6px; }
-
+    .job-company { font-size: 0.78rem; color: var(--text-muted); margin-bottom: 4px; }
+    .job-title { font-size: 0.9rem; font-weight: 700; margin-bottom: 8px; line-height: 1.4; }
+    .job-badges { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 8px; }
     .badge {
-      font-size: 0.68rem;
-      font-weight: 600;
+      font-size: 0.65rem;
+      font-weight: 700;
       padding: 2px 8px;
-      border-radius: 10px;
+      border-radius: 20px;
     }
-    .badge-level-intern { background: rgba(52,199,89,0.15); color: #34C759; }
-    .badge-level-entry { background: rgba(90,200,250,0.15); color: #5AC8FA; }
-    .badge-level-mid { background: rgba(88,86,214,0.15); color: #5856D6; }
-    .badge-level-senior { background: rgba(175,82,222,0.15); color: #AF52DE; }
-    .badge-level-lead { background: rgba(255,59,48,0.15); color: #FF3B30; }
-    .badge-salary { background: rgba(255,149,0,0.15); color: #CC7700; }
-    .badge-source { background: var(--border); color: var(--text-secondary); }
-    .badge-ta { background: rgba(88,86,214,0.12); color: #5856D6; }
+    .badge-intern { background: rgba(34,197,94,0.15); color: var(--intern); }
+    .badge-entry { background: rgba(6,182,212,0.15); color: var(--entry); }
+    .badge-mid { background: rgba(245,158,11,0.15); color: var(--mid); }
+    .badge-senior { background: rgba(168,85,247,0.15); color: var(--senior); }
+    .badge-salary { background: rgba(99,102,241,0.12); color: #818cf8; }
 
-    .job-meta-row {
+    .job-footer {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-size: 0.72rem;
-      color: var(--text-secondary);
+      font-size: 0.7rem;
+      color: var(--text-muted);
     }
     .job-deadline { font-weight: 600; }
-    .job-deadline.urgent { color: var(--danger); animation: blink 1s infinite; }
-    .job-deadline.soon { color: #FF9500; }
-    .job-deadline.normal { color: var(--success); }
+    .job-deadline.ok { color: var(--intern); }
+    .job-deadline.warn { color: var(--mid); }
+    .job-deadline.urgent { color: var(--lead); animation: blink 1s infinite; }
     @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.5} }
 
-    .jd-section { display: none; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); font-size: 0.82rem; line-height: 1.7; color: var(--text-secondary); }
+    .jd-section { display: none; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); }
     .jd-section.open { display: block; }
-    .jd-label { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--purple); margin-bottom: 6px; }
-    .jd-content { max-height: 180px; overflow-y: auto; padding-right: 4px; margin-bottom: 8px; }
-    .jd-apply-btn { display: inline-block; background: var(--purple); color: #fff; text-decoration: none; font-size: 0.8rem; font-weight: 700; padding: 6px 16px; border-radius: 20px; transition: background 0.15s; }
-    .jd-apply-btn:hover { background: #4B48B8; }
+    .jd-label { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--primary); margin-bottom: 6px; }
+    .jd-content { font-size: 0.78rem; line-height: 1.7; color: var(--text-muted); max-height: 160px; overflow-y: auto; margin-bottom: 10px; }
+    .apply-btn {
+      display: inline-block;
+      background: var(--primary);
+      color: #fff;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 6px 14px;
+      border-radius: 20px;
+      transition: background 0.15s;
+    }
+    .apply-btn:hover { background: #4f46e5; }
 
     #map { flex: 1; min-height: 0; }
-
-    .leaflet-popup-content-wrapper { border-radius: 12px; font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif; }
-    .popup-new { display:inline-block; background:#5856D6; color:#fff; font-size:0.7rem; font-weight:700; padding:2px 8px; border-radius:8px; margin-bottom:6px; }
-    .popup-deadline { font-size:0.78rem; font-weight:600; margin:4px 0; }
-    .popup-link { color:#5856D6; font-size:0.82rem; font-weight:600; text-decoration:none; }
-    .popup-link:hover { text-decoration:underline; }
+    .leaflet-popup-content-wrapper { border-radius: 12px; background: var(--card); color: var(--text); box-shadow: 0 8px 32px rgba(0,0,0,0.4); border: 1px solid var(--border); }
+    .leaflet-popup-tip { background: var(--card); }
+    .leaflet-popup-content { margin: 12px 16px; font-family: inherit; }
+    .popup-title { font-size: 0.9rem; font-weight: 700; margin-bottom: 4px; }
+    .popup-company { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 6px; }
+    .popup-meta { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 8px; }
+    .popup-link { color: var(--primary); font-size: 0.8rem; font-weight: 600; }
 
     @media (max-width: 768px) {
       body { height: auto; overflow: auto; }
-      .container { grid-template-columns: 1fr; }
-      #map { height: 300px; order: -1; }
+      .main { grid-template-columns: 1fr; }
+      #map { height: 280px; order: -1; }
       .sidebar { height: auto; max-height: 60vh; }
       .job-list { max-height: 50vh; }
-      .header-inner { padding: 10px 12px; }
-      .header-title { font-size: 0.95rem; }
-      .filter-panel { padding: 8px 12px; }
+      .header { padding: 10px 12px; }
     }
   </style>
 </head>
 <body>
 
-<header>
-  <div class="header-inner">
-    <div class="header-left">
-      <a href="index.html" class="header-back">← 返回</a>
-      <div>
-        <div class="header-title">海外 TA 岗位</div>
-        <div class="header-meta" id="header-meta">加载中...</div>
-      </div>
-    </div>
+<header class="header">
+  <a href="index.html" class="back-btn">← 返回</a>
+  <div class="header-info">
+    <div class="header-title" id="header-title">海外 TA 岗位</div>
+    <div class="header-meta" id="header-meta">加载中...</div>
   </div>
 </header>
 
-<div class="filter-panel">
-  <div class="filter-row">
-    <span class="filter-label">Experience</span>
-    <button class="filter-btn level-all active" data-filter="level" data-value="all">全部</button>
-    <button class="filter-btn level-intern" data-filter="level" data-value="intern">Intern</button>
-    <button class="filter-btn level-entry" data-filter="level" data-value="entry">Entry</button>
-    <button class="filter-btn level-mid" data-filter="level" data-value="mid">Mid (1-3y)</button>
-    <button class="filter-btn level-senior" data-filter="level" data-value="senior">Senior (3-5y)</button>
-    <button class="filter-btn level-lead" data-filter="level" data-value="lead">Lead (5y+)</button>
-  </div>
-  <div class="filter-row">
-    <span class="filter-label">TA Focus</span>
-    <button class="filter-btn ta-all active" data-filter="ta" data-value="all">全部</button>
-    <button class="filter-btn ta-rendering" data-filter="ta" data-value="rendering">Rendering</button>
-    <button class="filter-btn ta-character" data-filter="ta" data-value="character">Character</button>
-    <button class="filter-btn ta-pipeline" data-filter="ta" data-value="pipeline">Pipeline</button>
-    <button class="filter-btn ta-environment" data-filter="ta" data-value="environment">Environment</button>
-    <button class="filter-btn ta-ui" data-filter="ta" data-value="ui">UI/UX</button>
-    <button class="filter-btn ta-general" data-filter="ta" data-value="general">General</button>
-  </div>
+<div class="filter-tabs">
+  <button class="tab-btn active" data-filter="all">全部</button>
+  <button class="tab-btn" data-filter="entry">Entry</button>
+  <button class="tab-btn" data-filter="mid">Mid-Level</button>
+  <button class="tab-btn" data-filter="senior">Senior</button>
 </div>
 
-<div class="stats-bar" id="stats-bar">加载中...</div>
-
-<div class="container">
+<div class="main">
   <div class="sidebar">
     <div class="sidebar-header" id="sidebar-header">加载中...</div>
     <div class="job-list" id="job-list"></div>
@@ -276,81 +226,71 @@
 </div>
 
 <script>
-var overseasJobs = [];
-var currentLevel = 'all';
-var currentTa = 'all';
-var focusedId = null;
-
+var allJobs = [];
+var currentFilter = 'all';
 var today = new Date();
 var todayStr = today.getFullYear() + '-' + String(today.getMonth()+1).padStart(2,'0') + '-' + String(today.getDate()).padStart(2,'0');
-function isToday(d) { return d === todayStr; }
 
-function getDeadlineClass(daysLeft) {
-  if (daysLeft <= 3) return 'urgent';
-  if (daysLeft <= 7) return 'soon';
-  return 'normal';
-}
-function getDeadlineText(daysLeft) {
-  if (daysLeft <= 0) return 'Closed';
-  if (daysLeft === 1) return 'Due tomorrow';
-  if (daysLeft <= 7) return daysLeft + ' days left';
-  return daysLeft + ' days';
-}
-function getDeadlineColor(daysLeft) {
-  if (daysLeft <= 3) return '#FF3B30';
-  if (daysLeft <= 7) return '#FF9500';
-  return '#34C759';
-}
+var levelColor = {'intern':'#22c55e','entry':'#06b6d4','mid':'#f59e0b','senior':'#a855f7','lead':'#ef4444'};
+var levelLabel = {intern:'Intern', entry:'Entry', mid:'Mid', senior:'Senior', lead:'Lead'};
+var levelBadge = {intern:'badge-intern', entry:'badge-entry', mid:'badge-mid', senior:'badge-senior', lead:'badge-lead'};
 
 function getFiltered() {
-  return overseasJobs.filter(function(j) {
-    if (j.excluded) return false;
-    if (currentLevel !== 'all' && j.level !== currentLevel) return false;
-    if (currentTa !== 'all' && j.taSubCategory !== currentTa) return false;
-    return true;
-  });
+  if (currentFilter === 'all') return allJobs;
+  return allJobs.filter(function(j){ return j.level === currentFilter; });
+}
+function getDeadlineClass(days) {
+  if (days <= 3) return 'urgent';
+  if (days <= 7) return 'warn';
+  return 'ok';
+}
+function getDeadlineText(days) {
+  if (days <= 0) return 'Closed';
+  if (days === 1) return '1 day left';
+  if (days <= 7) return days + ' days left';
+  return days + ' days';
 }
 
-function renderSidebar(jobs) {
-  var listEl = document.getElementById('job-list');
-  var total = overseasJobs.filter(function(j){ return !j.excluded; }).length;
-  document.getElementById('sidebar-header').innerHTML = '<strong>' + jobs.length + '</strong> / ' + total + ' positions';
-  listEl.innerHTML = '';
-
+function renderList(jobs) {
+  document.getElementById('sidebar-header').innerHTML = 'Showing <strong>' + jobs.length + '</strong> / ' + allJobs.length;
+  var list = document.getElementById('job-list');
+  list.innerHTML = '';
   if (jobs.length === 0) {
-    listEl.innerHTML = '<div style="text-align:center;padding:40px 20px;color:#666;">No matching positions found</div>';
+    list.innerHTML = '<div style="text-align:center;padding:40px 20px;color:var(--text-muted);font-size:0.85rem;">No jobs found</div>';
     return;
   }
 
-  jobs.forEach(function(j) {
-    var isNew = isToday(j.postedDate);
+  var sorted = jobs.slice().sort(function(a,b){
+    var order = {intern:0, entry:1, mid:2, senior:3, lead:4};
+    return (order[a.level]||5) - (order[b.level]||5);
+  });
+
+  sorted.forEach(function(j) {
+    var isNew = j.postedDate === todayStr;
     var dlClass = getDeadlineClass(j.daysLeft);
     var dlText = getDeadlineText(j.daysLeft);
-    var dlColor = getDeadlineColor(j.daysLeft);
     var hasJd = j.jd && j.jd.length > 10;
 
     var el = document.createElement('div');
     el.className = 'job-card';
     el.id = 'card-' + j.id;
     el.innerHTML =
-      (isNew ? '<span class="job-new-tag">🆕 New</span>' : '') +
-      '<div class="job-company">' + j.company + '</div>' +
+      (isNew ? '<span class="job-new">NEW</span>' : '') +
+      '<div class="job-company">' + j.company + ' · ' + j.address + '</div>' +
       '<div class="job-title">' + j.name + '</div>' +
       '<div class="job-badges">' +
-        '<span class="badge badge-level-' + j.level + '">' + j.levelLabel + '</span>' +
-        '<span class="badge badge-ta">' + j.taSubLabel + '</span>' +
-        (j.salary !== '—' ? '<span class="badge badge-salary">' + j.salary + '</span>' : '') +
-        '<span class="badge badge-source">' + j.source + '</span>' +
+        '<span class="badge ' + (levelBadge[j.level]||'') + '">' + (levelLabel[j.level]||j.level) + '</span>' +
+        '<span class="badge badge-salary">' + (j.taSubLabel||'') + '</span>' +
       '</div>' +
-      '<div class="job-meta-row">' +
-        '<span style="color:' + dlColor + ';font-weight:600;font-size:0.72rem;">⏰ ' + dlText + '</span>' +
-        '<span style="font-size:0.7rem;color:#999;">' + j.address + '</span>' +
+      '<div class="job-footer">' +
+        '<span class="job-deadline ' + dlClass + '">⏰ ' + dlText + '</span>' +
+        '<span style="font-size:0.7rem;color:var(--text-muted);">' + j.salary + '</span>' +
       '</div>' +
       (hasJd ? '<div class="jd-section" id="jd-' + j.id + '">' +
-        '<div class="jd-label">Job Description & Requirements</div>' +
+        '<div class="jd-label">JD & Requirements</div>' +
         '<div class="jd-content">' + j.jd.replace(/\n/g, '<br>') + '</div>' +
-        '<a href="' + j.url + '" target="_blank" class="jd-apply-btn">Apply Now →</a>' +
-       '</div>' : '<a href="' + j.url + '" target="_blank" class="jd-apply-btn" style="margin-top:8px;">Apply Now →</a>');
+        '<a href="' + j.url + '" target="_blank" class="apply-btn">Apply →</a>' +
+       '</div>' : '<a href="' + j.url + '" target="_blank" class="apply-btn" style="display:inline-block;margin-top:8px;">Apply →</a>');
 
     el.addEventListener('click', function(e) {
       if (hasJd) {
@@ -359,120 +299,71 @@ function renderSidebar(jobs) {
       }
       focusJob(j.id);
     });
-    listEl.appendChild(el);
+    list.appendChild(el);
+  });
+}
+
+var map = L.map('map', {zoomControl:true, scrollWheelZoom:true}).setView([39.0, -98.0], 4);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {attribution:'&copy; OSM', maxZoom:19}).addTo(map);
+var markerMap = {};
+
+function mkIcon(color, sz) {
+  return L.divIcon({className:'', html:'<div style="width:'+sz+'px;height:'+sz+'px;background:'+color+';border:2px solid rgba(255,255,255,0.8);border-radius:50%;box-shadow:0 2px 8px rgba(0,0,0,0.3);"></div>', iconSize:[sz,sz], iconAnchor:[sz/2,sz/2]});
+}
+
+function buildPopup(j) {
+  return '<div class="popup-title">' + j.name + '</div>' +
+    '<div class="popup-company">' + j.company + ' · ' + j.address + '</div>' +
+    '<div class="popup-meta"><span class="badge ' + (levelBadge[j.level]||'') + '">' + (levelLabel[j.level]||j.level) + '</span> ' + j.salary + '</div>' +
+    '<a href="' + j.url + '" target="_blank" class="popup-link">Apply →</a>';
+}
+
+function renderMarkers(jobs) {
+  Object.values(markerMap).forEach(function(m){ map.removeLayer(m); });
+  markerMap = {};
+  jobs.forEach(function(j) {
+    if (!j.lat || !j.lng) return;
+    var sz = j.level === 'intern' ? 8 : j.level === 'senior' || j.level === 'lead' ? 14 : 11;
+    var m = L.marker([j.lat, j.lng], {icon: mkIcon(levelColor[j.level]||'#6366f1', sz)}).addTo(map);
+    m.bindPopup(buildPopup(j));
+    m.on('click', function(){ focusJob(j.id); });
+    markerMap[j.id] = m;
   });
 }
 
 function focusJob(id) {
   document.querySelectorAll('.job-card').forEach(function(c){ c.classList.remove('focused'); });
   var card = document.getElementById('card-' + id);
-  if (card) { card.classList.add('focused'); card.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
-  focusedId = id;
-  var marker = markerMap[id];
-  if (marker) { marker.openPopup(); map.setView(marker.getLatLng(), 11); }
+  if(card) { card.classList.add('focused'); card.scrollIntoView({behavior:'smooth', block:'nearest'}); }
+  var m = markerMap[id];
+  if(m) { m.openPopup(); }
 }
 
-var map = L.map('map', { zoomControl:true, scrollWheelZoom:true }).setView([39.0, -98.0], 4);
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OSM', maxZoom: 19 }).addTo(map);
-
-var markerMap = {};
-
-function getLevelColor(level) {
-  var colors = {'intern':'#34C759','entry':'#5AC8FA','mid':'#5856D6','senior':'#AF52DE','lead':'#FF3B30'};
-  return colors[level] || '#5856D6';
-}
-function mkIcon(color, sz) {
-  sz = sz || 12;
-  return L.divIcon({
-    className:'',
-    html:'<div style="width:'+sz+'px;height:'+sz+'px;background:'+color+';border:2.5px solid #fff;border-radius:50%;box-shadow:0 2px 6px rgba(0,0,0,0.3);"></div>',
-    iconSize:[sz,sz], iconAnchor:[sz/2,sz/2]
+document.querySelectorAll('.tab-btn').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    document.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.remove('active'); });
+    btn.classList.add('active');
+    currentFilter = btn.dataset.filter;
+    var filtered = getFiltered();
+    renderList(filtered);
+    renderMarkers(filtered);
   });
-}
-
-function buildPopup(j) {
-  var isNew = isToday(j.postedDate);
-  var dlText = getDeadlineText(j.daysLeft);
-  var dlColor = getDeadlineColor(j.daysLeft);
-  var newTag = isNew ? '<span class="popup-new">🆕 New Today</span><br>' : '';
-  return '<b style="color:#5856D6;font-size:0.9rem;">' + j.company + '</b><br>' +
-    '<b style="font-size:0.85rem;">' + j.name + '</b><br>' + newTag +
-    '<span style="font-size:0.78rem;color:#666;">' + j.address + ' · ' + j.levelLabel + ' · ' + j.taSubLabel + '</span><br>' +
-    (j.salary !== '—' ? '<b style="font-size:0.82rem;color:#CC7700;">' + j.salary + '</b><br>' : '') +
-    '<span style="color:' + dlColor + ';font-size:0.78rem;font-weight:600;">⏰ ' + dlText + '</span><br><br>' +
-    '<a href="' + j.url + '" target="_blank" class="popup-link">View Job →</a>';
-}
-
-function renderMarkers(visibleJobs) {
-  Object.values(markerMap).forEach(function(m){ map.removeLayer(m); });
-  markerMap = {};
-  visibleJobs.forEach(function(j) {
-    var lat = j.lat || 39.0;
-    var lng = j.lng || -98.0;
-    var color = getLevelColor(j.level);
-    var sz = j.level === 'intern' ? 10 : j.level === 'senior' || j.level === 'lead' ? 14 : 12;
-    var m = L.marker([lat, lng], {icon: mkIcon(color, sz)}).addTo(map);
-    m.bindPopup(buildPopup(j));
-    m.on('click', function() { focusJob(j.id); });
-    markerMap[j.id] = m;
-  });
-}
-
-function renderStats(jobs) {
-  var total = overseasJobs.filter(function(j){ return !j.excluded; });
-  var deadlineSoon = total.filter(function(j){ return j.daysLeft <= 7; }).length;
-  var levelCounts = {intern:0, entry:0, mid:0, senior:0, lead:0};
-  var taCounts = {};
-  total.forEach(function(j) {
-    if (levelCounts.hasOwnProperty(j.level)) levelCounts[j.level]++;
-    taCounts[j.taSubCategory] = (taCounts[j.taSubCategory]||0) + 1;
-  });
-  var maxTa = Object.keys(taCounts).sort(function(a,b){ return taCounts[b]-taCounts[a]; })[0] || 'general';
-  var taLabels = {character:'Character TA', environment:'Environment TA', rendering:'Rendering TA',
-                  pipeline:'Pipeline TA', ui:'UI/UX TA', general:'General TA'};
-  document.getElementById('stats-bar').innerHTML =
-    'Total <strong>' + total.length + '</strong> positions | ' +
-    'Filtered <strong>' + jobs.length + '</strong> | ' +
-    '<span style="color:#FF3B30;font-weight:600;">⚠ ' + deadlineSoon + ' closing soon</span> | ' +
-    'Hot: <strong>' + (taLabels[maxTa]||'General') + '</strong> (' + taCounts[maxTa] + ')';
-}
-
-function initFilters() {
-  document.querySelectorAll('.filter-btn[data-filter]').forEach(function(btn) {
-    btn.addEventListener('click', function() {
-      var filterType = btn.dataset.filter;
-      var value = btn.dataset.value;
-      document.querySelectorAll('.filter-btn[data-filter="'+filterType+'"]').forEach(function(b){ b.classList.remove('active'); });
-      btn.classList.add('active');
-      if (filterType === 'level') currentLevel = value;
-      if (filterType === 'ta') currentTa = value;
-      applyFilters();
-    });
-  });
-}
-
-function applyFilters() {
-  var filtered = getFiltered();
-  renderSidebar(filtered);
-  renderMarkers(filtered);
-  renderStats(filtered);
-}
+});
 
 async function loadData() {
   try {
     var resp = await fetch('jobs-overseas.json');
     var data = await resp.json();
-    overseasJobs = data.overseasJobs || data || [];
-    var total = overseasJobs.filter(function(j){ return !j.excluded; }).length;
-    document.getElementById('header-meta').textContent = total + ' positions · Updated ' + (data.updated || todayStr);
-    document.title = 'Overseas TA Jobs（' + total + '） — TA Job Finder';
-    applyFilters();
+    allJobs = (data.overseasJobs||data||[]).filter(function(j){ return !j.excluded; });
+    document.getElementById('header-title').textContent = '海外 TA 岗位';
+    document.getElementById('header-meta').textContent = 'Updated ' + (data.updated||todayStr) + ' · ' + allJobs.length + ' jobs';
+    document.title = '海外 TA 岗位（' + allJobs.length + '） — TA Job Finder';
+    renderList(getFiltered());
+    renderMarkers(getFiltered());
   } catch(e) {
-    document.getElementById('job-list').innerHTML = '<div style="padding:20px;text-align:center;color:#999;">Failed to load data</div>';
+    document.getElementById('job-list').innerHTML = '<div style="padding:20px;text-align:center;color:var(--text-muted);">Data load failed</div>';
   }
 }
-
-initFilters();
 loadData();
 </script>
 </body>
