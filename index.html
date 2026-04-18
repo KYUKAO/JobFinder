@@ -210,6 +210,10 @@
       font-size: 0.65rem;
     }
 
+    /* Marker hover & active */
+    .leaflet-marker-icon { transition: transform 0.15s, filter 0.15s; cursor: pointer; }
+    .leaflet-marker-icon:hover, .leaflet-marker-icon.marker-active { transform: scale(1.3); filter: brightness(1.15); }
+
     .jd-section { display: none; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); }
     .jd-section.open { display: block; }
     .jd-label { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--primary); margin-bottom: 6px; }
@@ -243,6 +247,46 @@
     .popup-company { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 6px; }
     .popup-meta { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 8px; }
     .popup-link { color: var(--primary); font-size: 0.8rem; font-weight: 600; }
+
+    /* Loading skeleton */
+    .skeleton {
+      padding: 12px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .skeleton-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px;
+    }
+    .skeleton-line {
+      background: linear-gradient(90deg, var(--border) 25%, #e8e8ee 50%, var(--border) 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.4s infinite;
+      border-radius: 4px;
+    }
+    .skeleton-line.short { height: 8px; width: 40%; }
+    .skeleton-line.medium { height: 14px; width: 75%; }
+    .skeleton-line.long { height: 14px; width: 90%; }
+    .skeleton-line.tags { height: 20px; width: 55%; border-radius: 10px; }
+    @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+
+    /* Error state */
+    .error-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      gap: 10px;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      text-align: center;
+      padding: 20px;
+    }
+    .error-state .err-icon { font-size: 2rem; opacity: 0.4; }
 
     /* Portfolio/Tutorial Grid */
     .portfolio-grid {
@@ -319,8 +363,17 @@
 <div class="main" id="main-content">
   <!-- Sidebar -->
   <div class="sidebar" id="sidebar">
-    <div class="sidebar-header" id="sidebar-header">加载中...</div>
-    <div class="job-list" id="job-list"></div>
+    <div class="sidebar-header" id="sidebar-header">
+      <span class="skeleton-line short" style="display:inline-block;height:8px;width:120px;vertical-align:middle;margin-right:8px;"></span>
+      <span class="skeleton-line short" style="display:inline-block;height:8px;width:60px;vertical-align:middle;"></span>
+    </div>
+    <div class="job-list" id="job-list">
+      <div class="skeleton">
+        <div class="skeleton-card"><div class="skeleton-line short"></div><div class="skeleton-line long"></div><div class="skeleton-line medium"></div><div class="skeleton-line tags"></div></div>
+        <div class="skeleton-card"><div class="skeleton-line short"></div><div class="skeleton-line long"></div><div class="skeleton-line medium"></div><div class="skeleton-line tags"></div></div>
+        <div class="skeleton-card"><div class="skeleton-line short"></div><div class="skeleton-line long"></div><div class="skeleton-line medium"></div><div class="skeleton-line tags"></div></div>
+      </div>
+    </div>
   </div>
 
   <!-- Right Panel: Map or Portfolio Grid -->
@@ -354,10 +407,12 @@ var markerMap = {};
 var levelColor = {'intern':'#16a34a','entry':'#0891b2','mid':'#d97706','senior':'#9333ea','lead':'#dc2626'};
 
 function mkIcon(color, sz, isNew) {
-  var glow = isNew ? 'box-shadow:0 0 12px ' + color + ', 0 0 24px ' + color + '40;' : 'box-shadow:0 3px 12px rgba(0,0,0,0.35);';
+  var shadow = isNew
+    ? 'box-shadow:0 0 0 4px rgba(255,255,255,0.6),0 0 16px ' + color + ',0 0 32px ' + color + '60;'
+    : 'box-shadow:0 4px 16px rgba(0,0,0,0.4),0 0 0 3px ' + color + '30;';
   return L.divIcon({
     className: '',
-    html: '<div style="width:' + sz + 'px;height:' + sz + 'px;background:' + color + ';border:2.5px solid rgba(255,255,255,0.9);border-radius:50%;' + glow + '"></div>',
+    html: '<div style="width:' + sz + 'px;height:' + sz + 'px;background:' + color + ';border:3px solid rgba(255,255,255,0.95);border-radius:50%;' + shadow + 'transition:transform 0.15s;"></div>',
     iconSize: [sz, sz],
     iconAnchor: [sz/2, sz/2]
   });
@@ -452,6 +507,14 @@ function renderList(jobs) {
         '<a href="' + j.url + '" target="_blank" class="apply-btn">' + (isOverseas ? 'Apply →' : '申请岗位 →') + '</a>' +
        '</div>' : '<a href="' + j.url + '" target="_blank" class="apply-btn" style="display:inline-block;margin-top:8px;">' + (isOverseas ? 'Apply →' : '申请岗位 →') + '</a>');
 
+    el.addEventListener('mouseenter', function(){
+      var m = markerMap[j.id];
+      if(m && m._icon) m._icon.classList.add('marker-active');
+    });
+    el.addEventListener('mouseleave', function(){
+      var m = markerMap[j.id];
+      if(m && m._icon) m._icon.classList.remove('marker-active');
+    });
     el.addEventListener('click', function(e) {
       if (hasJd) {
         var jdEl = document.getElementById('jd-' + j.id);
@@ -479,7 +542,7 @@ function renderMarkers(jobs) {
     }
 
     var isOverseas = currentPage === 'overseas';
-    var sz = j.level === 'intern' ? 16 : j.level === 'senior' || j.level === 'lead' ? 20 : 14;
+    var sz = j.level === 'intern' ? 22 : j.level === 'senior' || j.level === 'lead' ? 28 : 18;
     var isNew = j.postedDate === todayStr;
     var location = isOverseas ? j.address : (j.city || '');
     var applyText = isOverseas ? 'Apply →' : '申请岗位 →';
@@ -510,10 +573,14 @@ function renderMarkers(jobs) {
 
 function focusJob(id) {
   document.querySelectorAll('.job-card').forEach(function(c){ c.classList.remove('focused'); });
+  document.querySelectorAll('.leaflet-marker-icon').forEach(function(ic){ ic.classList.remove('marker-active'); });
   var card = document.getElementById('card-' + id);
   if(card) { card.classList.add('focused'); card.scrollIntoView({behavior:'smooth', block:'nearest'}); }
   var m = markerMap[id];
-  if(m) { m.openPopup(); }
+  if(m) {
+    if(m._icon) m._icon.classList.add('marker-active');
+    m.openPopup();
+  }
 }
 
 // ===== Render portfolio/tutorial grid =====
@@ -634,6 +701,7 @@ function switchPage(page) {
     var jobs = getFiltered();
     renderList(jobs);
     renderMarkers(jobs);
+    if (jobs.length > 0) setTimeout(function() { focusJob(jobs[0].id); }, 100);
   } else if (page === 'portfolios') {
     renderPortfolioGrid(portfolios, 'portfolios');
   }
@@ -655,6 +723,7 @@ document.querySelectorAll('.filter-btn').forEach(function(btn){
     var filtered = getFiltered();
     renderList(filtered);
     renderMarkers(filtered);
+    if (filtered.length > 0) setTimeout(function() { focusJob(filtered[0].id); }, 100);
   });
 });
 
@@ -685,8 +754,15 @@ Promise.all([
   renderList(filtered);
   renderMarkers(filtered);
 
+  // 默认选中第一个岗位
+  if (filtered.length > 0) {
+    setTimeout(function() { focusJob(filtered[0].id); }, 100);
+  }
+
 }).catch(function(e){
-  console.error('Data load error:', e);
+  // 显示错误状态
+  document.getElementById('sidebar-header').innerHTML = '⚠️ 数据加载失败';
+  document.getElementById('job-list').innerHTML = '<div class="error-state"><div class="err-icon">⚠️</div><div>无法加载数据，请检查网络或刷新重试</div></div>';
 });
 </script>
 </body>
