@@ -770,7 +770,7 @@ function renderList(jobs) {
     var isNew = j.postedDate === todayStr;
     var dlClass = getDeadlineClass(j.daysLeft);
     var dlText = getDeadlineText(j.daysLeft, isOverseas);
-    var hasJd = j.jd && j.jd.length > 10;
+    var hasJd = !!(j.jd && j.jd.trim().length > 0);
     var location = isOverseas ? j.address : (j.city || '');
 
     var el = document.createElement('div');
@@ -790,14 +790,16 @@ function renderList(jobs) {
         '<div class="job-badges">' +
           getLevelBadge(j.level, isOverseas) +
           (j.taSubLabel ? '<span class="badge badge-salary">' + j.taSubLabel + '</span>' : '') +
+          (j.salary && j.salary !== '—' ? '<span class="badge badge-location">' + j.salary + '</span>' : '') +
         '</div>' +
         '<div class="card-footer">' +
           '<span class="job-deadline ' + dlClass + '"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>' + dlText + '</span>' +
-          '<a href="' + j.url + '" target="_blank" class="apply-btn" onclick="event.stopPropagation()">' + (isOverseas ? 'Apply' : '申请') + '</a>' +
+          (hasJd ? '<span style="font-size:0.62rem;color:var(--primary);font-weight:700;cursor:pointer;" onclick="event.stopPropagation();document.getElementById(\'jd-' + j.id + '\').classList.toggle(\'open\')">详情 ↓</span>' : '<a href="' + j.url + '" target="_blank" class="apply-btn" onclick="event.stopPropagation()">' + (isOverseas ? 'Apply' : '申请') + '</a>') +
         '</div>' +
         (hasJd ? '<div class="jd-section" id="jd-' + j.id + '">' +
           '<div class="jd-label">' + (isOverseas ? 'JD & Requirements' : '岗位职责 & 要求') + '</div>' +
-          '<div class="jd-content">' + j.jd.replace(/\n/g, '<br>') + '</div>' +
+          '<div class="jd-content">' + (j.jd||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>') + '</div>' +
+          '<a href="' + j.url + '" target="_blank" class="apply-btn" onclick="event.stopPropagation()">' + (isOverseas ? 'Apply Now →' : '申请岗位 →') + '</a>' +
          '</div>' : '') +
       '</div>';
 
