@@ -1,65 +1,65 @@
 {
-  "totalJobs": 26,
+  "totalJobs": 192,
   "domesticJobs": 26,
-  "overseasJobs": 0,
+  "overseasJobs": 166,
   "hotTestCategory": {
     "category": "general",
     "label": "综合 TA",
-    "count": 9
+    "count": 133
   },
   "topCompanies": [
     {
-      "name": "腾讯游戏",
-      "count": 3
+      "name": "Riot Games",
+      "count": 21
     },
     {
-      "name": "米哈游",
-      "count": 2
+      "name": "PlayStation Studios",
+      "count": 5
     },
     {
-      "name": "鹰角网络",
-      "count": 2
+      "name": "Epic",
+      "count": 5
     },
     {
-      "name": "字节跳动游戏",
-      "count": 2
+      "name": "Naughty Dog",
+      "count": 4
     },
     {
-      "name": "完美世界",
-      "count": 2
+      "name": "Bright Horizons",
+      "count": 4
     }
   ],
   "experienceBreakdown": {
-    "intern": 4,
-    "entry": 1,
-    "mid": 20,
-    "senior": 1,
-    "lead": 0
+    "intern": 53,
+    "entry": 3,
+    "mid": 103,
+    "senior": 8,
+    "lead": 25
   },
   "topJobs": [
     {
-      "name": "技术美术（TA）- 渲染方向",
-      "company": "腾讯游戏",
-      "salary": "28K-50K·16薪",
-      "level": "1-3年",
-      "taSub": "渲染 TA",
-      "requirements": "Unity、HLSL、GLSL、Shader、渲染、图形"
+      "name": "Senior Technical Artist, Environment",
+      "company": "Naughty Dog",
+      "salary": "$110K–$160K",
+      "level": "3-5 years",
+      "taSub": "Environment TA",
+      "requirements": "Python"
     },
     {
-      "name": "技术美术（TA）- 渲染方向",
-      "company": "字节跳动游戏",
-      "salary": "28K-50K·15薪",
-      "level": "1-3年",
-      "taSub": "渲染 TA",
-      "requirements": "Unity、HLSL、GLSL、Shader、渲染、图形"
+      "name": "Senior Technical Artist — Rendering",
+      "company": "Rockstar Games",
+      "salary": "$115K–$165K",
+      "level": "3-5 years",
+      "taSub": "Rendering TA",
+      "requirements": "HLSL、GLSL、Shader"
     },
     {
-      "name": "技术美术（TA）- 角色方向",
-      "company": "吉比特",
-      "salary": "22K-40K·15薪",
-      "level": "1-3年",
-      "taSub": "角色 TA",
-      "requirements": "Maya、Python、Photoshop、Substance、美术"
+      "name": "Senior Technical Artist, Characters",
+      "company": "Santa Monica Studio",
+      "salary": "$115K–$165K",
+      "level": "3-5 years",
+      "taSub": "Character TA",
+      "requirements": "Unreal、Maya、Python、Rigging"
     }
   ],
   "updated": "2026-04-18"

@@ -8,7 +8,15 @@
       "location": "上海",
       "profile_url": "https://www.linkedin.com/search/results/people/?keywords=Technical%20Artist%20Shanghai&origin=SWITCH_SEARCH_V2_PLUS_MRU",
       "scraped_date": "2026-04-18",
-      "skills": ["Unreal Engine", "HLSL", "Maya", "Substance Painter", "Python", "PBR", "Ray Tracing"],
+      "skills": [
+        "Unreal Engine",
+        "HLSL",
+        "Maya",
+        "Substance Painter",
+        "Python",
+        "PBR",
+        "Ray Tracing"
+      ],
       "education": "上海交通大学 · 数字媒体技术",
       "experience": "3年"
     },
@@ -19,7 +27,16 @@
       "location": "深圳",
       "profile_url": "https://www.linkedin.com/search/results/people/?keywords=Technical%20Artist%20Shenzhen&origin=SWITCH_SEARCH_V2_PLUS_MRU",
       "scraped_date": "2026-04-18",
-      "skills": ["Maya", "Houdini", "Unity", "Python", "MEL", "Rigging", "Animation", "ZBrush"],
+      "skills": [
+        "Maya",
+        "Houdini",
+        "Unity",
+        "Python",
+        "MEL",
+        "Rigging",
+        "Animation",
+        "ZBrush"
+      ],
       "education": "清华大学 · 计算机图形学",
       "experience": "5年"
     },
@@ -30,7 +47,16 @@
       "location": "北京",
       "profile_url": "https://www.linkedin.com/search/results/people/?keywords=Technical%20Artist%20Beijing&origin=SWITCH_SEARCH_V2_PLUS_MRU",
       "scraped_date": "2026-04-18",
-      "skills": ["Houdini", "Unreal Engine", "Nuke", "Python", "VFX", "Shader", "HLSL", "C++"],
+      "skills": [
+        "Houdini",
+        "Unreal Engine",
+        "Nuke",
+        "Python",
+        "VFX",
+        "Shader",
+        "HLSL",
+        "C++"
+      ],
       "education": "北京电影学院 · 游戏美术设计",
       "experience": "2年"
     },
@@ -41,7 +67,16 @@
       "location": "Los Angeles, CA",
       "profile_url": "https://www.linkedin.com/search/results/people/?keywords=Technical%20Artist%20Los%20Angeles&origin=SWITCH_SEARCH_V2_PLUS_MRU",
       "scraped_date": "2026-04-18",
-      "skills": ["Python", "Maya", "Unreal", "USD", "C++", "PyQt", "Pipeline", "Git"],
+      "skills": [
+        "Python",
+        "Maya",
+        "Unreal",
+        "USD",
+        "C++",
+        "PyQt",
+        "Pipeline",
+        "Git"
+      ],
       "education": "USC · Computer Science",
       "experience": "4年"
     },
@@ -52,7 +87,15 @@
       "location": "杭州",
       "profile_url": "https://www.linkedin.com/search/results/people/?keywords=Technical%20Artist%20Hangzhou&origin=SWITCH_SEARCH_V2_PLUS_MRU",
       "scraped_date": "2026-04-18",
-      "skills": ["Python", "Maya", "Blender", "Substance Designer", "P4", "Pipeline", "Automation"],
+      "skills": [
+        "Python",
+        "Maya",
+        "Blender",
+        "Substance Designer",
+        "P4",
+        "Pipeline",
+        "Automation"
+      ],
       "education": "浙江大学 · 软件工程",
       "experience": "4年"
     },
@@ -63,7 +106,16 @@
       "location": "San Francisco, CA",
       "profile_url": "https://www.linkedin.com/search/results/people/?keywords=Senior%20Technical%20Artist%20San%20Francisco&origin=SWITCH_SEARCH_V2_PLUS_MRU",
       "scraped_date": "2026-04-18",
-      "skills": ["Unreal Engine", "HLSL", "GLSL", "C++", "Ray Tracing", "Lumen", "Nanite", "Shader"],
+      "skills": [
+        "Unreal Engine",
+        "HLSL",
+        "GLSL",
+        "C++",
+        "Ray Tracing",
+        "Lumen",
+        "Nanite",
+        "Shader"
+      ],
       "education": "Carnegie Mellon University · Entertainment Technology",
       "experience": "6年"
     },
@@ -74,7 +126,15 @@
       "location": "成都",
       "profile_url": "https://www.linkedin.com/search/results/people/?keywords=Technical%20Artist%20Chengdu&origin=SWITCH_SEARCH_V2_PLUS_MRU",
       "scraped_date": "2026-04-18",
-      "skills": ["Unreal Engine", "Blender", "Substance Painter", "Photoshop", "World Builder", "Lighting", "PBR"],
+      "skills": [
+        "Unreal Engine",
+        "Blender",
+        "Substance Painter",
+        "Photoshop",
+        "World Builder",
+        "Lighting",
+        "PBR"
+      ],
       "education": "四川大学 · 数字艺术",
       "experience": "1年"
     },
@@ -85,7 +145,14 @@
       "location": "上海",
       "profile_url": "https://www.linkedin.com/search/results/people/?keywords=Technical%20Artist%20intern%20Shanghai&origin=SWITCH_SEARCH_V2_PLUS_MRU",
       "scraped_date": "2026-04-18",
-      "skills": ["Unity", "Maya", "HLSL", "Python", "Blender", "Photoshop"],
+      "skills": [
+        "Unity",
+        "Maya",
+        "HLSL",
+        "Python",
+        "Blender",
+        "Photoshop"
+      ],
       "education": "上海美术学院 · 艺术与科技（研究生在读）",
       "experience": "实习"
     },
@@ -96,7 +163,15 @@
       "location": "Austin, TX",
       "profile_url": "https://www.linkedin.com/search/results/people/?keywords=Technical%20Artist%20Austin&origin=SWITCH_SEARCH_V2_PLUS_MRU",
       "scraped_date": "2026-04-18",
-      "skills": ["Maya", "ZBrush", "Substance Painter", "Marvelous Designer", "Unreal", "Photoshop", "Rigging"],
+      "skills": [
+        "Maya",
+        "ZBrush",
+        "Substance Painter",
+        "Marvelous Designer",
+        "Unreal",
+        "Photoshop",
+        "Rigging"
+      ],
       "education": "Ringling College of Art and Design · Game Art",
       "experience": "3年"
     },
@@ -107,7 +182,17 @@
       "location": "广州",
       "profile_url": "https://www.linkedin.com/search/results/people/?keywords=Technical%20Artist%20Guangzhou&origin=SWITCH_SEARCH_V2_PLUS_MRU",
       "scraped_date": "2026-04-18",
-      "skills": ["Unreal Engine", "Unity", "HLSL", "Python", "Maya", "Houdini", "USD", "Shader", "Team Lead"],
+      "skills": [
+        "Unreal Engine",
+        "Unity",
+        "HLSL",
+        "Python",
+        "Maya",
+        "Houdini",
+        "USD",
+        "Shader",
+        "Team Lead"
+      ],
       "education": "中山大学 · 计算机科学",
       "experience": "7年"
     }
