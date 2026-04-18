@@ -24,28 +24,6 @@
       "cityCode": "sh"
     },
     {
-      "id": 1002,
-      "name": "TA实习生",
-      "company": "腾讯游戏",
-      "city": "深圳",
-      "region": "domestic",
-      "source": "腾讯招聘",
-      "url": "https://careers.tencent.com/search.html?query=TA",
-      "postedDate": "2026-04-12",
-      "type": "Intern",
-      "level": "intern",
-      "levelLabel": "实习",
-      "priority": 2,
-      "salary": "150-300/天",
-      "taSubCategory": "general",
-      "taSubLabel": "综合 TA",
-      "jd": "岗位职责：协助 TA 团队完成日常技术支持工作；参与游戏资产的技术规范制定；协助测试和优化美术资产在引擎中的表现。任职要求：在校本科生/研究生，美术、计算机相关专业；熟练使用 Photoshop、Maya/Blender 等工具；了解游戏引擎基础操作；对技术美术有浓厚兴趣；实习时间不少于 3 个月。",
-      "excluded": false,
-      "deadline": "2026-04-20",
-      "daysLeft": 2,
-      "cityCode": "sz"
-    },
-    {
       "id": 1019,
       "name": "TA实习生",
       "company": "鹰角网络",
@@ -74,7 +52,7 @@
       "city": "上海",
       "region": "domestic",
       "source": "字节跳动招聘",
-      "url": "https://www.google.com/search?q=%E5%AD%97%E8%8A%82%E8%B7%B3%E5%8A%A8%E6%B8%B8%E6%88%8F+TA%E5%AE%9E%E4%B9%A0%E7%94%9F",
+      "url": "https://jobs.bytedance.com/",
       "postedDate": "2026-04-12",
       "type": "Intern",
       "level": "intern",
@@ -134,28 +112,6 @@
       "cityCode": "bj"
     },
     {
-      "id": 1003,
-      "name": "技术美术（TA）- 渲染方向",
-      "company": "腾讯游戏",
-      "city": "深圳",
-      "region": "domestic",
-      "source": "腾讯招聘",
-      "url": "https://careers.tencent.com/search.html?query=TA",
-      "postedDate": "2026-04-08",
-      "type": "Full-time",
-      "level": "mid",
-      "levelLabel": "1-3年",
-      "priority": 4,
-      "salary": "28K-50K·16薪",
-      "taSubCategory": "rendering",
-      "taSubLabel": "渲染 TA",
-      "jd": "岗位职责：负责游戏渲染效果的研发与优化；制定图形程序的技术标准和规范；与程序和美术团队协作实现高质量视觉效果。任职要求：计算机图形学相关专业背景；熟悉 GPU 渲染管线、HLSL/GLSL Shader 编程；熟悉 Unity/UE 渲染系统；有较强的问题分析和解决能力。",
-      "excluded": false,
-      "deadline": "2026-04-22",
-      "daysLeft": 4,
-      "cityCode": "sz"
-    },
-    {
       "id": 1011,
       "name": "技术美术（TA）",
       "company": "完美世界",
@@ -184,7 +140,7 @@
       "city": "广州",
       "region": "domestic",
       "source": "37互娱招聘",
-      "url": "https://www.google.com/search?q=37%E4%BA%92%E5%A8%B1+%E6%8A%80%E6%9C%AF%E7%BE%8E%E6%9C%AF%EF%BC%88TA%EF%BC%89-+%E6%B5%81%E7%A8%8B%E5%B7%A5%E5%85%B7",
+      "url": "https://www.37i.com/",
       "postedDate": "2026-04-08",
       "type": "Full-time",
       "level": "mid",
@@ -206,7 +162,7 @@
       "city": "珠海",
       "region": "domestic",
       "source": "西山居招聘",
-      "url": "https://www.google.com/search?q=%E8%A5%BF%E5%B1%B1%E5%B1%85+%E6%8A%80%E6%9C%AF%E7%BE%8E%E6%9C%AF%EF%BC%88TA%EF%BC%89-+%E6%B5%81%E7%A8%8B%E5%B7%A5%E5%85%B7",
+      "url": "https://www.xishanju.com.cn/",
       "postedDate": "2026-04-08",
       "type": "Full-time",
       "level": "mid",
@@ -316,7 +272,7 @@
       "city": "福州",
       "region": "domestic",
       "source": "IGG招聘",
-      "url": "https://www.google.com/search?q=IGG+%E6%8A%80%E6%9C%AF%E7%BE%8E%E6%9C%AF%EF%BC%88TA%EF%BC%89-+%E5%9C%BA%E6%99%AF%E6%96%B9%E5%90%91",
+      "url": "https://igg.com/jobs",
       "postedDate": "2026-04-10",
       "type": "Full-time",
       "level": "mid",
@@ -382,7 +338,7 @@
       "city": "广州",
       "region": "domestic",
       "source": "多益网络招聘",
-      "url": "https://www.google.com/search?q=%E5%A4%9A%E7%9B%8A%E7%BD%91%E7%BB%9C+%E6%8A%80%E6%9C%AF%E7%BE%8E%E6%9C%AF%EF%BC%88TA%EF%BC%89-+%E6%B8%B2%E6%9F%93%E6%96%B9%E5%90%91",
+      "url": " https://www.duoyi.com/",
       "postedDate": "2026-04-11",
       "type": "Full-time",
       "level": "mid",
@@ -404,7 +360,7 @@
       "city": "上海",
       "region": "domestic",
       "source": "字节跳动招聘",
-      "url": "https://www.google.com/search?q=%E5%AD%97%E8%8A%82%E8%B7%B3%E5%8A%A8%E6%B8%B8%E6%88%8F+%E6%8A%80%E6%9C%AF%E7%BE%8E%E6%9C%AF%EF%BC%88TA%EF%BC%89-+%E6%B8%B2%E6%9F%93%E6%96%B9%E5%90%91",
+      "url": "https://jobs.bytedance.com/",
       "postedDate": "2026-04-11",
       "type": "Full-time",
       "level": "mid",
@@ -448,7 +404,7 @@
       "city": "深圳",
       "region": "domestic",
       "source": "吉比特招聘",
-      "url": "https://www.google.com/search?q=%E5%90%89%E6%AF%94%E7%89%B9+%E6%8A%80%E6%9C%AF%E7%BE%8E%E6%9C%AF%EF%BC%88TA%EF%BC%89-+%E8%A7%92%E8%89%B2%E6%96%B9%E5%90%91",
+      "url": "https://www.giwik.com/",
       "postedDate": "2026-04-11",
       "type": "Full-time",
       "level": "mid",
@@ -461,28 +417,6 @@
       "excluded": false,
       "deadline": "2026-04-26",
       "daysLeft": 8,
-      "cityCode": "sz"
-    },
-    {
-      "id": 1001,
-      "name": "技术美术（TA）- 角色方向",
-      "company": "腾讯游戏",
-      "city": "深圳",
-      "region": "domestic",
-      "source": "腾讯招聘",
-      "url": "https://careers.tencent.com/search.html?query=TA",
-      "postedDate": "2026-04-10",
-      "type": "Full-time",
-      "level": "mid",
-      "levelLabel": "1-3年",
-      "priority": 4,
-      "salary": "25K-45K·16薪",
-      "taSubCategory": "character",
-      "taSubLabel": "角色 TA",
-      "jd": "岗位职责：负责游戏角色的技术美术工作，制定角色资产的技术标准；与动画师和程序员协作优化角色动画管线；制定并维护角色资产的技术规范。任职要求：美术相关专业背景；精通 Maya/3ds Max、Photoshop、Substance Painter；了解游戏引擎（Unity/Unreal）中的角色资产管线；熟悉 Python 或 MEL 脚本优先；有 AAA 游戏项目经验优先。",
-      "excluded": false,
-      "deadline": "2026-04-27",
-      "daysLeft": 9,
       "cityCode": "sz"
     },
     {
@@ -536,7 +470,7 @@
       "city": "北京",
       "region": "domestic",
       "source": "英雄游戏招聘",
-      "url": "https://www.google.com/search?q=%E8%8B%B1%E9%9B%84%E6%B8%B8%E6%88%8F+%E6%8A%80%E6%9C%AF%E7%BE%8E%E6%9C%AF%EF%BC%88TA%EF%BC%89-+UI%E6%96%B9%E5%90%91",
+      "url": "https://www.yodo1.com/",
       "postedDate": "2026-04-12",
       "type": "Full-time",
       "level": "mid",
@@ -616,27 +550,6 @@
       "daysLeft": 27
     },
     {
-      "id": 10003,
-      "name": "游戏技术美术（TA）",
-      "company": "腾讯",
-      "city": "深圳",
-      "region": "domestic",
-      "source": "腾讯招聘",
-      "url": "https://careers.tencent.com/search.html?query=TA",
-      "postedDate": "2026-04-18",
-      "type": "Full-time",
-      "level": "mid",
-      "levelLabel": "1-3年",
-      "priority": 4,
-      "salary": "20-40K·15薪",
-      "taSubCategory": "general",
-      "taSubLabel": "综合 TA",
-      "jd": "工作职责：游戏TA通用技术美术支持；Shader编写与效果调试；美术资产性能优化；跨团队协作解决技术难题。\n任职要求：3年以上完整游戏项目开发经历；熟悉UE/Unity引擎；掌握Shader编写能力；具备Python/C#脚本开发能力；了解AIGC工具（Stable Diffusion、动画生成、场景生成）。",
-      "excluded": false,
-      "deadline": "2026-05-10",
-      "daysLeft": 22
-    },
-    {
       "id": 10004,
       "name": "技术美术（多方向）",
       "company": "米哈游",
@@ -698,27 +611,6 @@
       "excluded": false,
       "deadline": "2026-05-30",
       "daysLeft": 42
-    },
-    {
-      "id": 10008,
-      "name": "资深技术美术 TA-渲染向",
-      "company": "腾讯",
-      "city": "深圳",
-      "region": "domestic",
-      "source": "腾讯招聘",
-      "url": "https://careers.tencent.com/search.html?query=TA",
-      "postedDate": "2026-04-18",
-      "type": "Full-time",
-      "level": "senior",
-      "levelLabel": "3-5年",
-      "priority": 5,
-      "salary": "25-55K·16薪",
-      "taSubCategory": "rendering",
-      "taSubLabel": "渲染 TA",
-      "jd": "工作职责：角色材质渲染效果制作（皮肤、毛发、布料）；Shader设计（GLSL/HLSL/CG）；光照方案制定；资产性能指标维护。\n任职要求：5-10年技术美术经验；精通PBR理论与实时渲染管线；熟练掌握Shader设计；使用Profiler工具（RenderDoc、Adreno Profiler）进行性能分析。",
-      "excluded": false,
-      "deadline": "2026-05-20",
-      "daysLeft": 32
     },
     {
       "id": 10009,
@@ -805,48 +697,6 @@
       "daysLeft": 32
     },
     {
-      "id": 10014,
-      "name": "TA实习生",
-      "company": "腾讯",
-      "city": "深圳",
-      "region": "domestic",
-      "source": "腾讯招聘",
-      "url": "https://careers.tencent.com/search.html?query=TA",
-      "postedDate": "2026-04-18",
-      "type": "Intern",
-      "level": "intern",
-      "levelLabel": "实习",
-      "priority": 4,
-      "salary": "150-300/天",
-      "taSubCategory": "general",
-      "taSubLabel": "综合 TA",
-      "jd": "工作职责：协助TA团队完成日常技术支持工作；参与Shader编写和效果调试；协助测试和优化美术资产在引擎中的表现。\n任职要求：在校本科生/研究生，美术、计算机相关专业；熟练使用Photoshop、Maya/Blender等工具；了解游戏引擎基础操作；对技术美术有浓厚兴趣；实习时间不少于3个月。",
-      "excluded": false,
-      "deadline": "2026-06-15",
-      "daysLeft": 58
-    },
-    {
-      "id": 10015,
-      "name": "资深技术美术",
-      "company": "腾讯",
-      "city": "上海",
-      "region": "domestic",
-      "source": "腾讯招聘",
-      "url": "https://careers.tencent.com/search.html?query=TA",
-      "postedDate": "2026-04-18",
-      "type": "Full-time",
-      "level": "senior",
-      "levelLabel": "3-5年",
-      "priority": 5,
-      "salary": "面议",
-      "taSubCategory": "rendering",
-      "taSubLabel": "渲染 TA",
-      "jd": "工作职责：角色渲染（皮肤、毛发、布料）；Shader语言设计（GLSL/HLSL/CG）；Profiling工具使用（RenderDoc、Adreno Profiler）；UE引擎深度定制。\n任职要求：精通Unreal Engine；C#/C++；Shader语言；Houdini、Blender、3ds Max、Maya、Substance、Python；坚实美术基础。",
-      "excluded": false,
-      "deadline": "2026-05-20",
-      "daysLeft": 32
-    },
-    {
       "id": 10017,
       "name": "技术美术（TA）实习生",
       "company": "鹰角网络",
@@ -866,27 +716,6 @@
       "excluded": false,
       "deadline": "2026-06-30",
       "daysLeft": 73
-    },
-    {
-      "id": 10018,
-      "name": "Pipeline TD / 流程技术美术",
-      "company": "腾讯",
-      "city": "深圳",
-      "region": "domestic",
-      "source": "腾讯招聘",
-      "url": "https://careers.tencent.com/search.html?query=TA",
-      "postedDate": "2026-04-18",
-      "type": "Full-time",
-      "level": "senior",
-      "levelLabel": "3-5年",
-      "priority": 4,
-      "salary": "面议",
-      "taSubCategory": "pipeline",
-      "taSubLabel": "流程 TA",
-      "jd": "工作职责：美术生产管线搭建与维护；DCC工具开发（Maya、3ds Max、Houdini）；自动化工作流设计与实现；跨部门协作推进生产效率。\n任职要求：精通Python/MEL脚本开发；熟悉主流DCC工具API；了解游戏引擎资产导入管线；有TA或TD经验优先。",
-      "excluded": false,
-      "deadline": "2026-05-20",
-      "daysLeft": 32
     },
     {
       "id": 10019,
@@ -929,6 +758,414 @@
       "excluded": false,
       "deadline": "2026-05-25",
       "daysLeft": 37
+    },
+    {
+      "id": "10021",
+      "name": "《王者荣耀世界》动画TA",
+      "company": "腾讯",
+      "city": "上海",
+      "lat": 31.2304,
+      "lng": 121.4737,
+      "level": "entry",
+      "salary": "—",
+      "jd": "维护动画衔接之间的各种跳转、融合逻辑处理；维护或定制化处理骨骼级动画功能，特殊动画机制的设计，例如IK，Lookat等；编写引擎内的蓝图脚本，简化各条管线对于现有配置的理解，减少由于配置导致的问题；收敛动画需求，根据既有规则维护动画命名与目录，配合梳理资源拆分、入库细则、动画关键配置信息等。",
+      "url": "https://careers.tencent.com/jobdesc.html?postId=1960573284227637248",
+      "tags": [
+        "TA",
+        "技术美术"
+      ],
+      "isNew": false
+    },
+    {
+      "id": "10022",
+      "name": "魔方工作室-Unity渲染向TA",
+      "company": "腾讯",
+      "city": "深圳",
+      "lat": 22.5431,
+      "lng": 114.0579,
+      "level": "mid",
+      "salary": "—",
+      "jd": "负责Unity引擎下的渲染技术相关工作，包括材质系统优化，光照效果实现及渲染管线定制；与美术团队紧密合作，将美术需求转化为可实现的渲染技术方案，确保视觉效果的高质量呈现；参与游戏的性能优化工作，针对移动平台特性调整渲染策略，平衡画质与性能表现；开发和维护渲染相关工具链，提升美术和开发团队的工作效率；持续跟踪行业前沿渲染技术，将合适的技术方案落地到项目中，保持产品的技术竞争力。",
+      "url": "https://careers.tencent.com/jobdesc.html?postId=2011633026743816192",
+      "tags": [
+        "TA",
+        "技术美术"
+      ],
+      "isNew": false
+    },
+    {
+      "id": "10023",
+      "name": "《王者荣耀》UGC-技术美术（TA）",
+      "company": "腾讯",
+      "city": "深圳",
+      "lat": 22.5431,
+      "lng": 114.0579,
+      "level": "mid",
+      "salary": "—",
+      "jd": "开发面向非专业开发者的UGC游戏编辑器；主导非专业用户创作工具链搭建、美术资产模块化与玩法生态构建、内容性能与规范保障三大方向。",
+      "url": "https://careers.tencent.com/jobdesc.html?postId=2016735528275300352",
+      "tags": [
+        "TA",
+        "技术美术"
+      ],
+      "isNew": false
+    },
+    {
+      "id": "10024",
+      "name": "魔方工作室-《异人之下》动作TA",
+      "company": "腾讯",
+      "city": "深圳",
+      "lat": 22.5431,
+      "lng": 114.0579,
+      "level": "senior",
+      "salary": "—",
+      "jd": "负责与引擎技术组对接动作相关的需求，并完成相应功能验证；负责Unity中的资产设置、动画设置、物理设置、剧情编辑器和ik动作设置等工作；在Maya和Unity中实现动作相关流程的设计与开发。",
+      "url": "https://careers.tencent.com/jobdesc.html?postId=2000410051898138624",
+      "tags": [
+        "TA",
+        "技术美术"
+      ],
+      "isNew": false
+    },
+    {
+      "id": "10025",
+      "name": "《王者荣耀世界》资深渲染TA（角色）",
+      "company": "腾讯",
+      "city": "上海",
+      "lat": 31.2304,
+      "lng": 121.4737,
+      "level": "mid",
+      "salary": "—",
+      "jd": "负责项目角色渲染相关的材质、着色器开发、维护与优化；负责角色渲染性能分析、数据整理与优化方案制定；负责角色渲染管线的技术规范建立、完善与落地推进；负责角色渲染的前期技术评估与技术方案调研；负责角色渲染相关的日常问题排查与疑难BUG修复；与角色美术、动画及引擎团队协作，攻克渲染技术难点，提升角色视觉品质。",
+      "url": "https://careers.tencent.com/jobdesc.html?postId=1981610488450142208",
+      "tags": [
+        "TA",
+        "技术美术"
+      ],
+      "isNew": false
+    },
+    {
+      "id": "10026",
+      "name": "王者荣耀IP预研游戏-资深动画TA",
+      "company": "腾讯",
+      "city": "上海",
+      "lat": 31.2304,
+      "lng": 121.4737,
+      "level": "mid",
+      "salary": "—",
+      "jd": "核心职责：解决动画实现的技术难题和优化生产流程，专注于技术性与效率；负责搭建引擎动画逻辑：在游戏引擎中使用状态机、混合空间和动画蒙太奇，实现动画的融合与切换，确保动作流畅自然；负责流程搭建与工具开发，使用Python等脚本语言开发自动化工具，优化从DCC软件到游戏引擎的动画管线，提升团队效率；负责实现程序化动画效果：Contral Rig，Motion Matching，Deformer Graph，以及其他；参与动画性能优化，确保动画资源符合性能预算，解决引擎内的性能瓶颈。",
+      "url": "https://careers.tencent.com/jobdesc.html?postId=1999118120366792704",
+      "tags": [
+        "TA",
+        "技术美术"
+      ],
+      "isNew": false
+    },
+    {
+      "id": "10027",
+      "name": "王者荣耀IP预研游戏-资深动画TA",
+      "company": "腾讯",
+      "city": "上海",
+      "lat": 31.2304,
+      "lng": 121.4737,
+      "level": "mid",
+      "salary": "—",
+      "jd": "负责技能演出与过场落地：整体把控角色技能演出的制作，以角色表现优先，结合镜头语言、节奏、打点、音画同步，打造高完成度的2-4s技能演出；在 UE5 中使用 Sequencer 制作技能镜头、过场与演出模板；角色动画全流程生产与整合；对导入动画进行二次加工/清洗/润色，并在 UE5 中完成动画资源接入、调试与迭代；Control Rig 与动画技术支持；重定向与资产复用；外包对接与质量把控；跨团队协作。",
+      "url": "https://careers.tencent.com/jobdesc.html?postId=2033846486055415808",
+      "tags": [
+        "TA",
+        "技术美术"
+      ],
+      "isNew": false
+    },
+    {
+      "id": "10028",
+      "name": "王者荣耀IP预研游戏-资深动画TA",
+      "company": "腾讯",
+      "city": "成都",
+      "lat": 30.5728,
+      "lng": 104.0668,
+      "level": "mid",
+      "salary": "—",
+      "jd": "核心职责：解决动画实现的技术难题和优化生产流程；负责日常角色、表情、动物、道具绑定和工具插件维护；负责UE引擎内动画蓝图、control rig、角色蓝图的搭建和优化；负责引擎内物理、布料、动画效果的实现和优化；负责引擎内动画性能优化。",
+      "url": "https://careers.tencent.com/jobdesc.html?postId=2033846611553185792",
+      "tags": [
+        "TA",
+        "技术美术"
+      ],
+      "isNew": false
+    },
+    {
+      "id": "10029",
+      "name": "魔方工作室-《暗区突围》手游渲染向TA",
+      "company": "腾讯",
+      "city": "深圳",
+      "lat": 22.5431,
+      "lng": 114.0579,
+      "level": "mid",
+      "salary": "—",
+      "jd": "设计并编写高质量的游戏Shader，提升游戏画面效果；为场景和角色美术搭建Lookdev环境，确保美术资产在各种光照条件下的表现一致性；与图形开发团队紧密协作，实现渲染特性，并推动其在项目中的实际应用；提供技术支持和问题解决，协助美术和开发团队高效完成工作；编写并维护技术文档。",
+      "url": "https://careers.tencent.com/jobdesc.html?postId=2005525670314266624",
+      "tags": [
+        "TA",
+        "技术美术"
+      ],
+      "isNew": false
+    },
+    {
+      "id": "10030",
+      "name": "《三角洲行动》商业化表现TA-新星引力计划",
+      "company": "腾讯",
+      "city": "上海",
+      "lat": 31.2304,
+      "lng": 121.4737,
+      "level": "entry",
+      "salary": "—",
+      "jd": "负责项目中美术效果的技术方案设计与实现，例如武器材质设计和开发；与美术和引擎团队协作，设计并优化渲染方案，编写高性能Shader，确保效果在目标平台上的表现力和性能平衡；为美术环节建立正确的工作流程和工作环境，确保生产环节的稳定性；优化美术生产pipeline，提高美术工作效率；制作效果展示Demo，推广并跟踪应用；设计美术资源规范和执行方案；编写并维护技术文档，推广工具和技术。",
+      "url": "https://careers.tencent.com/jobdesc.html?postId=2015744615373758464",
+      "tags": [
+        "TA",
+        "技术美术"
+      ],
+      "isNew": false
+    },
+    {
+      "id": "10031",
+      "name": "魔方工作室-知名IP战术射击手游UE5动作TA",
+      "company": "腾讯",
+      "city": "深圳",
+      "lat": 22.5431,
+      "lng": 114.0579,
+      "level": "mid",
+      "salary": "—",
+      "jd": "负责与美术团队和程序团队紧密对接，精准理解并转化动作表现相关需求，高效完成相应功能的测试与验证工作；熟练操作Unity或者UE引擎，进行资产设置、动画设置、物理设置以及IK动作设置等精细化工作，确保动作效果符合项目要求；在DCC软件与游戏引擎中，独立完成动作相关流程的设计工作，并通过代码开发实现流程的自动化与优化；全程跟进绑定和动作模块的开发过程，及时排查并解决效果落地过程中出现的各类问题。",
+      "url": "https://careers.tencent.com/jobdesc.html?postId=2005525666291929088",
+      "tags": [
+        "TA",
+        "技术美术"
+      ],
+      "isNew": false
+    },
+    {
+      "id": "10032",
+      "name": "王者荣耀IP 3D英雄竞技对抗项目-资深动画TA",
+      "company": "腾讯",
+      "city": "成都",
+      "lat": 30.5728,
+      "lng": 104.0668,
+      "level": "mid",
+      "salary": "—",
+      "jd": "为动画师与客户端程序团队提供专业动画技术支持，深入分析角色动画表现、逻辑与数据问题，提出系统级解决方案，持续提升动画质量与技术稳定性；与客户端程序团队配合开发UE5中动画蓝图、状态机与动画系统架构设计；深度参与 UE5 动画系统的技术方案设计与验证，结合引擎特性（AnimGraph、AnimInstance、Motion Warping、IK、control rig等）开发动画相关功能模块；以动画师使用效率为核心，从技术与美术双视角设计动画工具链与流程。",
+      "url": "https://careers.tencent.com/jobdesc.html?postId=2019445823594725376",
+      "tags": [
+        "TA",
+        "技术美术"
+      ],
+      "isNew": false
+    },
+    {
+      "id": "10033",
+      "name": "《三角洲行动》-客户端开发工程师-渲染性能优化",
+      "company": "腾讯",
+      "city": "深圳",
+      "lat": 22.5431,
+      "lng": 114.0579,
+      "level": "entry",
+      "salary": "—",
+      "jd": "负责外网玩家反馈的兼容性问题进行分析、优化；负责商业化资源的性能监控与优化；负责单点渲染Feature的实现与优化。",
+      "url": "https://careers.tencent.com/jobdesc.html?postId=1998240474506354688",
+      "tags": [
+        "TA",
+        "技术美术"
+      ],
+      "isNew": false
+    },
+    {
+      "id": "10034",
+      "name": "写实军事FPS-游戏特效设计师",
+      "company": "腾讯",
+      "city": "深圳",
+      "lat": 22.5431,
+      "lng": 114.0579,
+      "level": "senior",
+      "salary": "—",
+      "jd": "负责制作游戏中需要的技能，枪械,载具,场景等特效需求；和策划程序能够顺畅沟通，清晰了解需求中的重点并高效制作；跟进开发特效相关工具，完善功能并提升工具使用效率；负责外包资源的审核修改及外包团队的培养；整体规划特效生产流程规范，把控特效品质。",
+      "url": "https://careers.tencent.com/jobdesc.html?postId=2008057091117441024",
+      "tags": [
+        "TA",
+        "技术美术"
+      ],
+      "isNew": false
+    },
+    {
+      "id": "10035",
+      "name": "光子艺术部-高级产品经理-(AIGC工具与功能设计方向)",
+      "company": "腾讯",
+      "city": "深圳",
+      "lat": 22.5431,
+      "lng": 114.0579,
+      "level": "mid",
+      "salary": "—",
+      "jd": "AI工具产品化设计：主导AIGC工具的核心功能规划与设计；美术管线深度整合：拆解2D/3D美术工作流，设计基于MCP等协议的插件，实现AI工具与DCC软件的无缝衔接；敏捷交付闭环：协同算法、前后端、测试等团队，制定迭代节奏与质量门禁；用户体验与数据驱动：通过定量数据与定性用户调研，持续打磨产品细节。",
+      "url": "https://careers.tencent.com/jobdesc.html?postId=2044685787236302848",
+      "tags": [
+        "TA",
+        "技术美术"
+      ],
+      "isNew": false
+    },
+    {
+      "id": "10036",
+      "name": "PUBG Mobile-3D特效设计师",
+      "company": "腾讯",
+      "city": "深圳",
+      "lat": 22.5431,
+      "lng": 114.0579,
+      "level": "entry",
+      "salary": "—",
+      "jd": "设计主题战斗特效脑暴设定，给予CP准确方向引导；把控CP完成主题特效制作，确保美术效果与设计目标吻合；协同TA与程序推进工具链迭代、特效资源性能优化及管线效能提升；对接策划，梳理需求特效内部，并能够对此有自我思考，能够从流程下游对上游设计有反推能力。",
+      "url": "https://careers.tencent.com/jobdesc.html?postId=1951486641851965440",
+      "tags": [
+        "TA",
+        "技术美术"
+      ],
+      "isNew": false
+    },
+    {
+      "id": "10037",
+      "name": "游戏技术美术",
+      "company": "腾讯",
+      "city": "上海",
+      "lat": 31.2304,
+      "lng": 121.4737,
+      "level": "mid",
+      "salary": "—",
+      "jd": "制定和完善美术生产流程和规范，在技术艺术方面为团队提供参考，为复杂问题制定解决方案；开发工具和材质，满足项目美术需求，提升渲染品质和表现效果；根据项目需求参与模型、特效、材质和纹理等的效果开发；配合引擎程序进行图形渲染模块开发及性能优化。",
+      "url": "https://careers.tencent.com/jobdesc.html?postId=2031393882830438400",
+      "tags": [
+        "TA",
+        "技术美术"
+      ],
+      "isNew": false
+    },
+    {
+      "id": "10038",
+      "name": "无畏契约手游-资深3D特效设计师",
+      "company": "腾讯",
+      "city": "深圳",
+      "lat": 22.5431,
+      "lng": 114.0579,
+      "level": "senior",
+      "salary": "—",
+      "jd": "主导商业化枪械皮肤特效设计与实现，打造标杆级特效视觉表现；协同CP完成英雄技能特效开发全流程把控，确保美术效果与设计目标吻合；协同TA与程序推进工具链迭代、特效资源性能优化及管线效能提升；审核团队输出质量，培养新人并攻克特效技术难点，推动团队专业化建设。",
+      "url": "https://careers.tencent.com/jobdesc.html?postId=1938020535711670272",
+      "tags": [
+        "TA",
+        "技术美术"
+      ],
+      "isNew": false
+    },
+    {
+      "id": "10039",
+      "name": "魔方工作室-AI技术美术（流程工具向）",
+      "company": "腾讯",
+      "city": "深圳",
+      "lat": 22.5431,
+      "lng": 114.0579,
+      "level": "senior",
+      "salary": "—",
+      "jd": "协助项目规划和改善美术流程，为任务管理、美术制作等管线提供流程工具或服务，以提高美术环节的管理和生产效率；配合PM、策划、美术等角色调研和挖掘项目需求，解决各环节间的流程问题；以促进项目更稳定、可控；与团队共同建设、优化和维护现有的流程基建和服务，辅助其他团队学习、接入和使用团队各项成熟业务。",
+      "url": "https://careers.tencent.com/jobdesc.html?postId=1924803808161038336",
+      "tags": [
+        "TA",
+        "技术美术"
+      ],
+      "isNew": false
+    },
+    {
+      "id": "10040",
+      "name": "Technology Platform-UE资深技术美术-角色渲染方向",
+      "company": "腾讯",
+      "city": "深圳",
+      "lat": 22.5431,
+      "lng": 114.0579,
+      "level": "entry",
+      "salary": "—",
+      "jd": "负责项目中角色渲染效果的技术方案设计与落地，包括角色材质、皮肤、头发、眼睛、布料等表现效果；基于Unreal Engine搭建和优化角色渲染流程，提升角色在实时引擎中的视觉品质；与角色美术、绑定、动画、程序团队协作，制定并推进角色资产规范、渲染标准及制作流程；负责角色相关Shader/Material的设计、开发与维护。",
+      "url": "https://careers.tencent.com/jobdesc.html?postId=2039528742862352384",
+      "tags": [
+        "TA",
+        "技术美术"
+      ],
+      "isNew": false
+    },
+    {
+      "id": "10041",
+      "name": "Technology Platform-高级游戏技术美术-场景向",
+      "company": "腾讯",
+      "city": "深圳",
+      "lat": 22.5431,
+      "lng": 114.0579,
+      "level": "mid",
+      "salary": "—",
+      "jd": "制定场景资产的技术规格（LOD、材质、贴图、命名等），建立资源审核机制，确保资产符合移动端性能预算与引擎规范；负责场景材质体系，光照方案的技术选型与效果落地，编写Shader或材质模板，沉淀可复用的美术资产库；主导场景性能优化（GPU/CPU/内存/带宽），利用Profiling工具定位瓶颈；与程序团队协作开发渲染特性、编辑器工具与自动化流程。",
+      "url": "https://careers.tencent.com/jobdesc.html?postId=2031569619629797376",
+      "tags": [
+        "TA",
+        "技术美术"
+      ],
+      "isNew": false
+    },
+    {
+      "id": "10042",
+      "name": "在研ue5产品-资深3D角色设计师",
+      "company": "腾讯",
+      "city": "上海",
+      "lat": 31.2304,
+      "lng": 121.4737,
+      "level": "mid",
+      "salary": "—",
+      "jd": "负责角色全流程制作，包括人体建模、服饰打版、写实皮肤材质绘制；运用MetaHuman制作管线进行高保真角色生成；引入AI工具辅助贴图素材生成；在角色制作管线中引入AI工具辅助建模/拓扑/UV等；熟练运用XGen制作高质量发型插片；独立管理角色资产管线生产，跟进从设计到落地的全流程。",
+      "url": "https://careers.tencent.com/jobdesc.html?postId=2034124210883952640",
+      "tags": [
+        "TA",
+        "技术美术"
+      ],
+      "isNew": false
+    },
+    {
+      "id": "10043",
+      "name": "3D动作游戏《狩》-资深3D场景地编（深圳/上海）",
+      "company": "腾讯",
+      "city": "深圳",
+      "lat": 22.5431,
+      "lng": 114.0579,
+      "level": "senior",
+      "salary": "—",
+      "jd": "规划资产制作量，根据策划白盒，模块化考虑，拆分和搭建美术代理模型；负责游戏中大地图的编辑，平衡审美和性能；负责场景中的灯光氛围制作及优化；与TA研究和提升场景效果和工作效率，与开发一起优化场景性能。",
+      "url": "https://careers.tencent.com/jobdesc.html?postId=1945021474242953216",
+      "tags": [
+        "TA",
+        "技术美术"
+      ],
+      "isNew": false
+    },
+    {
+      "id": "10044",
+      "name": "腾讯游戏-技术美术-角色/动画",
+      "company": "腾讯",
+      "city": "上海",
+      "lat": 31.2304,
+      "lng": 121.4737,
+      "level": "lead",
+      "salary": "—",
+      "jd": "生产角色的绑定动画、游戏内的动态模拟。包含表情、肢体绑定，处理衣服、头发等物理动态效果，根据游戏限制，制定最优的生产方案并推动落地；结合业务需求，参与并监督资源的引擎合入，在效果和工具上给到专业的推进意见，文档化资源标准；进行外包培训与效果验收，优化整合文件，推动规范有效执行，协助美术高效解决制作层面的痛点；参与内部角色动画管线的开发积累，制作案例测试，优化美术工具，提升研发效能。",
+      "url": "https://careers.tencent.com/jobdesc.html?postId=2027953063721070592",
+      "tags": [
+        "TA",
+        "技术美术"
+      ],
+      "isNew": false
     }
   ]
 }
