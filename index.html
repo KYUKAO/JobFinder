@@ -544,9 +544,43 @@
       transition: all 0.2s;
     }
     .video-card:hover { border-color: var(--border-hover); transform: translateY(-2px); box-shadow: var(--shadow); }
-    .video-thumb { position: relative; padding-top: 56.25%; background: #000; }
-    .video-thumb iframe, .video-thumb .thumb-placeholder { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
-    .thumb-placeholder { display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #e8e8f0, #d5d5e8); color: var(--text-muted); font-size: 2rem; }
+    .video-thumb {
+      position: relative;
+      padding-top: 56.25%;
+      background: linear-gradient(135deg, #e8e8f0, #d5d5e8);
+      overflow: hidden;
+    }
+    .video-thumb img {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: opacity 0.3s;
+    }
+    .video-thumb .play-btn {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 44px; height: 44px;
+      background: rgba(0,0,0,0.55);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      pointer-events: none;
+      transition: background 0.2s;
+    }
+    .video-card:hover .play-btn { background: rgba(0,0,0,0.7); }
+    .video-thumb .play-btn::after {
+      content: '';
+      display: block;
+      width: 0; height: 0;
+      border-style: solid;
+      border-width: 8px 0 8px 14px;
+      border-color: transparent transparent transparent #fff;
+      margin-left: 3px;
+    }
+    .video-thumb .cover-loaded { opacity: 1; }
+    .video-thumb .cover-loading { opacity: 0; }
+    .video-thumb .thumb-placeholder { display: none; }
     .video-info { padding: 12px; }
     .video-title { font-size: 0.82rem; font-weight: 700; margin-bottom: 5px; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
     .video-meta { font-size: 0.68rem; color: var(--text-muted); margin-bottom: 4px; }
@@ -1026,21 +1060,59 @@ function renderPortfolioGrid(items, type) {
   }
 
   grid.innerHTML = items.map(function(p) {
+    var bvid = p.bvid;
+    var pic = 'https://api.bilibili.com/x/web-interface/view?bvid=' + bvid;
+    var title = p.title;
+    var author = p.author || '';
+    var views = p.views || '';
     var isBilibili = p.platform === 'bilibili';
-    var embedUrl = isBilibili ? 'https://player.bilibili.com/player.html?bvid=' + p.bvid + '&autoplay=0' : '';
-    return '<div class="video-card">' +
+    var platformLabel = isBilibili ? 'B站' : 'YouTube';
+    var platformColor = isBilibili ? '#FB7299' : '#FF0000';
+    var platformIcon = isBilibili ? '📺' : '▶';
+    var cardStyle = isBilibili ? '' : 'border-color: rgba(255,0,0,0.3);';
+    return '<div class="video-card" style="' + cardStyle + '">' +
       '<div class="video-thumb">' +
-        (embedUrl ? '<iframe src="' + embedUrl + '" allowfullscreen loading="lazy"></iframe>' : '<div class="thumb-placeholder">📺</div>') +
+        '<img class="cover-loading" data-src="' + pic + '" alt="' + title + '">' +
+        '<div class="play-btn"></div>' +
+        '<div class="thumb-placeholder"></div>' +
       '</div>' +
       '<div class="video-info">' +
-        '<div class="video-title">' + p.title + '</div>' +
-        '<div class="video-meta"><span class="video-author">' + p.author + '</span></div>' +
-        '<div class="video-meta">' + (p.views ? '▶ ' + p.views + ' | ' : '') + '<span style="color:' + (isBilibili ? '#FB7299' : '#FF0000') + ';">' + (isBilibili ? 'B站' : 'YouTube') + '</span></div>' +
+        '<div class="video-title">' + title + '</div>' +
+        '<div class="video-meta"><span class="video-author">' + author + '</span></div>' +
+        '<div class="video-meta">' + (views ? platformIcon + ' ' + views + ' | ' : '') + '<span style="color:' + platformColor + ';">' + platformLabel + '</span></div>' +
         '<a href="' + p.url + '" target="_blank" class="video-tag">查看完整视频 →</a>' +
       '</div>' +
     '</div>';
   }).join('');
-}
+
+  // Lazy load cover images via IntersectionObserver
+  if ('IntersectionObserver' in window) {
+    var observer = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          var img = entry.target;
+          var src = img.dataset.src;
+          var bvid = src.split('bvid=')[1];
+          img.src = 'https://player.bilibili.com/player?' +
+            'bvid=' + bvid + '&outer_vid=1&high_quality=1&hide_uinfo=1&autoplay=0';
+          img.addEventListener('load', function() {
+            img.classList.remove('cover-loading');
+            img.classList.add('cover-loaded');
+          });
+          img.addEventListener('error', function() {
+            img.src = 'https://i0.hdslb.com/bfs/archive/' +
+              bvid.replace('BV','') + '.jpg';
+            img.classList.remove('cover-loading');
+            img.classList.add('cover-loaded');
+          });
+          observer.unobserve(img);
+        }
+      });
+    }, { rootMargin: '200px' });
+    grid.querySelectorAll('.cover-loading').forEach(function(img) {
+      observer.observe(img);
+    });
+  }
 
 // ===== Switch page =====
 function switchPage(page) {
