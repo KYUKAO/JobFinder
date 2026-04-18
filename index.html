@@ -7,21 +7,33 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
     :root {
-      --bg: #f5f5f7;
-      --card: #ffffff;
-      --card-hover: #f0f0f5;
+      --bg: #f0f2f8;
+      --surface: #ffffff;
+      --surface-2: #f8f9fc;
+      --border: rgba(99,102,241,0.1);
+      --border-hover: rgba(99,102,241,0.25);
       --primary: #6366f1;
-      --text: #1a1a1a;
-      --text-muted: #71717a;
-      --border: rgba(0,0,0,0.08);
-      --intern: #16a34a;
+      --primary-light: rgba(99,102,241,0.1);
+      --text: #1e1e2e;
+      --text-muted: #8892a4;
+      --text-light: #b0b8cc;
+      --intern: #22c55e;
       --entry: #0891b2;
       --mid: #d97706;
-      --senior: #9333ea;
-      --lead: #dc2626;
+      --senior: #a855f7;
+      --lead: #ef4444;
+      --shadow-sm: 0 1px 3px rgba(99,102,241,0.08);
+      --shadow: 0 4px 16px rgba(99,102,241,0.12);
+      --shadow-lg: 0 8px 32px rgba(99,102,241,0.18);
+      --radius: 14px;
+      --radius-sm: 10px;
+      --sidebar-w: 360px;
+      --nav-h: 52px;
+      --filter-h: 48px;
+      --sidebar-header-h: 52px;
     }
 
     body {
@@ -32,13 +44,14 @@
       display: flex;
       flex-direction: column;
       overflow: hidden;
+      font-size: 14px;
     }
 
     a { color: inherit; text-decoration: none; }
 
     /* ===== Top Nav ===== */
     .top-nav {
-      background: var(--card);
+      background: var(--surface);
       border-bottom: 1px solid var(--border);
       padding: 0 20px;
       display: flex;
@@ -46,81 +59,126 @@
       gap: 0;
       flex-shrink: 0;
       z-index: 20;
+      height: var(--nav-h);
     }
     .nav-brand {
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       font-weight: 800;
-      letter-spacing: -0.5px;
-      background: linear-gradient(135deg, #1a1a1a, #6366f1);
+      letter-spacing: -0.3px;
+      background: linear-gradient(135deg, var(--primary), #818cf8);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      padding: 14px 16px 14px 0;
-      margin-right: 8px;
+      padding: 0 18px 0 0;
+      margin-right: 18px;
       border-right: 1px solid var(--border);
       flex-shrink: 0;
+      line-height: 1;
     }
     .nav-tabs {
       display: flex;
-      gap: 2px;
+      gap: 4px;
       overflow-x: auto;
+      flex: 1;
     }
     .nav-tabs::-webkit-scrollbar { display: none; }
     .nav-tab {
-      padding: 12px 16px;
-      font-size: 0.82rem;
+      padding: 6px 14px;
+      font-size: 0.78rem;
       font-weight: 600;
       color: var(--text-muted);
       border: none;
       background: none;
       cursor: pointer;
-      border-bottom: 2px solid transparent;
+      border-radius: var(--radius-sm);
       white-space: nowrap;
-      transition: all 0.15s;
+      transition: all 0.18s;
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 5px;
+      position: relative;
     }
-    .nav-tab:hover { color: var(--text); }
-    .nav-tab.active { color: var(--primary); border-bottom-color: var(--primary); }
+    .nav-tab:hover { color: var(--text); background: var(--surface-2); }
+    .nav-tab.active {
+      color: var(--primary);
+      background: var(--primary-light);
+    }
     .nav-tab .tab-count {
-      font-size: 0.65rem;
+      font-size: 0.6rem;
       background: var(--border);
-      padding: 2px 6px;
-      border-radius: 10px;
+      padding: 1px 5px;
+      border-radius: 8px;
       color: var(--text-muted);
+      font-weight: 700;
+      min-width: 18px;
+      text-align: center;
     }
     .nav-tab.active .tab-count { background: rgba(99,102,241,0.2); color: var(--primary); }
 
     /* ===== Filter Bar ===== */
     .filter-bar {
-      background: var(--card);
+      background: var(--surface);
       border-bottom: 1px solid var(--border);
-      padding: 0 20px;
+      padding: 0 16px;
       display: flex;
-      gap: 4px;
+      align-items: center;
+      gap: 8px;
       flex-shrink: 0;
+      height: var(--filter-h);
       overflow-x: auto;
     }
     .filter-bar::-webkit-scrollbar { display: none; }
+
     .filter-btn {
-      padding: 8px 14px;
-      font-size: 0.75rem;
-      font-weight: 600;
+      padding: 5px 12px;
+      font-size: 0.72rem;
+      font-weight: 700;
       color: var(--text-muted);
-      border: 1px solid transparent;
+      border: 1.5px solid var(--border);
       background: none;
       cursor: pointer;
-      border-radius: 8px;
-      transition: all 0.15s;
+      border-radius: 20px;
+      transition: all 0.18s;
       white-space: nowrap;
+      flex-shrink: 0;
     }
-    .filter-btn:hover { border-color: var(--border); color: var(--text); }
-    .filter-btn.active { background: var(--primary); color: #fff; }
+    .filter-btn:hover { border-color: var(--primary); color: var(--primary); background: var(--primary-light); }
+    .filter-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+    .filter-divider { width: 1px; height: 20px; background: var(--border); flex-shrink: 0; }
+
+    .search-wrap {
+      flex: 1;
+      min-width: 120px;
+      max-width: 220px;
+      position: relative;
+      flex-shrink: 0;
+    }
+    .search-wrap svg {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-light);
+      pointer-events: none;
+    }
+    .search-input {
+      width: 100%;
+      padding: 5px 12px 5px 32px;
+      border: 1.5px solid var(--border);
+      border-radius: 20px;
+      font-size: 0.72rem;
+      font-family: inherit;
+      background: var(--surface-2);
+      color: var(--text);
+      outline: none;
+      transition: all 0.18s;
+    }
+    .search-input:focus { border-color: var(--primary); background: var(--surface); box-shadow: 0 0 0 3px var(--primary-light); }
+    .search-input::placeholder { color: var(--text-light); }
 
     /* ===== Main Layout ===== */
     .main {
       display: flex;
-      flex-direction: row;
       flex: 1;
       overflow: hidden;
       min-height: 0;
@@ -128,107 +186,201 @@
 
     /* Sidebar */
     .sidebar {
-      width: 380px;
+      width: var(--sidebar-w);
       flex-shrink: 0;
-      background: var(--card);
+      background: var(--surface);
       border-right: 1px solid var(--border);
       display: flex;
       flex-direction: column;
       overflow: hidden;
+      box-shadow: 2px 0 8px rgba(0,0,0,0.04);
+      z-index: 10;
     }
     .sidebar-header {
-      padding: 10px 16px;
+      padding: 12px 16px;
       border-bottom: 1px solid var(--border);
-      font-size: 0.72rem;
+      font-size: 0.7rem;
       color: var(--text-muted);
       flex-shrink: 0;
+      height: var(--sidebar-header-h);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--surface-2);
     }
+    .sidebar-header strong { color: var(--primary); font-weight: 700; }
+    .sidebar-stats {
+      display: flex;
+      gap: 6px;
+      margin-left: auto;
+    }
+    .stat-chip {
+      font-size: 0.6rem;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 8px;
+      background: var(--primary-light);
+      color: var(--primary);
+    }
+
     .job-list {
       flex: 1;
       overflow-y: auto;
-      padding: 8px;
+      padding: 10px;
     }
-    .job-list::-webkit-scrollbar { width: 4px; }
+    .job-list::-webkit-scrollbar { width: 3px; }
     .job-list::-webkit-scrollbar-track { background: transparent; }
     .job-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
 
+    /* ===== Job Card ===== */
     .job-card {
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 14px;
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      padding: 0;
       margin-bottom: 8px;
       cursor: pointer;
-      transition: all 0.15s;
+      transition: all 0.2s;
+      overflow: hidden;
+      position: relative;
+      box-shadow: var(--shadow-sm);
     }
-    .job-card:hover { border-color: var(--primary); background: var(--card-hover); }
-    .job-card.focused { border-color: var(--primary); background: var(--card-hover); }
+    .job-card:hover {
+      border-color: var(--primary);
+      box-shadow: var(--shadow);
+      transform: translateY(-1px);
+    }
+    .job-card.focused {
+      border-color: var(--primary);
+      background: var(--surface);
+      box-shadow: 0 0 0 3px var(--primary-light), var(--shadow);
+      transform: translateY(-1px);
+    }
+    .job-card.focused::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 3px;
+      background: var(--primary);
+      border-radius: 3px 0 0 3px;
+    }
 
+    /* Card left accent bar by level */
+    .job-card[data-level="intern"]::before,
+    .job-card[data-level="entry"]::before,
+    .job-card[data-level="mid"]::before,
+    .job-card[data-level="senior"]::before,
+    .job-card[data-level="lead"]::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 3px;
+    }
+    .job-card[data-level="intern"]::before { background: var(--intern); }
+    .job-card[data-level="entry"]::before { background: var(--entry); }
+    .job-card[data-level="mid"]::before { background: var(--mid); }
+    .job-card[data-level="senior"]::before { background: var(--senior); }
+    .job-card[data-level="lead"]::before { background: var(--lead); }
+
+    .card-body { padding: 12px 12px 12px 15px; }
+    .card-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
     .job-new {
       display: inline-block;
       background: var(--primary);
       color: #fff;
-      font-size: 0.65rem;
-      font-weight: 700;
+      font-size: 0.58rem;
+      font-weight: 800;
       padding: 2px 6px;
       border-radius: 6px;
-      margin-bottom: 6px;
+      flex-shrink: 0;
+      letter-spacing: 0.5px;
     }
-    .job-company { font-size: 0.78rem; color: var(--text-muted); margin-bottom: 4px; }
-    .job-title { font-size: 0.9rem; font-weight: 700; margin-bottom: 8px; line-height: 1.4; }
+    .job-source-badge {
+      font-size: 0.58rem;
+      font-weight: 700;
+      color: var(--text-light);
+      flex-shrink: 0;
+    }
+    .job-company {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      margin-bottom: 3px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .job-title {
+      font-size: 0.85rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      line-height: 1.4;
+      color: var(--text);
+    }
     .job-badges { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 8px; }
     .badge {
-      font-size: 0.65rem;
+      font-size: 0.62rem;
       font-weight: 700;
       padding: 2px 8px;
       border-radius: 20px;
+      letter-spacing: 0.2px;
     }
-    .badge-intern { background: rgba(34,197,94,0.15); color: var(--intern); }
-    .badge-entry { background: rgba(6,182,212,0.15); color: var(--entry); }
-    .badge-mid { background: rgba(245,158,11,0.15); color: var(--mid); }
-    .badge-senior { background: rgba(168,85,247,0.15); color: var(--senior); }
-    .badge-lead { background: rgba(239,68,68,0.15); color: var(--lead); }
-    .badge-salary { background: rgba(99,102,241,0.12); color: #818cf8; }
+    .badge-intern { background: rgba(34,197,94,0.12); color: var(--intern); }
+    .badge-entry { background: rgba(6,182,212,0.12); color: var(--entry); }
+    .badge-mid { background: rgba(217,119,6,0.12); color: var(--mid); }
+    .badge-senior { background: rgba(168,85,247,0.12); color: var(--senior); }
+    .badge-lead { background: rgba(239,68,68,0.12); color: var(--lead); }
+    .badge-salary { background: var(--primary-light); color: var(--primary); }
+    .badge-location { background: var(--surface-2); color: var(--text-muted); border: 1px solid var(--border); }
 
-    .job-footer {
+    .card-footer {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-size: 0.7rem;
+      font-size: 0.68rem;
       color: var(--text-muted);
     }
-    .job-deadline { font-weight: 600; }
+    .job-deadline { font-weight: 600; display: flex; align-items: center; gap: 3px; }
     .job-deadline.ok { color: var(--intern); }
     .job-deadline.warn { color: var(--mid); }
     .job-deadline.urgent { color: var(--lead); animation: blink 1s infinite; }
-    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.5} }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.4} }
 
-    .job-source {
-      background: var(--border);
-      padding: 2px 8px;
-      border-radius: 10px;
-      font-size: 0.65rem;
-    }
-
-    /* Marker hover & active */
-    .leaflet-marker-icon { transition: transform 0.15s, filter 0.15s; cursor: pointer; }
-    .leaflet-marker-icon:hover, .leaflet-marker-icon.marker-active { transform: scale(1.3); filter: brightness(1.15); }
-
-    .jd-section { display: none; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); }
-    .jd-section.open { display: block; }
-    .jd-label { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--primary); margin-bottom: 6px; }
-    .jd-content { font-size: 0.78rem; line-height: 1.7; color: var(--text-muted); max-height: 160px; overflow-y: auto; margin-bottom: 10px; }
+    /* JD Section */
+    .jd-section { display: none; margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--border); }
+    .jd-section.open { display: block; animation: slideDown 0.2s ease; }
+    @keyframes slideDown { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
+    .jd-label { font-size: 0.65rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; color: var(--primary); margin-bottom: 5px; }
+    .jd-content { font-size: 0.75rem; line-height: 1.7; color: var(--text-muted); max-height: 140px; overflow-y: auto; margin-bottom: 8px; padding-right: 4px; }
+    .jd-content::-webkit-scrollbar { width: 3px; }
+    .jd-content::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
     .apply-btn {
       display: inline-block;
       background: var(--primary);
       color: #fff;
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       font-weight: 700;
-      padding: 6px 14px;
+      padding: 5px 14px;
       border-radius: 20px;
-      transition: background 0.15s;
+      transition: all 0.15s;
+      margin-top: 4px;
     }
-    .apply-btn:hover { background: #4f46e5; }
+    .apply-btn:hover { background: #4f46e5; box-shadow: 0 4px 12px rgba(99,102,241,0.35); }
+
+    /* Marker hover & active */
+    .leaflet-marker-icon { transition: transform 0.15s cubic-bezier(0.34,1.56,0.64,1), filter 0.15s; cursor: pointer; }
+    .leaflet-marker-icon:hover, .leaflet-marker-icon.marker-active {
+      transform: scale(1.4) !important;
+      filter: brightness(1.1);
+      z-index: 1000 !important;
+    }
 
     /* Map */
     #right-panel {
@@ -238,98 +390,166 @@
       display: flex;
       flex-direction: column;
       overflow: hidden;
+      position: relative;
     }
-    #map { flex: 1; min-height: 0; background: #e8e8ed; }
-    .leaflet-popup-content-wrapper { border-radius: 12px; background: var(--card); color: var(--text); box-shadow: 0 8px 32px rgba(0,0,0,0.4); border: 1px solid var(--border); }
-    .leaflet-popup-tip { background: var(--card); }
-    .leaflet-popup-content { margin: 12px 16px; font-family: inherit; }
-    .popup-title { font-size: 0.9rem; font-weight: 700; margin-bottom: 4px; }
-    .popup-company { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 6px; }
-    .popup-meta { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 8px; }
-    .popup-link { color: var(--primary); font-size: 0.8rem; font-weight: 600; }
+    #map { flex: 1; min-height: 0; background: #e8eaf0; }
+
+    /* Leaflet customization */
+    .leaflet-popup-content-wrapper {
+      border-radius: var(--radius);
+      background: var(--surface);
+      color: var(--text);
+      box-shadow: var(--shadow-lg);
+      border: 1px solid var(--border);
+      padding: 0;
+      overflow: hidden;
+    }
+    .leaflet-popup-tip { background: var(--surface); }
+    .leaflet-popup-content { margin: 0; font-family: inherit; }
+    .popup-inner { padding: 14px 16px; }
+    .popup-title { font-size: 0.88rem; font-weight: 700; margin-bottom: 3px; color: var(--text); }
+    .popup-company { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 6px; }
+    .popup-meta { font-size: 0.72rem; color: var(--text-muted); margin-bottom: 8px; display: flex; gap: 4px; flex-wrap: wrap; align-items: center; }
+    .popup-link { color: var(--primary); font-size: 0.75rem; font-weight: 700; }
+    .leaflet-control-zoom {
+      border: none !important;
+      box-shadow: var(--shadow) !important;
+    }
+    .leaflet-control-zoom a {
+      background: var(--surface) !important;
+      color: var(--text) !important;
+      border: none !important;
+      width: 32px !important;
+      height: 32px !important;
+      line-height: 32px !important;
+      font-size: 16px !important;
+      transition: all 0.15s;
+    }
+    .leaflet-control-zoom a:hover { background: var(--primary-light) !important; color: var(--primary) !important; }
+    .leaflet-control-zoom-in { border-radius: var(--radius-sm) var(--radius-sm) 0 0 !important; }
+    .leaflet-control-zoom-out { border-radius: 0 0 var(--radius-sm) var(--radius-sm) !important; }
+    .leaflet-control-attribution {
+      background: rgba(255,255,255,0.85) !important;
+      backdrop-filter: blur(4px);
+      font-size: 0.6rem !important;
+      color: var(--text-muted) !important;
+      border-radius: 8px 0 0 0 !important;
+      padding: 3px 6px !important;
+    }
+    .leaflet-control-attribution a { color: var(--primary) !important; }
+
+    /* Map stats bar */
+    .map-stats-bar {
+      position: absolute;
+      bottom: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 8px 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      box-shadow: var(--shadow);
+      z-index: 1000;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+    .map-stats-bar .stat-item { display: flex; align-items: center; gap: 4px; }
+    .map-stats-bar .stat-dot { width: 8px; height: 8px; border-radius: 50%; }
+    .map-stats-bar .stat-num { font-weight: 700; color: var(--text); }
 
     /* Loading skeleton */
-    .skeleton {
-      padding: 12px 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
+    .skeleton { padding: 10px; display: flex; flex-direction: column; gap: 8px; }
     .skeleton-card {
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 12px;
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
       padding: 14px;
     }
     .skeleton-line {
-      background: linear-gradient(90deg, var(--border) 25%, #e8e8ee 50%, var(--border) 75%);
-      background-size: 200% 100%;
-      animation: shimmer 1.4s infinite;
+      background: linear-gradient(90deg, var(--border) 25%, var(--surface-2) 50%, var(--border) 75%);
+      background-size: 400% 100%;
+      animation: shimmer 1.6s infinite;
       border-radius: 4px;
     }
-    .skeleton-line.short { height: 8px; width: 40%; }
-    .skeleton-line.medium { height: 14px; width: 75%; }
-    .skeleton-line.long { height: 14px; width: 90%; }
-    .skeleton-line.tags { height: 20px; width: 55%; border-radius: 10px; }
-    @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+    @keyframes shimmer { 0%{background-position:100% 0} 100%{background-position:-100% 0} }
+    .skeleton-line.s { height: 7px; width: 35%; }
+    .skeleton-line.m { height: 12px; width: 70%; }
+    .skeleton-line.l { height: 12px; width: 90%; }
+    .skeleton-line.tag { height: 18px; width: 50%; border-radius: 10px; }
 
-    /* Error state */
-    .error-state {
+    /* Error / Empty state */
+    .state-panel {
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       height: 100%;
-      gap: 10px;
+      gap: 12px;
       color: var(--text-muted);
-      font-size: 0.85rem;
+      font-size: 0.82rem;
       text-align: center;
-      padding: 20px;
+      padding: 24px;
     }
-    .error-state .err-icon { font-size: 2rem; opacity: 0.4; }
+    .state-icon { font-size: 2.5rem; opacity: 0.3; }
+    .state-title { font-weight: 700; font-size: 0.88rem; color: var(--text); }
+    .state-desc { font-size: 0.75rem; color: var(--text-muted); }
 
-    /* Portfolio/Tutorial Grid */
+    /* Portfolio Grid */
     .portfolio-grid {
       flex: 1;
       overflow-y: auto;
-      padding: 20px;
+      padding: 16px;
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 16px;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 14px;
       align-content: start;
     }
-    .portfolio-grid::-webkit-scrollbar { width: 4px; }
-    .portfolio-grid::-webkit-scrollbar-track { background: transparent; }
+    .portfolio-grid::-webkit-scrollbar { width: 3px; }
     .portfolio-grid::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
 
     .video-card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 14px;
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
       overflow: hidden;
-      transition: all 0.15s;
+      transition: all 0.2s;
     }
-    .video-card:hover { border-color: var(--primary); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(99,102,241,0.1); }
+    .video-card:hover { border-color: var(--border-hover); transform: translateY(-2px); box-shadow: var(--shadow); }
     .video-thumb { position: relative; padding-top: 56.25%; background: #000; }
     .video-thumb iframe, .video-thumb .thumb-placeholder { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
-    .thumb-placeholder { display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #e8e8f0, #d0d0e0); color: var(--text-muted); font-size: 2rem; }
-    .video-info { padding: 14px; }
-    .video-title { font-size: 0.88rem; font-weight: 700; margin-bottom: 6px; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-    .video-meta { font-size: 0.72rem; color: var(--text-muted); margin-bottom: 6px; }
-    .video-author { font-weight: 600; color: var(--primary); }
-    .video-tag { display: inline-block; background: rgba(99,102,241,0.12); color: var(--primary); font-size: 0.68rem; padding: 3px 8px; border-radius: 10px; margin-top: 8px; }
+    .thumb-placeholder { display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #e8e8f0, #d5d5e8); color: var(--text-muted); font-size: 2rem; }
+    .video-info { padding: 12px; }
+    .video-title { font-size: 0.82rem; font-weight: 700; margin-bottom: 5px; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .video-meta { font-size: 0.68rem; color: var(--text-muted); margin-bottom: 4px; }
+    .video-author { font-weight: 700; color: var(--primary); }
+    .video-tag {
+      display: inline-block;
+      background: var(--primary-light);
+      color: var(--primary);
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 10px;
+      margin-top: 8px;
+    }
 
     /* Mobile */
     @media (max-width: 768px) {
       body { height: auto; overflow: auto; }
       .main { flex-direction: column; }
-      #right-panel { flex-direction: column; min-height: 300px; }
+      #right-panel { min-height: 280px; }
       #map { height: 280px; order: -1; }
-      .sidebar { width: 100%; max-height: 60vh; }
-      .job-list { max-height: 50vh; }
-      .portfolio-grid { grid-template-columns: 1fr; }
-      .filter-bar { padding: 0 12px; }
-      .nav-brand { padding: 12px 12px 12px 0; }
+      .sidebar { width: 100%; max-height: 55vh; }
+      .job-list { max-height: 48vh; }
+      .portfolio-grid { grid-template-columns: 1fr; padding: 12px; }
+      .filter-bar { padding: 0 10px; }
+      .nav-brand { padding: 0 10px 0 0; }
+      .search-wrap { max-width: 140px; }
     }
   </style>
 </head>
@@ -340,23 +560,35 @@
   <div class="nav-brand">TA Job Finder</div>
   <div class="nav-tabs">
     <button class="nav-tab active" data-page="domestic">
-      🇨🇳 国内岗位
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+      国内岗位
       <span class="tab-count" id="count-domestic">—</span>
     </button>
     <button class="nav-tab" data-page="overseas">
-      🌎 海外岗位
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+      海外岗位
       <span class="tab-count" id="count-overseas">—</span>
+    </button>
+    <button class="nav-tab" data-page="portfolios">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+      作品集
+      <span class="tab-count" id="count-portfolios">—</span>
     </button>
   </div>
 </nav>
 
-<!-- Filter Bar (job pages only) -->
+<!-- Filter Bar -->
 <div class="filter-bar" id="filter-bar">
   <button class="filter-btn active" data-filter="all">全部</button>
   <button class="filter-btn" data-filter="intern">实习</button>
   <button class="filter-btn" data-filter="entry">1年以下</button>
   <button class="filter-btn" data-filter="mid">1-3年</button>
   <button class="filter-btn" data-filter="senior">3-5年</button>
+  <div class="filter-divider"></div>
+  <div class="search-wrap">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <input class="search-input" id="job-search" type="text" placeholder="搜索岗位/公司…" />
+  </div>
 </div>
 
 <!-- Main Content -->
@@ -364,14 +596,15 @@
   <!-- Sidebar -->
   <div class="sidebar" id="sidebar">
     <div class="sidebar-header" id="sidebar-header">
-      <span class="skeleton-line short" style="display:inline-block;height:8px;width:120px;vertical-align:middle;margin-right:8px;"></span>
-      <span class="skeleton-line short" style="display:inline-block;height:8px;width:60px;vertical-align:middle;"></span>
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      <span id="header-text">加载中…</span>
+      <div class="sidebar-stats" id="sidebar-stats"></div>
     </div>
     <div class="job-list" id="job-list">
-      <div class="skeleton">
-        <div class="skeleton-card"><div class="skeleton-line short"></div><div class="skeleton-line long"></div><div class="skeleton-line medium"></div><div class="skeleton-line tags"></div></div>
-        <div class="skeleton-card"><div class="skeleton-line short"></div><div class="skeleton-line long"></div><div class="skeleton-line medium"></div><div class="skeleton-line tags"></div></div>
-        <div class="skeleton-card"><div class="skeleton-line short"></div><div class="skeleton-line long"></div><div class="skeleton-line medium"></div><div class="skeleton-line tags"></div></div>
+      <div class="skeleton" id="skeleton-loader">
+        <div class="skeleton-card"><div class="skeleton-line s"></div><div class="skeleton-line l"></div><div class="skeleton-line m"></div><div class="skeleton-line tag"></div></div>
+        <div class="skeleton-card"><div class="skeleton-line s"></div><div class="skeleton-line l"></div><div class="skeleton-line m"></div><div class="skeleton-line tag"></div></div>
+        <div class="skeleton-card"><div class="skeleton-line s"></div><div class="skeleton-line l"></div><div class="skeleton-line m"></div><div class="skeleton-line tag"></div></div>
       </div>
     </div>
   </div>
@@ -386,6 +619,8 @@
 // ===== State =====
 var currentPage = 'domestic';
 var currentFilter = 'all';
+var currentSearch = '';
+var focusedIdx = -1;
 
 var domesticJobs = [];
 var overseasJobs = [];
@@ -396,7 +631,7 @@ var today = new Date();
 var todayStr = today.getFullYear() + '-' + String(today.getMonth()+1).padStart(2,'0') + '-' + String(today.getDate()).padStart(2,'0');
 
 // ===== Map =====
-var map = L.map('map', {zoomControl:true, scrollWheelZoom:true}).setView([31.2304, 121.4737], 4);
+var map = L.map('map', {zoomControl:true, scrollWheelZoom:true, inertia: true}).setView([31.2304, 121.4737], 4);
 L.tileLayer('https://webrd0{s}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=8&x={x}&y={y}&z={z}', {
   subdomains: '1234',
   attribution: '&copy; 高德地图',
@@ -404,15 +639,49 @@ L.tileLayer('https://webrd0{s}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scal
 }).addTo(map);
 var markerMap = {};
 
-var levelColor = {'intern':'#16a34a','entry':'#0891b2','mid':'#d97706','senior':'#9333ea','lead':'#dc2626'};
+// ===== Map Stats Bar =====
+var statsBar = null;
+function ensureStatsBar() {
+  if (!statsBar) {
+    statsBar = document.createElement('div');
+    statsBar.className = 'map-stats-bar';
+    statsBar.id = 'map-stats-bar';
+    document.getElementById('right-panel').appendChild(statsBar);
+  }
+  return statsBar;
+}
+
+function updateStatsBar(jobs) {
+  var bar = ensureStatsBar();
+  var isOverseas = currentPage === 'overseas';
+  var counts = {intern:0, entry:0, mid:0, senior:0, lead:0};
+  jobs.forEach(function(j){ counts[j.level] = (counts[j.level]||0) + 1; });
+  var internN = counts.intern||0;
+  var entryN = counts.entry||0;
+  var midN = counts.mid||0;
+  var seniorN = counts.senior||0;
+  var leadN = counts.lead||0;
+  var internLbl = isOverseas ? 'Intern' : '实习';
+  var entryLbl = isOverseas ? 'Entry' : '1年';
+  var midLbl = isOverseas ? 'Mid' : '1-3年';
+  var seniorLbl = isOverseas ? 'Senior' : '3-5年';
+  bar.innerHTML =
+    '<div class="stat-item"><span class="stat-dot" style="background:var(--intern)"></span><span class="stat-num">' + internN + '</span> ' + internLbl + '</div>' +
+    '<div class="stat-item"><span class="stat-dot" style="background:var(--entry)"></span><span class="stat-num">' + entryN + '</span> ' + entryLbl + '</div>' +
+    '<div class="stat-item"><span class="stat-dot" style="background:var(--mid)"></span><span class="stat-num">' + midN + '</span> ' + midLbl + '</div>' +
+    '<div class="stat-item"><span class="stat-dot" style="background:var(--senior)"></span><span class="stat-num">' + seniorN + '</span> ' + seniorLbl + '</div>' +
+    '<div class="stat-item"><span class="stat-dot" style="background:var(--lead)"></span><span class="stat-num">' + leadN + '</span> ' + (isOverseas?'Lead':'5年+') + '</div>';
+}
+
+var levelColor = {'intern':'#22c55e','entry':'#0891b2','mid':'#d97706','senior':'#a855f7','lead':'#ef4444'};
 
 function mkIcon(color, sz, isNew) {
   var shadow = isNew
-    ? 'box-shadow:0 0 0 4px rgba(255,255,255,0.6),0 0 16px ' + color + ',0 0 32px ' + color + '60;'
-    : 'box-shadow:0 4px 16px rgba(0,0,0,0.4),0 0 0 3px ' + color + '30;';
+    ? 'box-shadow:0 0 0 4px rgba(255,255,255,0.7),0 0 20px ' + color + ',0 0 36px ' + color + '50;'
+    : 'box-shadow:0 4px 16px rgba(0,0,0,0.35),0 0 0 3px ' + color + '30;';
   return L.divIcon({
     className: '',
-    html: '<div style="width:' + sz + 'px;height:' + sz + 'px;background:' + color + ';border:3px solid rgba(255,255,255,0.95);border-radius:50%;' + shadow + 'transition:transform 0.15s;"></div>',
+    html: '<div style="width:' + sz + 'px;height:' + sz + 'px;background:' + color + ';border:3px solid rgba(255,255,255,0.95);border-radius:50%;' + shadow + '"></div>',
     iconSize: [sz, sz],
     iconAnchor: [sz/2, sz/2]
   });
@@ -433,8 +702,14 @@ function getDomesticCoords(city) {
 // ===== Helpers =====
 function getFiltered() {
   var jobs = currentPage === 'domestic' ? domesticJobs : overseasJobs;
-  if (currentFilter === 'all') return jobs;
-  return jobs.filter(function(j){ return j.level === currentFilter; });
+  var result = currentFilter === 'all' ? jobs : jobs.filter(function(j){ return j.level === currentFilter; });
+  if (currentSearch.trim()) {
+    var q = currentSearch.trim().toLowerCase();
+    result = result.filter(function(j){
+      return (j.name||'').toLowerCase().indexOf(q) > -1 || (j.company||'').toLowerCase().indexOf(q) > -1 || (j.city||'').toLowerCase().indexOf(q) > -1;
+    });
+  }
+  return result;
 }
 
 function getDeadlineClass(days) {
@@ -453,7 +728,7 @@ function getDeadlineText(days, isOverseas) {
 function getLevelBadge(level, isOverseas) {
   var map = isOverseas
     ? {intern:'Intern', entry:'Entry', mid:'Mid', senior:'Senior', lead:'Lead'}
-    : {intern:'实习', entry:'1年以下', mid:'1-3年', senior:'3-5年', lead:'5年+'};
+    : {intern:'实习', entry:'1年', mid:'1-3年', senior:'3-5年', lead:'5年+'};
   var cls = {intern:'badge-intern', entry:'badge-entry', mid:'badge-mid', senior:'badge-senior', lead:'badge-lead'};
   return '<span class="badge ' + (cls[level]||'') + '">' + (map[level]||level) + '</span>';
 }
@@ -463,14 +738,23 @@ function renderList(jobs) {
   var isOverseas = currentPage === 'overseas';
   var total = (isOverseas ? overseasJobs : domesticJobs).length;
   var filtered = jobs.length;
-  document.getElementById('sidebar-header').innerHTML =
+
+  document.getElementById('header-text').innerHTML =
     '显示 <strong>' + filtered + '</strong> / ' + total + ' 个岗位';
 
+  // Level stats
+  var counts = {intern:0, entry:0, mid:0, senior:0, lead:0};
+  jobs.forEach(function(j){ counts[j.level] = (counts[j.level]||0) + 1; });
+  document.getElementById('sidebar-stats').innerHTML =
+    '<span class="stat-chip">' + (counts.intern||0) + ' 实习</span>';
+
   var list = document.getElementById('job-list');
-  list.innerHTML = '';
+  var skeleton = document.getElementById('skeleton-loader');
+  if (skeleton) skeleton.style.display = 'none';
 
   if (jobs.length === 0) {
-    list.innerHTML = '<div style="text-align:center;padding:40px 20px;color:var(--text-muted);font-size:0.85rem;">没有符合条件的岗位</div>';
+    list.innerHTML = '';
+    list.innerHTML = '<div class="state-panel"><div class="state-icon">🔍</div><div class="state-title">没有符合条件的岗位</div><div class="state-desc">试试调整筛选条件或关键词</div></div>';
     return;
   }
 
@@ -479,7 +763,10 @@ function renderList(jobs) {
     return (order[a.level]||5) - (order[b.level]||5);
   });
 
-  sorted.forEach(function(j) {
+  list.innerHTML = '';
+  focusedIdx = -1;
+
+  sorted.forEach(function(j, idx) {
     var isNew = j.postedDate === todayStr;
     var dlClass = getDeadlineClass(j.daysLeft);
     var dlText = getDeadlineText(j.daysLeft, isOverseas);
@@ -488,24 +775,31 @@ function renderList(jobs) {
 
     var el = document.createElement('div');
     el.className = 'job-card';
+    el.dataset.level = j.level || 'mid';
+    el.dataset.idx = idx;
     el.id = 'card-' + j.id;
+
     el.innerHTML =
-      (isNew ? '<span class="job-new">NEW</span>' : '') +
-      '<div class="job-company">' + j.company + (location ? ' · ' + location : '') + '</div>' +
-      '<div class="job-title">' + j.name + '</div>' +
-      '<div class="job-badges">' +
-        getLevelBadge(j.level, isOverseas) +
-        '<span class="badge badge-salary">' + (j.taSubLabel||'') + '</span>' +
-      '</div>' +
-      '<div class="job-footer">' +
-        '<span class="job-deadline ' + dlClass + '">⏰ ' + dlText + '</span>' +
-        '<span class="job-source">' + j.source + '</span>' +
-      '</div>' +
-      (hasJd ? '<div class="jd-section" id="jd-' + j.id + '">' +
-        '<div class="jd-label">' + (isOverseas ? 'JD & Requirements' : '岗位职责 & 要求') + '</div>' +
-        '<div class="jd-content">' + j.jd.replace(/\n/g, '<br>') + '</div>' +
-        '<a href="' + j.url + '" target="_blank" class="apply-btn">' + (isOverseas ? 'Apply →' : '申请岗位 →') + '</a>' +
-       '</div>' : '<a href="' + j.url + '" target="_blank" class="apply-btn" style="display:inline-block;margin-top:8px;">' + (isOverseas ? 'Apply →' : '申请岗位 →') + '</a>');
+      '<div class="card-body">' +
+        '<div class="card-top">' +
+          (isNew ? '<span class="job-new">NEW</span>' : '<span></span>') +
+          '<span class="job-source-badge">' + j.source + '</span>' +
+        '</div>' +
+        '<div class="job-company"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>' + j.company + (location ? ' · ' + location : '') + '</div>' +
+        '<div class="job-title">' + j.name + '</div>' +
+        '<div class="job-badges">' +
+          getLevelBadge(j.level, isOverseas) +
+          (j.taSubLabel ? '<span class="badge badge-salary">' + j.taSubLabel + '</span>' : '') +
+        '</div>' +
+        '<div class="card-footer">' +
+          '<span class="job-deadline ' + dlClass + '"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>' + dlText + '</span>' +
+          '<a href="' + j.url + '" target="_blank" class="apply-btn" onclick="event.stopPropagation()">' + (isOverseas ? 'Apply' : '申请') + '</a>' +
+        '</div>' +
+        (hasJd ? '<div class="jd-section" id="jd-' + j.id + '">' +
+          '<div class="jd-label">' + (isOverseas ? 'JD & Requirements' : '岗位职责 & 要求') + '</div>' +
+          '<div class="jd-content">' + j.jd.replace(/\n/g, '<br>') + '</div>' +
+         '</div>' : '') +
+      '</div>';
 
     el.addEventListener('mouseenter', function(){
       var m = markerMap[j.id];
@@ -518,9 +812,9 @@ function renderList(jobs) {
     el.addEventListener('click', function(e) {
       if (hasJd) {
         var jdEl = document.getElementById('jd-' + j.id);
-        if (jdEl) { jdEl.classList.toggle('open'); e.stopPropagation(); }
+        if (jdEl) { jdEl.classList.toggle('open'); }
       }
-      focusJob(j.id);
+      focusJobByIdx(idx, sorted);
     });
     list.appendChild(el);
   });
@@ -545,19 +839,29 @@ function renderMarkers(jobs) {
     var sz = j.level === 'intern' ? 22 : j.level === 'senior' || j.level === 'lead' ? 28 : 18;
     var isNew = j.postedDate === todayStr;
     var location = isOverseas ? j.address : (j.city || '');
-    var applyText = isOverseas ? 'Apply →' : '申请岗位 →';
-    var popup = '<div class="popup-title">' + j.name + '</div>' +
-      '<div class="popup-company">' + j.company + (location ? ' · ' + location : '') + '</div>' +
-      '<div class="popup-meta">' + getLevelBadge(j.level, isOverseas) + ' ' + (j.salary && j.salary !== '—' ? '<span style="color:#818cf8;">'+j.salary+'</span>' : '') + '</div>' +
-      '<a href="' + j.url + '" target="_blank" class="popup-link">' + applyText + '</a>';
+    var popup =
+      '<div class="popup-inner">' +
+        '<div class="popup-title">' + j.name + '</div>' +
+        '<div class="popup-company">' + j.company + (location ? ' · ' + location : '') + '</div>' +
+        '<div class="popup-meta">' + getLevelBadge(j.level, isOverseas) + ' ' + (j.salary && j.salary !== '—' ? '<span class="badge badge-salary">' + j.salary + '</span>' : '') + '</div>' +
+        '<a href="' + j.url + '" target="_blank" class="popup-link">' + (isOverseas ? 'Apply →' : '申请岗位 →') + '</a>' +
+      '</div>';
 
     var m = L.marker([lat, lng], {icon: mkIcon(levelColor[j.level]||'#6366f1', sz, isNew)}).addTo(map);
-    m.bindPopup(popup);
-    m.on('click', function(){ focusJob(j.id); });
+    m.bindPopup(popup, {maxWidth: 260});
+    m.on('click', function(){
+      var sorted = getFiltered().slice().sort(function(a,b){
+        var order = {intern:0, entry:1, mid:2, senior:3, lead:4};
+        return (order[a.level]||5) - (order[b.level]||5);
+      });
+      var idx = sorted.findIndex(function(x){ return x.id === j.id; });
+      focusJobByIdx(idx, sorted);
+    });
     markerMap[j.id] = m;
   });
 
-  // Fit bounds
+  updateStatsBar(jobs);
+
   if (jobs.length > 0) {
     var lats = jobs.map(function(j){
       return currentPage === 'domestic' ? getDomesticCoords(j.city||'上海')[0] : j.lat;
@@ -566,96 +870,80 @@ function renderMarkers(jobs) {
       return currentPage === 'domestic' ? getDomesticCoords(j.city||'上海')[1] : j.lng;
     }).filter(Boolean);
     if (lats.length > 0) {
-      map.fitBounds([[Math.min.apply(null,lats), Math.min.apply(null,lngs)], [Math.max.apply(null,lats), Math.max.apply(null,lngs)]], {padding:[30,30]});
+      map.fitBounds([[Math.min.apply(null,lats), Math.min.apply(null,lngs)], [Math.max.apply(null,lats), Math.max.apply(null,lngs)]], {padding:[40,40], maxZoom: 8});
     }
   }
 }
 
-function focusJob(id) {
+function focusJobByIdx(idx, sorted) {
+  focusedIdx = idx;
   document.querySelectorAll('.job-card').forEach(function(c){ c.classList.remove('focused'); });
   document.querySelectorAll('.leaflet-marker-icon').forEach(function(ic){ ic.classList.remove('marker-active'); });
-  var card = document.getElementById('card-' + id);
-  if(card) { card.classList.add('focused'); card.scrollIntoView({behavior:'smooth', block:'nearest'}); }
-  var m = markerMap[id];
+
+  if (idx < 0 || idx >= sorted.length) return;
+  var j = sorted[idx];
+  var card = document.getElementById('card-' + j.id);
+  if(card) {
+    card.classList.add('focused');
+    card.scrollIntoView({behavior: 'smooth', block: 'nearest'});
+  }
+  var m = markerMap[j.id];
   if(m) {
     if(m._icon) m._icon.classList.add('marker-active');
     m.openPopup();
   }
 }
 
-// ===== Render portfolio/tutorial grid =====
+// ===== Keyboard navigation =====
+document.addEventListener('keydown', function(e) {
+  var list = document.getElementById('job-list');
+  if (!list || list.querySelector('.state-panel')) return;
+  var cards = list.querySelectorAll('.job-card');
+  if (cards.length === 0) return;
+
+  var sorted = getFiltered().slice().sort(function(a,b){
+    var order = {intern:0, entry:1, mid:2, senior:3, lead:4};
+    return (order[a.level]||5) - (order[b.level]||5);
+  });
+
+  if (e.key === 'ArrowDown') {
+    e.preventDefault();
+    var next = Math.min(focusedIdx + 1, cards.length - 1);
+    focusJobByIdx(next, sorted);
+  } else if (e.key === 'ArrowUp') {
+    e.preventDefault();
+    var prev = Math.max(focusedIdx - 1, 0);
+    focusJobByIdx(prev, sorted);
+  }
+});
+
+// ===== Render portfolio grid =====
 function renderPortfolioGrid(items, type) {
   var panel = document.getElementById('right-panel');
   var list = document.getElementById('job-list');
-  var typeLabel = type === 'portfolios' ? '作品集' : type === 'tutorials' ? '教程' : '项目';
   panel.innerHTML = '<div class="portfolio-grid" id="portfolio-grid"></div>';
   list.innerHTML = '';
-  document.getElementById('sidebar-header').innerHTML = '共 <strong>' + items.length + '</strong> 个' + typeLabel;
+  document.getElementById('header-text').innerHTML = '共 <strong>' + items.length + '</strong> 个作品集';
+  document.getElementById('sidebar-stats').innerHTML = '';
 
   var grid = document.getElementById('portfolio-grid');
   if (items.length === 0) {
-    grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--text-muted);font-size:0.9rem;">暂无数据</div>';
+    panel.innerHTML = '<div class="state-panel" style="flex:1;"><div class="state-icon">📂</div><div class="state-title">暂无作品集数据</div></div>';
     return;
   }
 
   grid.innerHTML = items.map(function(p) {
     var isBilibili = p.platform === 'bilibili';
-    var platformIcon = isBilibili ? '📺' : '▶️';
-    var embedUrl = isBilibili
-      ? 'https://player.bilibili.com/player.html?bvid=' + p.bvid + '&autoplay=0'
-      : (p.videoId ? 'https://www.youtube.com/embed/' + p.videoId + '?rel=0' : '');
-
+    var embedUrl = isBilibili ? 'https://player.bilibili.com/player.html?bvid=' + p.bvid + '&autoplay=0' : '';
     return '<div class="video-card">' +
       '<div class="video-thumb">' +
-        (embedUrl
-          ? '<iframe src="' + embedUrl + '" allowfullscreen loading="lazy"></iframe>'
-          : '<div class="thumb-placeholder">' + platformIcon + '</div>') +
+        (embedUrl ? '<iframe src="' + embedUrl + '" allowfullscreen loading="lazy"></iframe>' : '<div class="thumb-placeholder">📺</div>') +
       '</div>' +
       '<div class="video-info">' +
         '<div class="video-title">' + p.title + '</div>' +
         '<div class="video-meta"><span class="video-author">' + p.author + '</span></div>' +
-        '<div class="video-meta" style="color:#71717a;">' +
-          (p.views ? '▶ ' + p.views + ' | ' : '') +
-          '<span style="color:' + (isBilibili ? '#FB7299' : '#FF0000') + ';">' + (isBilibili ? 'B站' : 'YouTube') + '</span>' +
-        '</div>' +
+        '<div class="video-meta">' + (p.views ? '▶ ' + p.views + ' | ' : '') + '<span style="color:' + (isBilibili ? '#FB7299' : '#FF0000') + ';">' + (isBilibili ? 'B站' : 'YouTube') + '</span></div>' +
         '<a href="' + p.url + '" target="_blank" class="video-tag">查看完整视频 →</a>' +
-      '</div>' +
-    '</div>';
-  }).join('');
-}
-
-// ===== Render resume grid =====
-function renderResumeGrid() {
-  var panel = document.getElementById('right-panel');
-  var list = document.getElementById('job-list');
-  panel.innerHTML = '<div id="resume-grid" style="flex:1;overflow-y:auto;padding:20px;display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;align-content:start;"></div>';
-  list.innerHTML = '';
-  document.getElementById('sidebar-header').innerHTML = '共 <strong>' + resumes.length + '</strong> 条 LinkedIn 公开简历';
-
-  var grid = document.getElementById('resume-grid');
-  if (resumes.length === 0) {
-    grid.style.gridTemplateColumns = '1fr';
-    grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--text-muted);font-size:0.9rem;">暂无简历数据</div>';
-    return;
-  }
-
-  grid.innerHTML = resumes.map(function(r) {
-    var skills = r.skills || [];
-    var skillHtml = skills.length > 0
-      ? skills.map(function(s){ return '<span style="font-size:0.68rem;font-weight:600;padding:3px 8px;border-radius:10px;background:var(--bg);color:var(--text-muted);border:1px solid var(--border);">' + s + '</span>'; }).join('')
-      : '<span style="font-size:0.72rem;color:var(--text-muted);">—</span>';
-
-    return '<div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px;border-left:3px solid var(--primary);transition:all 0.15s;">' +
-      '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;gap:8px;">' +
-        '<span style="font-size:0.95rem;font-weight:700;">' + (r.name || '匿名') + '</span>' +
-        '<span style="font-size:0.65rem;font-weight:700;padding:3px 8px;border-radius:10px;background:rgba(99,102,241,0.15);color:var(--primary);white-space:nowrap;">LinkedIn</span>' +
-      '</div>' +
-      '<div style="font-size:0.82rem;color:var(--text-muted);margin-bottom:4px;">' + (r.title || '—') + '</div>' +
-      '<div style="font-size:0.75rem;color:var(--text-muted);margin-bottom:12px;display:flex;align-items:center;gap:8px;">📍 ' + (r.location || '—') + ' &nbsp;| &nbsp;🎓 ' + (r.education || '—') + ' &nbsp;| &nbsp;💼 ' + (r.experience || '—') + '</div>' +
-      '<div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:14px;">' + skillHtml + '</div>' +
-      '<div style="border-top:1px solid var(--border);padding-top:10px;display:flex;justify-content:space-between;align-items:center;">' +
-        '<span style="font-size:0.68rem;color:var(--text-muted);">抓取于 ' + (r.scraped_date || '') + '</span>' +
-        '<a href="' + (r.profile_url || '#') + '" target="_blank" style="font-size:0.72rem;font-weight:600;color:var(--primary);padding:4px 10px;border-radius:20px;border:1px solid var(--primary);transition:all 0.15s;">LinkedIn搜索 →</a>' +
       '</div>' +
     '</div>';
   }).join('');
@@ -664,54 +952,49 @@ function renderResumeGrid() {
 // ===== Switch page =====
 function switchPage(page) {
   currentPage = page;
+  currentFilter = 'all';
+  currentSearch = '';
+  document.getElementById('job-search').value = '';
 
-  // Update nav tabs
-  document.querySelectorAll('.nav-tab').forEach(function(t){
-    t.classList.toggle('active', t.dataset.page === page);
-  });
+  document.querySelectorAll('.nav-tab').forEach(function(t){ t.classList.toggle('active', t.dataset.page === page); });
+  document.querySelectorAll('.filter-btn').forEach(function(b){ b.classList.remove('active'); });
+  document.querySelector('.filter-btn[data-filter="all"]').classList.add('active');
 
-  // Show/hide filter bar
   var filterBar = document.getElementById('filter-bar');
-  var isJobPage = (page === 'domestic' || page === 'overseas');
-  filterBar.style.display = isJobPage ? 'flex' : 'none';
-
-  // Show/hide sidebar+map
   var sidebar = document.getElementById('sidebar');
   var panel = document.getElementById('right-panel');
+  var isJobPage = (page === 'domestic' || page === 'overseas');
+  filterBar.style.display = isJobPage ? 'flex' : 'none';
   sidebar.style.display = isJobPage ? 'flex' : 'none';
   panel.innerHTML = '';
+  statsBar = null;
 
   if (isJobPage) {
     panel.innerHTML = '<div id="map"></div>';
-    map = L.map('map', {zoomControl:true, scrollWheelZoom:true}).setView([31.2304, 121.4737], 4);
+    map = L.map('map', {zoomControl:true, scrollWheelZoom:true, inertia:true}).setView([31.2304, 121.4737], 4);
     L.tileLayer('https://webrd0{s}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=8&x={x}&y={y}&z={z}', {
       subdomains: '1234',
       attribution: '&copy; 高德地图',
       maxZoom: 18,
     }).addTo(map);
-
-    if (page === 'overseas') {
-      map.setView([39.0, -98.0], 4);
-    }
-
-    currentFilter = 'all';
-    document.querySelectorAll('.filter-btn').forEach(function(b){ b.classList.remove('active'); });
-    document.querySelector('.filter-btn[data-filter="all"]').classList.add('active');
+    if (page === 'overseas') map.setView([39.0, -98.0], 4);
 
     var jobs = getFiltered();
     renderList(jobs);
     renderMarkers(jobs);
-    if (jobs.length > 0) setTimeout(function() { focusJob(jobs[0].id); }, 100);
+    if (jobs.length > 0) setTimeout(function() { focusJobByIdx(0, jobs.slice().sort(function(a,b){
+      var order = {intern:0, entry:1, mid:2, senior:3, lead:4};
+      return (order[a.level]||5) - (order[b.level]||5);
+    })); }, 200);
   } else if (page === 'portfolios') {
+    panel.innerHTML = '<div class="portfolio-grid" id="portfolio-grid"></div>';
     renderPortfolioGrid(portfolios, 'portfolios');
   }
 }
 
 // ===== Nav tab events =====
 document.querySelectorAll('.nav-tab').forEach(function(btn){
-  btn.addEventListener('click', function(){
-    switchPage(btn.dataset.page);
-  });
+  btn.addEventListener('click', function(){ switchPage(btn.dataset.page); });
 });
 
 // ===== Filter events =====
@@ -723,8 +1006,29 @@ document.querySelectorAll('.filter-btn').forEach(function(btn){
     var filtered = getFiltered();
     renderList(filtered);
     renderMarkers(filtered);
-    if (filtered.length > 0) setTimeout(function() { focusJob(filtered[0].id); }, 100);
+    if (filtered.length > 0) setTimeout(function() {
+      var sorted = filtered.slice().sort(function(a,b){
+        var order = {intern:0, entry:1, mid:2, senior:3, lead:4};
+        return (order[a.level]||5) - (order[b.level]||5);
+      });
+      focusJobByIdx(0, sorted);
+    }, 200);
   });
+});
+
+// ===== Search events =====
+document.getElementById('job-search').addEventListener('input', function(){
+  currentSearch = this.value;
+  var filtered = getFiltered();
+  renderList(filtered);
+  renderMarkers(filtered);
+  if (filtered.length > 0) setTimeout(function() {
+    var sorted = filtered.slice().sort(function(a,b){
+      var order = {intern:0, entry:1, mid:2, senior:3, lead:4};
+      return (order[a.level]||5) - (order[b.level]||5);
+    });
+    focusJobByIdx(0, sorted);
+  }, 200);
 });
 
 // ===== Load all data =====
@@ -737,32 +1041,33 @@ Promise.all([
   var dom = results[0];
   var over = results[1];
   var ports = results[2];
-  var res = results[3];
 
   domesticJobs = (dom.domesticJobs||[]).filter(function(j){ return !j.excluded; });
   overseasJobs = (over.overseasJobs||[]).filter(function(j){ return !j.excluded; });
   portfolios = ports.portfolios||[];
-  resumes = res.resumes||[];
 
-  // Update nav counts
   document.getElementById('count-domestic').textContent = domesticJobs.length;
   document.getElementById('count-overseas').textContent = overseasJobs.length;
   document.getElementById('count-portfolios').textContent = portfolios.length;
 
-  // Render default page (domestic)
   var filtered = getFiltered();
   renderList(filtered);
   renderMarkers(filtered);
 
-  // 默认选中第一个岗位
   if (filtered.length > 0) {
-    setTimeout(function() { focusJob(filtered[0].id); }, 100);
+    var sorted = filtered.slice().sort(function(a,b){
+      var order = {intern:0, entry:1, mid:2, senior:3, lead:4};
+      return (order[a.level]||5) - (order[b.level]||5);
+    });
+    setTimeout(function() { focusJobByIdx(0, sorted); }, 300);
   }
 
 }).catch(function(e){
-  // 显示错误状态
-  document.getElementById('sidebar-header').innerHTML = '⚠️ 数据加载失败';
-  document.getElementById('job-list').innerHTML = '<div class="error-state"><div class="err-icon">⚠️</div><div>无法加载数据，请检查网络或刷新重试</div></div>';
+  var list = document.getElementById('job-list');
+  var skeleton = document.getElementById('skeleton-loader');
+  if (skeleton) skeleton.style.display = 'none';
+  document.getElementById('header-text').innerHTML = '⚠️ 加载失败';
+  list.innerHTML = '<div class="state-panel"><div class="state-icon">⚠️</div><div class="state-title">数据加载失败</div><div class="state-desc">请检查网络后刷新重试</div></div>';
 });
 </script>
 </body>
