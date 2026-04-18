@@ -1121,4 +1121,14 @@ def main():
         log(f'  {c["name"]}: {c["count"]} 个岗位')
 
 if __name__ == '__main__':
-    main()
+    try:
+        main()
+        exit(0)
+    except SystemExit:
+        raise
+    except Exception as e:
+        import sys
+        log(f'致命错误: {e}')
+        import traceback
+        traceback.print_exc()
+        sys.exit(1)
