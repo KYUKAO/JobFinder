@@ -733,6 +733,31 @@ function getLevelBadge(level, isOverseas) {
   return '<span class="badge ' + (cls[level]||'') + '">' + (map[level]||level) + '</span>';
 }
 
+// ===== Apply URL fallback =====
+function getApplyUrl(j) {
+  var url = j.url || '';
+  var isFake = /\/position\/\d+$/.test(url) ||
+    url === 'https://jobs.mihoyo.com/position/12346' ||
+    url === 'https://jobs.mihoyo.com/position/12345';
+  if (isFake || !url || url === '#') {
+    var map2 = {
+      '米哈游': 'https://jobs.mihoyo.com/?search=' + encodeURIComponent('技术美术'),
+      '腾讯': 'https://careers.tencent.com/search.html?query=TA',
+      '网易': 'https://we.campus.163.com/search?keyword=TA',
+      '鹰角': 'https://careers.arknights.global/',
+      '莉莉丝': 'https://www.lilith.com/careers/',
+      '叠纸': 'https://www.papergames.cn/site/join',
+      '盛趣': 'https://www.shengqugames.com/',
+      'FunPlus': 'https://www.funplus.com/careers/',
+    };
+    for (var c in map2) {
+      if (j.company && j.company.indexOf(c) > -1) return map2[c];
+    }
+    return 'https://www.google.com/search?q=' + encodeURIComponent(j.company + ' ' + (j.name || '技术美术 招聘'));
+  }
+  return url;
+}
+
 // ===== Render job list =====
 function renderList(jobs) {
   var isOverseas = currentPage === 'overseas';
@@ -794,12 +819,12 @@ function renderList(jobs) {
         '</div>' +
         '<div class="card-footer">' +
           '<span class="job-deadline ' + dlClass + '"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>' + dlText + '</span>' +
-          (hasJd ? '<span style="font-size:0.62rem;color:var(--primary);font-weight:700;cursor:pointer;" onclick="event.stopPropagation();document.getElementById(\'jd-' + j.id + '\').classList.toggle(\'open\')">详情 ↓</span>' : '<a href="' + j.url + '" target="_blank" class="apply-btn" onclick="event.stopPropagation()">' + (isOverseas ? 'Apply' : '申请') + '</a>') +
+          (hasJd ? '<span style="font-size:0.62rem;color:var(--primary);font-weight:700;cursor:pointer;" onclick="event.stopPropagation();document.getElementById(\'jd-' + j.id + '\').classList.toggle(\'open\')">详情 ↓</span>' : '<a href="' + getApplyUrl(j) + '" target="_blank" class="apply-btn" onclick="event.stopPropagation()">' + (isOverseas ? 'Apply' : '申请') + '</a>') +
         '</div>' +
         (hasJd ? '<div class="jd-section" id="jd-' + j.id + '">' +
           '<div class="jd-label">' + (isOverseas ? 'JD & Requirements' : '岗位职责 & 要求') + '</div>' +
           '<div class="jd-content">' + (j.jd||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>') + '</div>' +
-          '<a href="' + j.url + '" target="_blank" class="apply-btn" onclick="event.stopPropagation()">' + (isOverseas ? 'Apply Now →' : '申请岗位 →') + '</a>' +
+          '<a href="' + getApplyUrl(j) + '" target="_blank" class="apply-btn" onclick="event.stopPropagation()">' + (isOverseas ? 'Apply Now →' : '申请岗位 →') + '</a>' +
          '</div>' : '') +
       '</div>';
 
@@ -846,7 +871,7 @@ function renderMarkers(jobs) {
         '<div class="popup-title">' + j.name + '</div>' +
         '<div class="popup-company">' + j.company + (location ? ' · ' + location : '') + '</div>' +
         '<div class="popup-meta">' + getLevelBadge(j.level, isOverseas) + ' ' + (j.salary && j.salary !== '—' ? '<span class="badge badge-salary">' + j.salary + '</span>' : '') + '</div>' +
-        '<a href="' + j.url + '" target="_blank" class="popup-link">' + (isOverseas ? 'Apply →' : '申请岗位 →') + '</a>' +
+        '<a href="' + getApplyUrl(j) + '" target="_blank" class="popup-link">' + (isOverseas ? 'Apply →' : '申请岗位 →') + '</a>' +
       '</div>';
 
     var m = L.marker([lat, lng], {icon: mkIcon(levelColor[j.level]||'#6366f1', sz, isNew)}).addTo(map);
