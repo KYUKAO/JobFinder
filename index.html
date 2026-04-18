@@ -518,17 +518,23 @@
     .state-desc { font-size: 0.75rem; color: var(--text-muted); }
 
     /* Portfolio Grid */
-    .portfolio-grid {
+    .portfolio-scroll {
       flex: 1;
+      min-height: 0;
+      height: 100%;
       overflow-y: auto;
+    }
+    .portfolio-scroll::-webkit-scrollbar { width: 3px; }
+    .portfolio-scroll::-webkit-scrollbar-track { background: transparent; }
+    .portfolio-scroll::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+    .portfolio-grid {
       padding: 16px;
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
       gap: 14px;
-      align-content: start;
+      align-items: start;
     }
-    .portfolio-grid::-webkit-scrollbar { width: 3px; }
-    .portfolio-grid::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
 
     .video-card {
       background: var(--surface);
@@ -995,20 +1001,27 @@ document.addEventListener('keydown', function(e) {
 function renderPortfolioGrid(items, type) {
   var panel = document.getElementById('right-panel');
   var list = document.getElementById('job-list');
+
+  // Build: panel > .portfolio-scroll > .portfolio-grid
   panel.innerHTML = '';
   panel.style.overflow = 'hidden';
+
+  var scrollEl = document.createElement('div');
+  scrollEl.className = 'portfolio-scroll';
+  panel.appendChild(scrollEl);
+
   var grid = document.createElement('div');
   grid.id = 'portfolio-grid';
   grid.className = 'portfolio-grid';
-  panel.appendChild(grid);
+  scrollEl.appendChild(grid);
+
   list.innerHTML = '';
   document.getElementById('header-text').innerHTML = '共 <strong>' + items.length + '</strong> 个作品集';
   document.getElementById('sidebar-stats').innerHTML = '';
 
   if (items.length === 0) {
-    panel.innerHTML = '';
-    panel.style.cssText = '';
-    panel.innerHTML = '<div class="state-panel" style="flex:1;"><div class="state-icon">📂</div><div class="state-title">暂无作品集数据</div></div>';
+    scrollEl.style.display = 'none';
+    scrollEl.innerHTML = '<div class="state-panel"><div class="state-icon">📂</div><div class="state-title">暂无作品集数据</div></div>';
     return;
   }
 
