@@ -375,11 +375,29 @@
     .apply-btn:hover { background: #4f46e5; box-shadow: 0 4px 12px rgba(99,102,241,0.35); }
 
     /* Marker hover & active */
-    .leaflet-marker-icon { transition: transform 0.15s cubic-bezier(0.34,1.56,0.64,1), filter 0.15s; cursor: pointer; }
+    .leaflet-marker-icon { cursor: pointer; }
     .leaflet-marker-icon:hover, .leaflet-marker-icon.marker-active {
-      transform: scale(1.4) !important;
-      filter: brightness(1.1);
+      filter: brightness(1.15) drop-shadow(0 0 8px rgba(99,102,241,0.6));
       z-index: 1000 !important;
+    }
+
+    /* Map hover tooltip — managed by JS, not Leaflet */
+    .map-hover-label {
+      position: fixed;
+      background: rgba(30, 30, 46, 0.92);
+      border: 1px solid rgba(99,102,241,0.35);
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+      color: #fff;
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 5px 10px;
+      white-space: nowrap;
+      pointer-events: none;
+      z-index: 999999;
+      transform: translate(-50%, -110%);
+      transition: opacity 0.12s;
     }
 
     /* Map */
@@ -631,13 +649,30 @@ var today = new Date();
 var todayStr = today.getFullYear() + '-' + String(today.getMonth()+1).padStart(2,'0') + '-' + String(today.getDate()).padStart(2,'0');
 
 // ===== Map =====
-var map = L.map('map', {zoomControl:true, scrollWheelZoom:true, inertia: true}).setView([31.2304, 121.4737], 4);
+var map = L.map('map', {zoomControl:true, scrollWheelZoom:true, inertia: false}).setView([31.2304, 121.4737], 4);
 L.tileLayer('https://webrd0{s}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=8&x={x}&y={y}&z={z}', {
   subdomains: '1234',
   attribution: '&copy; 高德地图',
   maxZoom: 18,
 }).addTo(map);
 var markerMap = {};
+
+// Custom hover tooltip element
+var hoverLabel = null;
+function showHoverLabel(e, text) {
+  if (!hoverLabel) {
+    hoverLabel = document.createElement('div');
+    hoverLabel.className = 'map-hover-label';
+    document.body.appendChild(hoverLabel);
+  }
+  hoverLabel.textContent = text;
+  hoverLabel.style.left = e.clientX + 'px';
+  hoverLabel.style.top = e.clientY + 'px';
+  hoverLabel.style.opacity = '1';
+}
+function hideHoverLabel() {
+  if (hoverLabel) hoverLabel.style.opacity = '0';
+}
 
 // ===== Map Stats Bar =====
 var statsBar = null;
@@ -681,6 +716,7 @@ function mkIcon(color, sz, isNew) {
     : 'box-shadow:0 4px 16px rgba(0,0,0,0.35),0 0 0 3px ' + color + '30;';
   return L.divIcon({
     className: '',
+    interactive: false,
     html: '<div style="width:' + sz + 'px;height:' + sz + 'px;background:' + color + ';border:3px solid rgba(255,255,255,0.95);border-radius:50%;' + shadow + '"></div>',
     iconSize: [sz, sz],
     iconAnchor: [sz/2, sz/2]
@@ -876,6 +912,17 @@ function renderMarkers(jobs) {
 
     var m = L.marker([lat, lng], {icon: mkIcon(levelColor[j.level]||'#6366f1', sz, isNew)}).addTo(map);
     m.bindPopup(popup, {maxWidth: 260});
+
+    // Custom hover tooltip — Leaflet's built-in tooltip causes conflicts
+    m.on('mouseover', function(e){
+      showHoverLabel(e.originalEvent, j.name);
+      if (m._icon) m._icon.classList.add('marker-active');
+    });
+    m.on('mouseout', function(){
+      hideHoverLabel();
+      if (m._icon) m._icon.classList.remove('marker-active');
+    });
+
     m.on('click', function(){
       var sorted = getFiltered().slice().sort(function(a,b){
         var order = {intern:0, entry:1, mid:2, senior:3, lead:4};
@@ -897,7 +944,7 @@ function renderMarkers(jobs) {
       return currentPage === 'domestic' ? getDomesticCoords(j.city||'上海')[1] : j.lng;
     }).filter(Boolean);
     if (lats.length > 0) {
-      map.fitBounds([[Math.min.apply(null,lats), Math.min.apply(null,lngs)], [Math.max.apply(null,lats), Math.max.apply(null,lngs)]], {padding:[40,40], maxZoom: 8});
+      map.fitBounds([[Math.min.apply(null,lats), Math.min.apply(null,lngs)], [Math.max.apply(null,lats), Math.max.apply(null,lngs)]], {padding:[40,40], maxZoom: 8, animate: false});
     }
   }
 }
@@ -948,13 +995,19 @@ document.addEventListener('keydown', function(e) {
 function renderPortfolioGrid(items, type) {
   var panel = document.getElementById('right-panel');
   var list = document.getElementById('job-list');
-  panel.innerHTML = '<div class="portfolio-grid" id="portfolio-grid"></div>';
+  panel.innerHTML = '';
+  panel.style.overflow = 'hidden';
+  var grid = document.createElement('div');
+  grid.id = 'portfolio-grid';
+  grid.className = 'portfolio-grid';
+  panel.appendChild(grid);
   list.innerHTML = '';
   document.getElementById('header-text').innerHTML = '共 <strong>' + items.length + '</strong> 个作品集';
   document.getElementById('sidebar-stats').innerHTML = '';
 
-  var grid = document.getElementById('portfolio-grid');
   if (items.length === 0) {
+    panel.innerHTML = '';
+    panel.style.cssText = '';
     panel.innerHTML = '<div class="state-panel" style="flex:1;"><div class="state-icon">📂</div><div class="state-title">暂无作品集数据</div></div>';
     return;
   }
@@ -996,9 +1049,9 @@ function switchPage(page) {
   panel.innerHTML = '';
   statsBar = null;
 
-  if (isJobPage) {
+    if (isJobPage) {
     panel.innerHTML = '<div id="map"></div>';
-    map = L.map('map', {zoomControl:true, scrollWheelZoom:true, inertia:true}).setView([31.2304, 121.4737], 4);
+    map = L.map('map', {zoomControl:true, scrollWheelZoom:true, inertia:false}).setView([31.2304, 121.4737], 4);
     L.tileLayer('https://webrd0{s}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=8&x={x}&y={y}&z={z}', {
       subdomains: '1234',
       attribution: '&copy; 高德地图',
@@ -1070,7 +1123,22 @@ Promise.all([
   var ports = results[2];
 
   domesticJobs = (dom.domesticJobs||[]).filter(function(j){ return !j.excluded; });
-  overseasJobs = (over.overseasJobs||[]).filter(function(j){ return !j.excluded; });
+
+  // Filter overseas: only keep jobs that are clearly TA-related
+  var taKeywords = ['technical artist', 'tech art', 'techart', 'ta ', ' (ta)', 'ta)'];
+  overseasJobs = (over.overseasJobs||[]).filter(function(j){
+    if (j.excluded) return false;
+    var name = (j.name||'').toLowerCase();
+    var company = (j.company||'').toLowerCase();
+    var isGameCompany = /naughty dog|epic games|riot|ubisoft|blizzard|ea |electronic arts|activision|insomniac|sony|playstation|cd projekt|CD Projekt|rockstar|rockstar games|guerrilla|insomniac|polyphony|sucker punch|respawn|bioware|obsidian|infinity ward|343 industries|riot games|valve|supercell|miHoYo|hoYoverse|arKnights|tencent|netease|lilith|papergames|scuderia|new gcore|super soldier|netease games|tencent games|igen games|hotta|koudashijie|babeltime|lightspeed|lilith|miracle games|funplus|IGG|37games|changyou|perfect world|yingdi|chukong|joycity/i.test(company);
+    // Game-company 3D/VFX can be TA-adjacent
+    if (isGameCompany && /\b(3d|3d|digital|art|art ? ?artist|vfx|visual fx|shader|render|pipeline|animation|animator|character|environment|lighting|material|texture|model|rig|creature)/i.test(name)) return true;
+    for (var k = 0; k < taKeywords.length; k++) {
+      if (name.indexOf(taKeywords[k]) > -1) return true;
+    }
+    return false;
+  });
+
   portfolios = ports.portfolios||[];
 
   document.getElementById('count-domestic').textContent = domesticJobs.length;
