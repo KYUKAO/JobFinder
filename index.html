@@ -812,14 +812,18 @@ function getLevelBadge(level, isOverseas) {
 // ===== Apply URL fallback =====
 function getApplyUrl(j) {
   var url = j.url || '';
-  var isFake = /\/position\/\d+$/.test(url) ||
-    url === 'https://jobs.mihoyo.com/position/12346' ||
-    url === 'https://jobs.mihoyo.com/position/12345';
-  if (isFake || !url || url === '#') {
+  // Fake/placeholder URLs that are not real job postings
+  var isFake =
+    /\/position\/\d+$/.test(url) ||
+    /careers\.tencent\.com\/search\.html\?query=/.test(url) ||
+    /jobs\.mihoyo\.com\/position\/1234[56]/.test(url) ||
+    !url || url === '#';
+  if (isFake) {
+    // For fake/generic URLs, try to find a real career page for the company
     var map2 = {
       '米哈游': 'https://jobs.mihoyo.com/?search=' + encodeURIComponent('技术美术'),
-      '腾讯': 'https://careers.tencent.com/search.html?query=TA',
-      '网易': 'https://we.campus.163.com/search?keyword=TA',
+      '腾讯': 'https://careers.tencent.com/',
+      '网易': 'https://we.campus.163.com/search?keyword=ta',
       '鹰角': 'https://careers.arknights.global/',
       '莉莉丝': 'https://www.lilith.com/careers/',
       '叠纸': 'https://www.papergames.cn/site/join',
@@ -829,7 +833,7 @@ function getApplyUrl(j) {
     for (var c in map2) {
       if (j.company && j.company.indexOf(c) > -1) return map2[c];
     }
-    return 'https://www.google.com/search?q=' + encodeURIComponent(j.company + ' ' + (j.name || '技术美术 招聘'));
+    return 'https://www.google.com/search?q=' + encodeURIComponent((j.company||'') + ' ' + (j.name||'技术美术 招聘'));
   }
   return url;
 }
